@@ -1,8 +1,8 @@
 @extends('layouts.auth')
 
-@section('title', 'Login')
+@section('title', 'Register')
 
-@section('description', 'Start your session with us.')
+@section('description', 'Register a new account with us.')
 
 @section('content')
 <form class="mt-6 space-y-4" method="POST">
@@ -18,6 +18,24 @@
     </div>
     <div>
         <x-front.input 
+            label="Name"
+            id="name"
+            name="name" 
+            placeholder="Name" 
+            type="text"
+        />
+    </div>
+    <div>
+        <x-front.input 
+            label="Email"
+            id="email"
+            name="email" 
+            placeholder="Email" 
+            type="email"
+        />
+    </div>
+    <div>
+        <x-front.input 
             label="Password"
             id="password"
             name="password" 
@@ -25,18 +43,21 @@
             type="password"
         />
     </div>
+    <div>
+        <x-front.input 
+            label="Confirm Password"
+            id="password_confirmation"
+            name="password_confirmation"
+            placeholder="Password" 
+            type="password"
+        />
+    </div>
     
-    <div class="flex items-center justify-end text-sm">      
-        <a href="#" class="text-dark hover:text-primary">Forgot Password?</a>
-    </div>
-    <div class="flex items-center justify-center">
-        <div class="g-recaptcha" data-sitekey="your-site-key"></div>
-    </div>
-    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-front.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Login</button>
+    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-front.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Register</button>
     <div class="mb-3">
         <span class="relative flex items-center text-sm text-dark bg-light">
           <span class="flex-grow border-t border-dark/25"></span>
-          <span class="mx-8">Login With</span>
+          <span class="mx-8">Register With</span>
           <span class="flex-grow border-t border-dark/25"></span>
         </span>
         <div class="flex items-center justify-center gap-2">
@@ -51,7 +72,7 @@
     </div>
 </form>
 <div class="mt-6">
-    <h5 class="text-center text-dark">New on our platform?  <a class="font-semibold cursor-pointer hover:text-primary/90 text-primary" href="{{ route('auth.register.index') }}">Register</a></h5>
+    <h5 class="text-center text-dark">Already have an account?  <a class="font-semibold cursor-pointer hover:text-primary/90 text-primary" href="{{ route('auth.login.index') }}">Login</a></h5>
 </div>
 
 @endsection

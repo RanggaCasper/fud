@@ -48,25 +48,22 @@
                         </div>
                         <ul class="py-2 text-sm text-black" aria-labelledby="dropdownUserAvatarButton">
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+                                <a href="#" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-dashboard-line me-1.5"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
-                            </li>
-                            <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Earnings</a>
+                                <a href="#" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Settings</a>
                             </li>
                         </ul>
                         <div class="py-2">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">Sign out</button>
+                                <button type="submit" class="block px-4 py-2 w-full text-left text-sm text-black hover:bg-gray-100"><i class="ri ri-logout-circle-line me-0.5"></i> Logout</button>
                             </form>
                         </div>
                     </div>
                 @else
                     <button class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition text-sm">Sign Up</button>
-                    <a href="{{ route('login') }}" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition text-sm">Login</a>
+                    <a href="{{ route('auth.login.index') }}" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition text-sm">Login</a>
                 @endauth
 
                 <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button" class="inline-flex items-center justify-center p-2 rounded-lg border text-primary border-primary md:hidden" aria-expanded="false">

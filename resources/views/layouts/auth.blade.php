@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/action.js'])
 </head>
 <body class="flex flex-col min-h-screen bg-light lg:flex-row">
+
     <!-- Close Button -->
     <div class="absolute z-50 right-4 md:left-4 top-4">
         <a href="/" class="inline-flex items-center justify-center text-sm font-medium transition-all rounded-lg shadow-md hover:ring-primary hover:border-none hover:text-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 w-9 text-muted bg-light">
@@ -21,8 +22,8 @@
         </a>
     </div>
     
-    <!-- Left Section -->
-    <div class="flex flex-col items-start justify-center min-h-screen p-8 text-light lg:w-4/12 lg:p-16">
+    <!-- Left Section (Scrolls) -->
+    <div class="flex flex-col items-start justify-center p-8 text-light lg:w-4/12 lg:p-16 overflow-y-auto h-screen">
         <div class="w-full max-w-md mx-auto">
             <h2 class="text-3xl font-bold text-primary">@yield('title', 'Masuk')</h2>
             <p class="mt-2 text-muted">@yield('description', 'Masuk dengan akun yang telah Kamu daftarkan.')</p>
@@ -30,11 +31,13 @@
         </div>
     </div>
 
-    <!-- Right Section -->
-    <img data-src="https://w.wallhaven.cc/full/3z/wallhaven-3zk513.png" 
-        alt="Background Image" 
-        loading="lazy"
-        class="hidden object-cover object-center w-full mx-auto lazyload bg-muted lg:flex lg:w-8/12">
+    <!-- Right Section (Fixed Image) -->
+    <div class="hidden lg:flex lg:w-8/12 fixed top-0 right-0 h-screen">
+        <img src="https://w.wallhaven.cc/full/ly/wallhaven-ly9qzq.jpg" 
+             alt="Background Image" 
+             loading="lazy"
+             class="object-cover w-full h-full">
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
