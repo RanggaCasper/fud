@@ -49,4 +49,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
+
+    public function isGoogleConnected()
+    {
+        return $this->socialAccounts()->where('social_provider', 'google')->exists();
+    }
+
+    public function isFacebookConnected()
+    {
+        return $this->socialAccounts()->where('social_provider', 'facebook')->exists();
+    }
 }

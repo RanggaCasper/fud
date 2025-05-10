@@ -14,6 +14,15 @@ Route::get('/detail', function () {
     return view('detail');
 });
 
+Route::get('/settings', function () {
+    return view('user.settings');
+})->name('settings');
+
+Route::get('/dashboard', function () {
+    return view('user.dashboard');
+})->name('list');
+
+
 Route::prefix('auth')->as('auth.')->group(function () {
 
     Route::prefix('login')->as('login.')->group(function () {
@@ -23,6 +32,10 @@ Route::prefix('auth')->as('auth.')->group(function () {
         Route::get('{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider'])->name('social');
         Route::get('{provider}/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
     });
+
+    Route::get('disconnect/{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'deleteSocialAccount'])
+        ->name('disconnect.social');
+
 
     Route::prefix('register')->as('register.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('index');

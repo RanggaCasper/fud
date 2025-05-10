@@ -53,5 +53,45 @@
 <div class="mt-6">
     <h5 class="text-center text-dark">New on our platform?  <a class="font-semibold cursor-pointer hover:text-primary/90 text-primary" href="{{ route('auth.register.index') }}">Register</a></h5>
 </div>
-
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('swalError'))
+    <script>
+        Swal.fire({
+            html: `
+                <div class="mt-3">
+                    <lord-icon src="https://cdn.lordicon.com/azxkyjta.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
+                    <div class="pt-2 mx-5 mt-4 fs-15">
+                        <h4 class="text-2xl font-semibold">Oops!!</h4>
+                        <p class="mx-4 mb-0 text-muted">{{ session('swalError') }}</p>
+                    </div>
+                </div>
+            `,
+            customClass: {
+                confirmButton: "bg-primary text-white mb-1",
+            },
+        });
+    </script>
+@endif
+
+@if(session('swalSuccess'))
+     <script>
+        Swal.fire({
+            html: `
+                <div class="mt-3">
+                    <lord-icon src="https://cdn.lordicon.com/mhnfcfpf.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
+                    <div class="pt-2 mx-5 mt-4 fs-15">
+                        <h4 class="text-2xl font-semibold">Success!!</h4>
+                        <p class="mx-4 mb-0 text-muted">{{ session('swalSuccess') }}</p>
+                    </div>
+                </div>
+            `,
+            customClass: {
+                confirmButton: "bg-primary text-white mb-1",
+            },
+        });
+    </script>
+@endif
+@endpush

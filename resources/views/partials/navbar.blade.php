@@ -35,9 +35,18 @@
             <div class="flex gap-2">
                 @auth
                     <!-- Dropdown Button -->
-                   <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300" type="button">
+                    <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar" data-dropdown-placement="bottom-end" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300" type="button">
                         <span class="sr-only">Open user menu</span>
-                        <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar }}" alt="user photo">
+                        
+                        <!-- Check if the user has an avatar -->
+                        @if(Auth::user()->avatar)
+                            <!-- Show Avatar if exists -->
+                            <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar }}" alt="user photo">
+                        @else
+                            <span class="w-8 h-8 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </span>
+                        @endif
                     </button>
 
                     <!-- Dropdown menu -->
