@@ -37,6 +37,7 @@
         class="hidden object-cover object-center w-full mx-auto lazyload bg-muted lg:flex lg:w-8/12">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('scripts')
 </body>
 </html>
