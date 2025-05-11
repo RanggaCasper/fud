@@ -107,6 +107,3 @@
 
 @endsection
 
-@push('scripts')
-@vite(['resources/js/swiper.init.js'])
-@endpush

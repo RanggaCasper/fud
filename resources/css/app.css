@@ -42,5 +42,3 @@ html {
 .nav-link.active {
     @apply text-primary font-bold;
 }
-  
-  

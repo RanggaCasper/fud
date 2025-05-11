@@ -1,4 +1,6 @@
 import './bootstrap';
+import './action.js';
+import './swiper.init.js';
 import 'flowbite';
 
 // Theme Toggle
@@ -124,3 +126,28 @@ if (togglePasswordButtons.length > 0) {
     });
 }
 // End Password Toggle
+
+// Import FilePond dan plugin yang diperlukan dengan named import
+FilePond.registerPlugin(
+  FilePondPluginFileEncode,
+  FilePondPluginFileValidateType,
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview,
+  FilePondPluginImageCrop,
+  FilePondPluginImageResize,
+  FilePondPluginImageTransform
+);
+
+// Pilih elemen input file dan konversi menjadi FilePond
+document.addEventListener('DOMContentLoaded', function () {
+    FilePond.create(document.querySelector('input[type="file"]'), {
+        labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
+        imagePreviewHeight: 170,
+        imageCropAspectRatio: '1:1', // Crop image menjadi 1:1 (persegi)
+        imageResizeTargetWidth: 200, // Resize image menjadi lebar 200px
+        imageResizeTargetHeight: 200, // Resize image menjadi tinggi 200px
+        stylePanelLayout: 'compact circle', // Gaya tampilan panel menjadi compact dan berbentuk lingkaran
+        styleLoadIndicatorPosition: 'center bottom', // Posisi indikator load
+        styleButtonRemoveItemPosition: 'center bottom', // Posisi tombol untuk menghapus item
+    });
+});

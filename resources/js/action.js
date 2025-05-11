@@ -22,11 +22,7 @@ $(document).on('submit', 'form', function(e) {
         data: $(this).serialize(),
         success: function(response) {
             if (response.status && response.message) {
-                $(e.target).before(`
-                    <div class="alert p-4 mt-3 text-sm text-white rounded-xl bg-success" role="alert">
-                        ${response.message}
-                    </div>
-                `);
+                $(e.target).before(generateAlertHtml('success', response.message));
             }
 
             if (response.redirect_url) {
@@ -41,10 +37,22 @@ $(document).on('submit', 'form', function(e) {
                 });
             }
 
-            if (!$(e.target).attr('id')?.endsWith('_update')) {
-                $(e.target).trigger('reset');
-            }
+           if (!$(e.target).attr('id')?.endsWith('_update')) {
+                if ($(e.target).data('reset') !== false) {
+                    $(e.target).trigger('reset');
+                }
 
+                if ($(e.target).data('reload')) {
+                    location.reload();
+                }
+
+                if ($.fn.select2) {
+                    $('.select2').each(function () {
+                        $(this).val(null).trigger('change');
+                    });
+                }
+            }
+            
             $.each($(e.target).data(), function(key, value) {
                 if (typeof window[value] === 'function') {
                     try {
@@ -59,7 +67,11 @@ $(document).on('submit', 'form', function(e) {
             let response = xhr.responseJSON;
             let errors = response.errors;
 
+            // Clear existing error messages
+            $('.error-message').remove();
+
             if (errors && Object.keys(errors).length > 0) {
+                // Iterate over field errors and display them below the inputs
                 $.each(errors, function(field, message) {
                     let input = $(`[name="${field}"]`);
                     
@@ -68,13 +80,9 @@ $(document).on('submit', 'form', function(e) {
                     d.after(`
                         <div class="error-message text-xs text-danger mt-1">${message[0]}</div>
                     `);
-                });                
+                });
             } else if (response.message) {
-                $(e.target).before(`
-                   <div class="alert p-4 mt-3 text-sm text-white rounded-xl bg-danger" role="alert">
-                        ${response.message}
-                    </div>
-                `);
+                $(e.target).before(generateAlertHtml('danger', response.message));
             }
         },
         complete: function() {  
@@ -85,3 +93,23 @@ $(document).on('submit', 'form', function(e) {
         }
     });
 });
+
+function generateAlertHtml(type, message) {
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+    
+    const alertClasses = type === 'success' ? 'bg-green-50 text-success border-success' :
+                        (type === 'danger' ? 'bg-red-50 text-danger border-danger' :
+                        (type === 'info' ? 'bg-blue-50 text-info border-info' :
+                        'bg-yellow-50 text-warning border-warning'));
+
+    
+    return `
+        <div class="alert flex items-center p-4 mb-4 text-sm ${alertClasses} border rounded-lg" role="alert">
+            <i class="ri ri-information-line text-lg me-1"></i>
+            <span class="sr-only">${capitalize(type)}</span>
+            <div>
+                <span class="font-medium">${capitalize(type)}!</span> ${message}
+            </div>
+        </div>
+    `;
+}

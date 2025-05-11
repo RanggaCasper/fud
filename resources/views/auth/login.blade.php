@@ -5,7 +5,7 @@
 @section('description', 'Start your session with us.')
 
 @section('content')
-<form class="mt-6 space-y-4" method="POST">
+<form class="space-y-4" method="POST">
     @csrf
     <div>
         <x-front.input 

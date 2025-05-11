@@ -27,14 +27,14 @@ class SocialLoginController extends Controller
                                             ->first();
 
             if ($alreadyConnected) {
-                return redirect()->route('settings')->with('swalError', ucfirst($provider) . ' account already connected.');
+                return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account already connected.');
             }
             $existingAccount = SocialAccount::where('social_provider', $provider)
                                             ->where('social_id', $socialUser->getId())
                                             ->first();
 
             if ($existingAccount) {
-                return redirect()->route('settings')->with('swalError', ucfirst($provider) . ' account is already linked to another user.');
+                return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account is already linked to another user.');
             }
             SocialAccount::create([
                 'user_id' => $user->id,
@@ -43,7 +43,7 @@ class SocialLoginController extends Controller
                 'avatar' => $socialUser->getAvatar(),
             ]);
 
-            return redirect()->route('settings')->with('swalSuccess', ucfirst($provider) . ' account connected successfully!');
+            return redirect()->route('settings.index')->with('swalSuccess', ucfirst($provider) . ' account connected successfully!');
         } else {
             $socialLogin = SocialAccount::where('social_provider', $provider)
                             ->where('social_id', $socialUser->getId())
@@ -89,12 +89,12 @@ class SocialLoginController extends Controller
                                         ->first();
 
             if (!$socialAccount) {
-                return redirect()->route('settings')->with('error', ucfirst($provider) . ' account is not connected.');
+                return redirect()->route('settings.index')->with('error', ucfirst($provider) . ' account is not connected.');
             }
 
             $socialAccount->delete();
 
-            return redirect()->route('settings')->with('success', ucfirst($provider) . ' account disconnected successfully!');
+            return redirect()->route('settings.index')->with('success', ucfirst($provider) . ' account disconnected successfully!');
         }
 
         return redirect()->route('auth.login.index')->with('error', 'You need to log in first.');

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/action.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex flex-col min-h-screen bg-light lg:flex-row">
 
@@ -26,7 +26,7 @@
     <div class="flex flex-col items-start justify-center p-8 text-light lg:w-4/12 lg:p-16 overflow-y-auto h-screen">
         <div class="w-full max-w-md mx-auto">
             <h2 class="text-3xl font-bold text-primary">@yield('title', 'Masuk')</h2>
-            <p class="mt-2 text-muted">@yield('description', 'Masuk dengan akun yang telah Kamu daftarkan.')</p>
+            <p class="mb-6 text-muted">@yield('description', 'Masuk dengan akun yang telah Kamu daftarkan.')</p>
             @yield('content')
         </div>
     </div>

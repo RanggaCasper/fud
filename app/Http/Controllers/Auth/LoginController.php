@@ -25,6 +25,7 @@ class LoginController extends Controller
         try {
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
+                
                 return ResponseFormatter::redirected('Login successful!', route("home"));
             }
             return ResponseFormatter::error('Credentials not match our records.', code: Response::HTTP_UNAUTHORIZED);

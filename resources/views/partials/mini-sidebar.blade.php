@@ -2,7 +2,7 @@
     <div class="w-full h-full py-4 overflow-y-auto bg-transparent">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="#"
+                <a href="{{ route('dashboard.index') }}"
                 class="flex items-center p-2 rounded-lg text-muted hover:bg-primary hover:text-white gap-2 group {{ request()->is('dashboard') ? 'bg-primary text-white' : '' }}">
                     <i class="ri ri-dashboard-line text-xl"></i>
                     <span>Dashboard</span>
@@ -16,7 +16,7 @@
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('settings.index') }}"
                 class="flex items-center p-2 rounded-lg text-muted hover:bg-primary hover:text-white gap-2 group {{ request()->is('settings') ? 'bg-primary text-white' : '' }}">
                     <i class="ri ri-settings-line text-xl"></i>
                     <span>Settings</span>

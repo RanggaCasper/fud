@@ -57,7 +57,6 @@
 @endsection
 
 @push('scripts')
-@vite(['resources/js/swiper.init.js'])
 <script>
     $(document).ready(function() {
         $("#owl-carousel").owlCarousel({

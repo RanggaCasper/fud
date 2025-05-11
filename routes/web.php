@@ -14,13 +14,9 @@ Route::get('/detail', function () {
     return view('detail');
 });
 
-Route::get('/settings', function () {
-    return view('user.settings');
-})->name('settings');
-
 Route::get('/dashboard', function () {
     return view('user.dashboard');
-})->name('list');
+})->name('dashboard.index');
 
 
 Route::prefix('auth')->as('auth.')->group(function () {
@@ -41,6 +37,13 @@ Route::prefix('auth')->as('auth.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('store');
     });
+});
+
+Route::prefix('settings')->as('settings.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\SettingController::class, 'index'])->name('index');
+    Route::put('/profile', [\App\Http\Controllers\SettingController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/password', [\App\Http\Controllers\SettingController::class, 'updatePassword'])->name('update.password');
+    Route::delete('/delete/account', [\App\Http\Controllers\SettingController::class, 'deleteAccount'])->name('delete.account');
 });
 
 Route::post('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'store'])->name('logout');
