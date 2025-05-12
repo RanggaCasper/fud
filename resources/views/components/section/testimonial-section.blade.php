@@ -16,7 +16,7 @@
             <div class="swiper-wrapper py-3">
                 @foreach($comments as $comment)
                     <div class="swiper-slide">
-                        <x-front.card.comment-card 
+                        <x-card.comment-card 
                             :userName="$comment['userName']" 
                             :commentDate="$comment['commentDate']" 
                             :userImage="$comment['userImage']" 

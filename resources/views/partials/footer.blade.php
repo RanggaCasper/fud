@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="@hasSection('showNavbot') pb-20 @else py-1 @endif lg:pb-1">
+        <div class="@hasSection('showNavbot') @else py-1 @endif lg:pb-1">
             <div class="w-full border-t bg-dark"></div>
             <h6 class="w-full mt-1 text-sm text-center text-muted">Copyright © 2024 CASPER TOPUP - All Right Reserved</h6>
         </div>

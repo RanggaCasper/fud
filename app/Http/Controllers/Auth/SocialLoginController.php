@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\SocialAccount;
@@ -62,6 +63,7 @@ class SocialLoginController extends Controller
                         'name' => $socialUser->getName(),
                         'avatar' => $socialUser->getAvatar(),
                         'username' => $this->generateUsername($socialUser),
+                        'role_id' => Role::where('name', 'user')->first()->id,
                     ]);
                 }
 

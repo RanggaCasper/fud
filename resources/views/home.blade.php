@@ -2,7 +2,7 @@
 @section('showNavbot', true)
 
 @section('header')
-<x-front.section.hero-section
+<x-section.hero-section
     :videoSource="asset('assets/video/IMG_44891.mp4')"
     title="Are you Hungry?"
     description="Discover your next favorite meal, whether you're craving a quick snack or a full-course feast."
@@ -16,25 +16,25 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png" class="w-50" alt="">
         </a>
     </div>
-</x-front.section.hero-section>
+</x-section.hero-section>
 
 @endsection
 
 @section('content')
-<x-front.section.restaurant-section 
+<x-section.restaurant-section 
     backgroundImage="https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg" 
     icon="https://cdn.lordicon.com/tqvrfslk.json"
     title="Restoran"
     description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
 >
     @foreach(range(1, 6) as $i)
-        <x-front.card.service-card 
+        <x-card.service-card 
             slug="lorem" 
             name="Lorem {{ $i }}" 
             desc="Hello kamu {{ $i }}" 
             image="https://b.zmtcdn.com/data/pictures/3/20863533/06fc9c8faa0fcf64c1a56859ae934abb_featured_v2.jpg?output-format=webp" />
     @endforeach
-</x-front.section.restaurant-section>
+</x-section.restaurant-section>
 
 @php
     $comments = [
@@ -73,7 +73,7 @@
     ];
 @endphp
 
-<x-front.section.testimonial-section 
+<x-section.testimonial-section 
     sectionId="review"
     iconSrc="https://cdn.lordicon.com/abhwievu.json"
     title="Every Bite Has a Story"
@@ -99,7 +99,7 @@
     ];
 @endphp
 
-<x-front.section.faq-section 
+<x-section.faq-section 
     sectionId="faq"
     title="FAQ"
     description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."

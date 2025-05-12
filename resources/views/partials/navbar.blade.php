@@ -29,6 +29,7 @@
                 <a href="{{ route('list') }}" class="nav-link">Restoran</a>
                 <a href="#review" class="nav-link">Review</a>
                 <a href="#download" class="nav-link">Download</a>
+                <a href="#">Work with Us</a>
                 <a href="#faq" class="nav-link">FAQ</a>
             </div>
 

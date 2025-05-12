@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
@@ -28,7 +29,8 @@ class RegisterController extends Controller
                 'username' => $request->username,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password), // default password adalah identitas
+                'password' => bcrypt($request->password),
+                'role_id' => Role::where('name', 'user')->first()->id,
             ]);
 
             return ResponseFormatter::redirected('Registration successful! Please login.', route("auth.login.index"));

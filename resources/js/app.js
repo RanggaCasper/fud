@@ -1,54 +1,10 @@
 import './bootstrap';
 import './action.js';
 import './swiper.init.js';
+import './datatable.js';
 import 'flowbite';
 
-// Theme Toggle
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-} else {
-    document.documentElement.classList.remove('dark')
-}
-
-let themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-let themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-if (themeToggleDarkIcon && themeToggleLightIcon) {
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        themeToggleLightIcon.classList.remove('hidden');
-    } else {
-        themeToggleDarkIcon.classList.remove('hidden');
-    }
-}
-
-let themeToggleBtn = document.getElementById('theme-toggle');
-
-if(themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', function() {
-        themeToggleDarkIcon.classList.toggle('hidden');
-        themeToggleLightIcon.classList.toggle('hidden');
-    
-        if (localStorage.getItem('color-theme')) {
-            if (localStorage.getItem('color-theme') === 'light') {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            }
-        } else {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            }
-        }
-        
-    });
-}
-// End Theme Toggle
+import Swal from 'sweetalert2';
 
 // Lazy Loading
 const images = document.querySelectorAll('.lazyload');
@@ -127,27 +83,14 @@ if (togglePasswordButtons.length > 0) {
 }
 // End Password Toggle
 
-// Import FilePond dan plugin yang diperlukan dengan named import
-FilePond.registerPlugin(
-  FilePondPluginFileEncode,
-  FilePondPluginFileValidateType,
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImagePreview,
-  FilePondPluginImageCrop,
-  FilePondPluginImageResize,
-  FilePondPluginImageTransform
-);
+// Modal
+document.addEventListener('click', function(event) {
+    if (event.target.hasAttribute('data-modal-target')) {
+        const modalId = event.target.getAttribute('data-modal-target');
+        const modalElement = document.getElementById(modalId);
 
-// Pilih elemen input file dan konversi menjadi FilePond
-document.addEventListener('DOMContentLoaded', function () {
-    FilePond.create(document.querySelector('input[type="file"]'), {
-        labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
-        imagePreviewHeight: 170,
-        imageCropAspectRatio: '1:1', // Crop image menjadi 1:1 (persegi)
-        imageResizeTargetWidth: 200, // Resize image menjadi lebar 200px
-        imageResizeTargetHeight: 200, // Resize image menjadi tinggi 200px
-        stylePanelLayout: 'compact circle', // Gaya tampilan panel menjadi compact dan berbentuk lingkaran
-        styleLoadIndicatorPosition: 'center bottom', // Posisi indikator load
-        styleButtonRemoveItemPosition: 'center bottom', // Posisi tombol untuk menghapus item
-    });
+        if (modalElement) {
+            new Modal(modalElement).show();
+        }
+    }
 });

@@ -42,3 +42,92 @@ html {
 .nav-link.active {
     @apply text-primary font-bold;
 }
+
+.btn {
+    @apply text-white font-medium rounded-lg text-center transition-all duration-300;
+}
+
+.btn-primary {
+    @apply bg-primary hover:bg-primary/80;
+}
+
+.btn-danger {
+    @apply bg-danger hover:bg-danger/80;
+}
+
+.btn-success {
+    @apply bg-success hover:bg-success/80;
+}
+
+.btn-warning {
+    @apply bg-warning hover:bg-warning/80;
+}
+
+.btn-info {
+    @apply bg-info hover:bg-info/80;
+}
+
+.btn-secondary {
+    @apply bg-secondary hover:bg-secondary/80;
+}
+
+.btn-light {
+    @apply bg-light hover:bg-light/80;
+}
+
+.btn-dark {
+    @apply bg-dark hover:bg-dark/80;
+}
+
+.btn-sm {
+    @apply text-sm px-2 py-1;
+}
+
+.btn-md {
+    @apply text-base px-3 py-1.5;
+}
+
+.btn-lg {
+    @apply text-lg px-4 py-2;
+}
+
+/* Datatable */
+button.fg-button.ui-button.ui-state-default {
+    @apply px-2 me-1 py-0.5 bg-gray-200 rounded-sm text-dark shadow-md;
+}
+
+button.fg-button.ui-button.ui-state-default.ui-state-disabled:not(.first):not(.previous):not(.next):not(.last) {
+    @apply px-2 me-1 py-0.5 bg-primary text-white rounded-sm shadow-md cursor-not-allowed;
+}
+
+button.fg-button.ui-button.ui-state-default:hover {
+    @apply bg-primary text-white rounded-sm shadow-md;
+}
+
+.dt-input {
+    @apply rounded-md shadow-sm focus:ring focus:ring-primary focus:border-primary;
+}
+
+td {
+    @apply text-sm;
+}
+
+th {
+    @apply text-sm;
+}
+
+.dt-column-title {
+    @apply font-bold;
+}
+
+.dt-info {
+    @apply text-sm;
+}
+
+.dt-length {
+    @apply text-sm;
+}
+
+.dt-search {
+    @apply text-sm;
+}

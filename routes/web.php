@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,6 +45,17 @@ Route::prefix('settings')->as('settings.')->group(function () {
     Route::put('/profile', [\App\Http\Controllers\SettingController::class, 'updateProfile'])->name('update.profile');
     Route::put('/password', [\App\Http\Controllers\SettingController::class, 'updatePassword'])->name('update.password');
     Route::delete('/delete/account', [\App\Http\Controllers\SettingController::class, 'deleteAccount'])->name('delete.account');
+});
+
+Route::prefix('admin')->as('admin.')->group(function () {
+    Route::prefix('user')->as('user.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\User\UserController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\User\UserController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\User\UserController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\User\UserController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\User\UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\User\UserController::class, 'destroy'])->name('destroy');
+    });
 });
 
 Route::post('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'store'])->name('logout');

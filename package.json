@@ -14,6 +14,25 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "datatables.net": "^2.3.0",
+        "datatables.net-autofill-zf": "^2.7.0",
+        "datatables.net-buttons-zf": "^3.2.3",
+        "datatables.net-colreorder-zf": "^2.1.0",
+        "datatables.net-datetime": "^1.5.5",
+        "datatables.net-dt": "^2.3.0",
+        "datatables.net-fixedcolumns-zf": "^5.0.4",
+        "datatables.net-fixedheader-zf": "^4.0.1",
+        "datatables.net-keytable-zf": "^2.12.1",
+        "datatables.net-responsive-dt": "^3.0.4",
+        "datatables.net-responsive-zf": "^3.0.4",
+        "datatables.net-rowgroup-zf": "^1.5.1",
+        "datatables.net-rowreorder-zf": "^1.5.0",
+        "datatables.net-scroller-zf": "^2.4.3",
+        "datatables.net-searchbuilder-zf": "^1.8.2",
+        "datatables.net-searchpanes-zf": "^2.3.3",
+        "datatables.net-select-zf": "^3.0.0",
+        "datatables.net-staterestore-zf": "^1.4.1",
+        "datatables.net-zf": "^2.3.0",
         "dropzone": "^6.0.0-beta.2",
         "filepond": "^4.32.7",
         "filepond-plugin-file-encode": "^2.1.14",
@@ -25,7 +44,11 @@
         "filepond-plugin-image-resize": "^2.0.10",
         "filepond-plugin-image-transform": "^3.8.7",
         "flowbite": "^3.1.2",
+        "jszip": "^3.10.1",
+        "pdfmake": "^0.2.20",
         "remixicon": "^4.6.0",
+        "simple-datatables": "^10.0.0",
+        "sweetalert2": "^11.6.13",
         "swiper": "^11.2.6"
     }
 }

@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl mx-auto">
         <div class="owl-carousel owl-theme" id="owl-carousel">
             @foreach($items as $item)
-                <x-front.carousel-item :src="$item['src']" />
+                <x-carousel-item :src="$item['src']" />
             @endforeach
         </div>
     </div>

@@ -8,7 +8,7 @@
 <form class="space-y-4" method="POST">
     @csrf
     <div>
-        <x-front.input 
+        <x-input 
             label="Username"
             id="username"
             name="username" 
@@ -17,7 +17,7 @@
         />
     </div>
     <div>
-        <x-front.input 
+        <x-input 
             label="Password"
             id="password"
             name="password" 
@@ -32,7 +32,7 @@
     <div class="flex items-center justify-center">
         <div class="g-recaptcha" data-sitekey="your-site-key"></div>
     </div>
-    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-front.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Login</button>
+    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Login</button>
     <div class="mb-3">
         <span class="relative flex items-center text-sm text-dark bg-light">
           <span class="flex-grow border-t border-dark/25"></span>

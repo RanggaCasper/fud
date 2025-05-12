@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 
 @section('content')
-<x-front.card.card title="Profile">
+<x-card.card title="Profile">
     <div class="flex items-center mb-3">
         @if(Auth::user()->avatar)                                                
             <img class="object-cover lazyload h-14 w-14 rounded-lg lazyload" loading="lazy" data-src="{{ Auth::user()->avatar }}" alt="user photo">
@@ -15,7 +15,7 @@
         @csrf
         @method('PUT')
         <div class="grid md:grid-cols-2 gap-3 mb-3">
-            <x-front.input 
+            <x-input 
                 label="Name"
                 id="name"
                 name="name" 
@@ -23,7 +23,7 @@
                 value="{{ auth()->user()->name }}"
                 type="text"
             />
-            <x-front.input 
+            <x-input 
                 label="Username"
                 id="username"
                 name="username" 
@@ -32,7 +32,7 @@
                 value="{{ auth()->user()->username }}"
                 :disabled="true"
             />
-            <x-front.input 
+            <x-input 
                 label="Email"
                 id="email"
                 name="email" 
@@ -41,7 +41,7 @@
                 type="text"
                 :disabled="true"
             />
-             <x-front.input 
+             <x-input 
                 label="Created At"
                 id="created_at"
                 name="created_at"
@@ -51,18 +51,18 @@
                 :disabled="true"
             />
         </div>
-        <button type="submit" class="py-1.5 px-4 bg-primary text-white rounded-lg ">Submit</button>
-        <button type="reset" class="py-1.5 px-4 bg-danger text-white rounded-lg ">Reset</button>
+        <x-button label="Submit" type="submit" />
+        <x-button label="Reset" type="reset" />
     </form>
-</x-front.card.card>
+</x-card.card>
 
-<x-front.card.card title="Password">
+<x-card.card title="Password">
     <form action="{{ route('settings.update.password') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @if(Auth::user()->password)
             <div class="mb-3">
-                <x-front.input 
+                <x-input 
                     label="Current Password"
                     id="current_password"
                     name="current_password" 
@@ -71,66 +71,65 @@
                 />
             </div>
         @else
-            <x-front.alert type="warning" message="Your password has not been set yet. Please set a new password." />
+            <x-alert type="warning" message="Your password has not been set yet. Please set a new password." />
         @endif
         <div class="grid md:grid-cols-2 gap-3 mb-3">
-            <x-front.input 
-                label="Password"
-                id="password"
+            <x-input 
+                label="New Password"
+                id="new_password"
                 name="password" 
-                placeholder="Password" 
+                placeholder="New Password" 
                 type="password"
             />
-            <x-front.input 
-                label="Confirmation Password"
+            <x-input 
+                label="Confirm Password"
                 id="password_confirmation"
                 name="password_confirmation" 
-                placeholder="Confirmation Password" 
+                placeholder="Confirm Password" 
                 type="password"
             />  
         </div>
-        <button type="submit" class="py-1.5 px-4 bg-primary text-white rounded-lg ">Submit</button>
-        <button type="reset" class="py-1.5 px-4 bg-danger text-white rounded-lg ">Reset</button>
+        <x-button label="Submit" type="submit" />
+        <x-button label="Reset" type="reset" />
     </form>
-</x-front.card.card>
+</x-card.card>
 
-<x-front.card.card title="Linked Account">
+<x-card.card title="Linked Account">
     <div class="grid md:grid-cols-2 gap-3 mb-3">
-        <x-front.social-account provider="google" isConnected="{{ Auth::user()->isGoogleConnected() }}" />
-        <x-front.social-account provider="facebook" isConnected="{{ Auth::user()->isFacebookConnected() }}" />
+        <x-social-account provider="google" isConnected="{{ Auth::user()->isGoogleConnected() }}" />
+        <x-social-account provider="facebook" isConnected="{{ Auth::user()->isFacebookConnected() }}" />
     </div>
-</x-front.card.card>
+</x-card.card>
 
-<x-front.card.card title="Delete Account">
+<x-card.card title="Delete Account">
     <form action="{{ route('settings.delete.account') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('DELETE')
         <div class="mb-3">
-            <x-front.alert type="warning" message="Are you sure you want to delete your account? This action cannot be undone." />
+            <x-alert type="warning" message="Are you sure you want to delete your account? This action cannot be undone." />
         </div>
         <div class="grid md:grid-cols-2 gap-3 mb-3">
-            <x-front.input 
+            <x-input 
                 label="Password"
                 id="password"
                 name="password" 
                 placeholder="Password" 
                 type="password"
             />
-            <x-front.input 
-                label="Confirmation Password"
+            <x-input 
+                label="Confirm Password"
                 id="password_confirmation"
                 name="password_confirmation" 
-                placeholder="Confirmation Password" 
+                placeholder="Confirm Password" 
                 type="password"
             /> 
         </div>
-        <button type="submit" class="py-1.5 px-4 bg-danger text-white rounded-lg text-md"><span>Delete Account</span></button>
+        <x-button label="Delete Account" type="submit" color="danger" />
     </form>
-</x-front.card.card>
+</x-card.card>
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if(session('swalError'))
     <script>
         Swal.fire({
@@ -144,7 +143,7 @@
                 </div>
             `,
             customClass: {
-                confirmButton: "bg-primary text-white mb-1",
+                confirmButton: "btn btn-primary btn-md mx-1",
             },
         });
     </script>
@@ -163,7 +162,7 @@
                 </div>
             `,
             customClass: {
-                confirmButton: "bg-primary text-white mb-1",
+                confirmButton: "btn btn-primary btn-md mx-1",
             },
         });
     </script>

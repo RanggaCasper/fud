@@ -9,24 +9,24 @@
         ];
     @endphp
 
-    <x-front.section.carousel-section 
+    <x-section.carousel-section 
         sectionId="home"
         :items="$carouselItems" />
     
-    <x-front.section.restaurant-section 
+    <x-section.restaurant-section 
         backgroundImage="https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg" 
         icon="https://cdn.lordicon.com/tqvrfslk.json"
         title="Restoran"
         description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
     >
         @foreach(range(1, 6) as $i)
-            <x-front.card.service-card 
+            <x-card.service-card 
                 slug="lorem" 
                 name="Lorem {{ $i }}" 
                 desc="Hello kamu {{ $i }}" 
                 image="https://b.zmtcdn.com/data/pictures/3/20863533/06fc9c8faa0fcf64c1a56859ae934abb_featured_v2.jpg?output-format=webp" />
         @endforeach
-    </x-front.section.restaurant-section>
+    </x-section.restaurant-section>
 
     @php
     $faqs = [
@@ -47,7 +47,7 @@
         ];
     @endphp
 
-    <x-front.section.faq-section 
+    <x-section.faq-section 
         sectionId="faq"
         title="FAQ"
         description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."

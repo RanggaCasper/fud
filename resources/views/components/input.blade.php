@@ -1,7 +1,12 @@
-@props(['label', 'name', 'id' => null, 'value' => null, 'placeholder' => '', 'type' => 'text', 'attr' => '', 'disabled' => false])
+@props(['label', 'name', 'id' => null, 'value' => null, 'placeholder' => '', 'type' => 'text', 'attr' => '', 'disabled' => false, 'required' => true])
 
 <div>
-    <label for="{{ $id }}" class="block mb-1 text-sm font-semibold text-black">{{ $label }}</label>
+    <label for="{{ $id }}" class="block mb-1 text-sm font-semibold text-black">
+        {{ $label }}
+        @if ($required && !$disabled) 
+            <span class="text-red-500">*</span>
+        @endif
+    </label>
     <div class="relative">
         <input 
             type="{{ $type }}" 

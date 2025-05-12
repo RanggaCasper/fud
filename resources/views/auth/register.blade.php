@@ -8,7 +8,7 @@
 <form class="mt-6 space-y-4" method="POST">
     @csrf
     <div>
-        <x-front.input 
+        <x-input 
             label="Username"
             id="username"
             name="username" 
@@ -17,7 +17,7 @@
         />
     </div>
     <div>
-        <x-front.input 
+        <x-input 
             label="Name"
             id="name"
             name="name" 
@@ -26,7 +26,7 @@
         />
     </div>
     <div>
-        <x-front.input 
+        <x-input 
             label="Email"
             id="email"
             name="email" 
@@ -34,26 +34,27 @@
             type="email"
         />
     </div>
-    <div>
-        <x-front.input 
-            label="Password"
-            id="password"
-            name="password" 
-            placeholder="Password" 
-            type="password"
-        />
+    <div class="grid grid-cols-2 gap-2">
+        <div>
+            <x-input 
+                label="Password"
+                id="password"
+                name="password" 
+                placeholder="Password" 
+                type="password"
+            />
+        </div>
+        <div>
+            <x-input 
+                label="Confirm Password"
+                id="password_confirmation"
+                name="password_confirmation"
+                placeholder="Password" 
+                type="password"
+            />
+        </div>
     </div>
-    <div>
-        <x-front.input 
-            label="Confirm Password"
-            id="password_confirmation"
-            name="password_confirmation"
-            placeholder="Password" 
-            type="password"
-        />
-    </div>
-    
-    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-front.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Register</button>
+    <button type="submit" class="w-full bg-primary disabled:bg-primary/50 inline-flex items-center justify-center hover:bg-primary/75 text-light font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary">Register</button>
     <div class="mb-3">
         <span class="relative flex items-center text-sm text-dark bg-light">
           <span class="flex-grow border-t border-dark/25"></span>
