@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -25,7 +26,7 @@ class RegisterController extends Controller
         ]);
 
         try {
-            User::create([
+            $data = User::create([
                 'username' => $request->username,
                 'name' => $request->name,
                 'email' => $request->email,
@@ -33,7 +34,10 @@ class RegisterController extends Controller
                 'role_id' => Role::where('name', 'user')->first()->id,
             ]);
 
-            return ResponseFormatter::redirected('Registration successful! Please login.', route("auth.login.index"));
+            Auth::login($data);
+
+            // Redirect the user with a success message
+            return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("dashboard.index")); // Adjust route as needed
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

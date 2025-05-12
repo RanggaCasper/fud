@@ -61,6 +61,12 @@
                                 <a href="{{ route('dashboard.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-dashboard-line me-1.5"></i>Dashboard</a>
                             </li>
                             <li>
+                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Favorite</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Review</a>
+                            </li>
+                            <li>
                                 <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Settings</a>
                             </li>
                         </ul>
@@ -73,7 +79,6 @@
                     </div>
                 @else
                     <div class="hidden md:flex gap-2">
-                        <a href="{{ route('auth.register.index') }}" class="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/10 transition text-sm">Sign Up</a>
                         <a href="{{ route('auth.login.index') }}" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition text-sm">Login</a>
                     </div>
                 @endauth

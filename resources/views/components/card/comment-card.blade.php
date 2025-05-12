@@ -1,6 +1,6 @@
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6">
     <!-- Comment Card Content -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             <!-- Profile Image -->
             <img class="w-10 h-10 rounded-full border-2 border-gray-300 lazyload" loading="lazy" data-src="{{ $userImage }}" alt="profile picture">
@@ -11,7 +11,7 @@
         </div>
 
         <!-- Rating -->
-        <div class="flex items-center space-x-1 mb-4">
+        <div class="flex items-center space-x-1 mb-3">
             @for ($i = 1; $i <= 5; $i++)
                 @if ($i <= $rating)
                     <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 22 20">
@@ -26,12 +26,25 @@
         </div>
     </div>
 
+    <div class="border-t w-full opacity-25 mb-3"></div>
+
     <!-- Comment Image -->
-    <img class="w-full h-48 object-cover rounded-lg mb-4" src="{{ $commentImage }}" alt="Food Image">
+    <h5 class="font-semibold mb-3">Nama Resto</h5>
+    <img class="w-full h-48 object-cover rounded-lg mb-3" src="{{ $commentImage }}" alt="Food Image">
 
     <!-- Comment Text -->
-    <p class="text-sm mb-4">
+    <p class="text-sm mb-3">
         {{ $commentText }}
         <span class="text-primary">Read More...</span>
     </p>
+
+    <div class="flex items-center justify-between gap-2">
+        <div>
+            <button class="hover:rounded-full hover:bg-gray-200 hover:text-primary py-0.5 px-1.5"><i class="ri-thumb-up-line text-2xl"></i></button>
+            <span>1 Like</span>
+        </div>
+        <div>
+            <button class="hover:rounded-full hover:bg-gray-200 hover:text-primary py-0.5 px-1.5"><i class="ri ri-more-2-line hover:text-primary text-2xl"></i></button>
+        </div>
+    </div>
 </div>

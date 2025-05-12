@@ -94,3 +94,14 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
+document.addEventListener('click', function(event) {
+    if (event.target.hasAttribute('data-modal-hide')) {
+        const modalId = event.target.getAttribute('data-modal-hide');
+        const modalElement = document.getElementById(modalId);
+
+        if (modalElement) {
+            new Modal(modalElement).hide();
+        }
+    }
+});
