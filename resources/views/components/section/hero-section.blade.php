@@ -11,8 +11,8 @@
     <!-- Content centered -->
     <div class="relative z-20 flex items-center justify-center w-full h-full px-4 md:px-2 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
         <div class="space-y-4">
-            <h5 class="mb-2 text-3xl font-bold text-white">{{ $title }}</h5>
-            <p class="mb-5 text-base text-white sm:text-lg">{{ $description }}</p>
+            <h5 class="mb-2 text-4xl font-bold text-white">{{ $title }}</h5>
+            <p class="mb-5 text-base text-white">{{ $description }}</p>
             <div class="flex items-center justify-center space-x-4 rtl:space-x-reverse">
                 {{ $slot }}
             </div>

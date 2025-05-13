@@ -105,3 +105,58 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
+// Search
+document.getElementById('showSearch').addEventListener('click', function() {
+    var searchContainer = document.getElementById('searchContainer');
+    searchContainer.classList.remove('hidden');
+    
+    setTimeout(function() {
+        searchContainer.style.width = '100%';
+        searchContainer.style.opacity = '1';
+    }, 10);
+});
+
+document.getElementById('closeSearch').addEventListener('click', function() {
+    var searchContainer = document.getElementById('searchContainer');
+    
+    searchContainer.style.width = '0';
+    searchContainer.style.opacity = '0';
+
+    setTimeout(function() {
+        searchContainer.classList.add('hidden');
+    }, 500);
+});
+
+function showSearchResults(query, containerId) {
+    const resultsContainer = document.getElementById(containerId);
+
+    if (!query.trim()) {
+        resultsContainer.classList.add('hidden');
+        return;
+    }
+
+    const results = [
+        'Restoran A',
+        'Restoran B',
+        'Restoran C',
+        'Restoran D',
+    ].filter(result => result.toLowerCase().includes(query.toLowerCase()));
+
+    if (results.length > 0) {
+        resultsContainer.innerHTML = results.map(result => `<div class="p-2 hover:bg-gray-100 cursor-pointer">${result}</div>`).join('');
+        resultsContainer.classList.remove('hidden');
+    } else {
+        resultsContainer.classList.add('hidden');
+    }
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    const query = this.value;
+    showSearchResults(query, 'searchResults');
+});
+
+document.getElementById('searchInputMobile').addEventListener('input', function() {
+    const query = this.value;
+    showSearchResults(query, 'searchResultsMobile');
+});

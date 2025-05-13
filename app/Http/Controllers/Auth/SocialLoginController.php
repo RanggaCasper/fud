@@ -30,6 +30,7 @@ class SocialLoginController extends Controller
             if ($alreadyConnected) {
                 return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account already connected.');
             }
+
             $existingAccount = SocialAccount::where('social_provider', $provider)
                                             ->where('social_id', $socialUser->getId())
                                             ->first();
@@ -37,6 +38,7 @@ class SocialLoginController extends Controller
             if ($existingAccount) {
                 return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account is already linked to another user.');
             }
+
             SocialAccount::create([
                 'user_id' => $user->id,
                 'social_provider' => $provider,
@@ -52,20 +54,17 @@ class SocialLoginController extends Controller
 
             if ($socialLogin) {
                 $user = User::find($socialLogin->user_id);
+
                 Auth::login($user);
+
                 return redirect()->route('home');
             } else {
-                $user = User::where('email', $socialUser->getEmail())->first();
-
-                if (!$user) {
-                    $user = User::create([
-                        'email' => $socialUser->getEmail(),
-                        'name' => $socialUser->getName(),
-                        'avatar' => $socialUser->getAvatar(),
-                        'username' => $this->generateUsername($socialUser),
-                        'role_id' => Role::where('name', 'user')->first()->id,
-                    ]);
-                }
+                $user = User::create([
+                    'name' => $socialUser->getName(),
+                    'avatar' => $socialUser->getAvatar(),
+                    'username' => $this->generateUsername($socialUser),
+                    'role_id' => Role::where('name', 'user')->first()->id,
+                ]);
 
                 SocialAccount::create([
                     'user_id' => $user->id,
@@ -79,6 +78,8 @@ class SocialLoginController extends Controller
                 return redirect()->route('home');
             }
         }
+
+        return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account already connected.');
     }
 
     public function deleteSocialAccount($provider)
@@ -109,7 +110,7 @@ class SocialLoginController extends Controller
         $username = strtolower(implode('', $nameParts));
 
         while (User::where('username', $username)->exists()) {
-            $username = strtolower(implode('', $nameParts)) . Str::random(4);
+            $username = strtolower(implode('', $nameParts)) .'-'. rand(1000, 9999);
         }
 
         return $username;

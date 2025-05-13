@@ -5,7 +5,7 @@
                     'bg-yellow-50 text-warning border-warning'));
 @endphp
 
-<div class="flex items-center p-4 mb-4 text-sm {{ $alertClasses }} border rounded-lg" role="alert">
+<div class="flex items-center p-4 mb-3 text-sm {{ $alertClasses }} border rounded-lg" role="alert">
     <i class="ri ri-information-line text-lg me-1"></i>
     <span class="sr-only">{{ ucfirst($type) }}</span>
     <div>

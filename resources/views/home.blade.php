@@ -29,10 +29,17 @@
 >
     @foreach(range(1, 6) as $i)
         <x-card.service-card 
+            title="Lorem {{ $i }}" 
             slug="lorem" 
-            name="Lorem {{ $i }}" 
-            desc="Hello kamu {{ $i }}" 
-            image="https://b.zmtcdn.com/data/pictures/3/20863533/06fc9c8faa0fcf64c1a56859ae934abb_featured_v2.jpg?output-format=webp" />
+            :rating="rand(3, 5)"
+            :reviews="rand(0, 1000)"
+            location="Jakarta"
+            :distance="rand(1, 10) . ' km'"
+            image="https://picsum.photos/200/300?random={{ $i }}"
+            :isPromotion="rand(0, 1)"
+            :isClosed="rand(0, 1)"
+            :isHalal="rand(0, 1)"
+        />
     @endforeach
 </x-section.restaurant-section>
 

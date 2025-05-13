@@ -79,16 +79,49 @@ html {
     @apply bg-dark hover:bg-dark/80;
 }
 
+.btn-outline-primary {
+    @apply border-2 border-primary text-primary hover:bg-primary/10;
+}
+
+.btn-outline-danger {
+    @apply border-2 border-danger text-danger hover:bg-danger/10;
+}
+
+.btn-outline-success {
+    @apply border-2 border-success text-success hover:bg-success/10;
+}
+
+.btn-outline-warning {
+    @apply border-2 border-warning text-warning hover:bg-warning/10;
+}
+
+.btn-outline-info {
+    @apply border-2 border-info text-info hover:bg-info/10;
+}
+
+.btn-outline-secondary {
+    @apply border-2 border-secondary text-secondary hover:bg-secondary/10;
+}
+
+.btn-outline-light {
+    @apply border-2 border-light text-light hover:bg-light/10;
+}
+
+.btn-outline-dark {
+    @apply border-2 border-dark text-dark hover:bg-dark/10;
+}
+
+
 .btn-sm {
-    @apply text-sm px-2 py-1;
+    @apply text-xs px-3 py-1.5;
 }
 
 .btn-md {
-    @apply text-base px-3 py-1.5;
+    @apply text-sm px-4 py-2;
 }
 
 .btn-lg {
-    @apply text-lg px-4 py-2;
+    @apply text-lg px-5 py-3;
 }
 
 /* Datatable */

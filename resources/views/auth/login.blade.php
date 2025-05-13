@@ -1,8 +1,8 @@
 @extends('layouts.auth')
 
-@section('title', 'Fud!')
+@section('title', config('app.name'))
 
-@section('description', 'Join Fud!, find your next favorite bite!')
+@section('description', 'Join '.config('app.name').', find your next favorite bite!')
 
 @section('content')
 <div class="">
@@ -31,7 +31,7 @@
             </span>
         </div>
         <div class="mt-12">
-            <h5 class="font-medium text-muted">Already have an account?</h5>
+            <h5 class="font-semibold text-dark text-sm">Already have an account?</h5>
         </div>
         <button type="button" data-modal-target="loginModal" data-modal-toggle="loginModal" class="text-primary border-2 border-primary gap-2 shadow-sm bg-white hover:bg-primary/10 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2">
             Login
@@ -54,7 +54,8 @@
             </div>
             <div class="p-4 flex flex-col md:w-sm mx-auto">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-primary">Create Account</h2>
+                    <h5 class="text-4xl font-bold text-primary">Create Account</h5>
+                    <p class="text-black font-semibold text-sm">Explore. Review. Devour. Join Today!</p>
                 </div>
                 <form action="{{ route('auth.register.store') }}" method="POST">
                     @csrf
@@ -87,21 +88,32 @@
                     </div>
                     <div class="mb-3">
                         <x-input 
-                            label="Password"
-                            id="registerPassword"
-                            name="password" 
-                            placeholder="Password" 
-                            type="password"
+                            label="Phone Number"
+                            id="registerPhone"
+                            name="phone" 
+                            placeholder="Phone Number" 
+                            type="number"
                         />
                     </div>
-                    <div class="mb-3">
-                        <x-input 
-                            label="Confirm Password"
-                            id="registerPasswordConfirmation"
-                            name="password_confirmation"
-                            placeholder="Password" 
-                            type="password"
-                        />
+                    <div class="grid md:grid-cols-2 md:gap-2">
+                        <div class="mb-3">
+                            <x-input 
+                                label="Password"
+                                id="registerPassword"
+                                name="password" 
+                                placeholder="Password" 
+                                type="password"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <x-input 
+                                label="Confirm Password"
+                                id="registerPasswordConfirmation"
+                                name="password_confirmation"
+                                placeholder="Password" 
+                                type="password"
+                            />
+                        </div>
                     </div>
                     <div class="flex items-center mb-3">
                         <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-sm focus:ring-primary focus:ring-2">
@@ -134,7 +146,8 @@
             </div>
             <div class="p-4 flex flex-col md:w-sm mx-auto">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-center text-primary">Login to Fud!</h2>
+                    <h5 class="text-4xl font-bold text-primary">Login to {{ config('app.name') }}</h5>
+                    <p class="text-black font-semibold text-sm">Welcome Back, fud!</p>
                 </div>
                 <a href="{{ route('auth.login.social', ['provider' => 'google']) }}" class="text-dark gap-2 shadow-sm bg-white hover:bg-primary/10 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-2">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 48 48" class="LgbsSe-Bz112c"><g><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path><path fill="none" d="M0 0h48v48H0z"></path></g></svg>
@@ -157,7 +170,7 @@
                         <x-input 
                             label="Phone, email or username"
                             id="loginUsername"
-                            name="username" 
+                            name="input" 
                             placeholder="Enter your phone, email or username" 
                             type="text"
                         />
@@ -195,7 +208,7 @@
                     <lord-icon src="https://cdn.lordicon.com/azxkyjta.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
                     <div class="pt-2 mx-5 mt-4 fs-15">
                         <h4 class="text-2xl font-semibold">Oops!!</h4>
-                        <p class="mx-4 mb-0 text-muted">{{ session('swalError') }}</p>
+                        <p class="mx-4 mb-0 text-dark">{{ session('swalError') }}</p>
                     </div>
                 </div>
             `,
@@ -214,7 +227,7 @@
                     <lord-icon src="https://cdn.lordicon.com/mhnfcfpf.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
                     <div class="pt-2 mx-5 mt-4 fs-15">
                         <h4 class="text-2xl font-semibold">Success!!</h4>
-                        <p class="mx-4 mb-0 text-muted">{{ session('swalSuccess') }}</p>
+                        <p class="mx-4 mb-0 text-dark">{{ session('swalSuccess') }}</p>
                     </div>
                 </div>
             `,

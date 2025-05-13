@@ -34,7 +34,7 @@
     <div class="flex flex-col items-start justify-center p-8 text-light lg:w-5/12 lg:p-16 overflow-y-auto h-screen">
         <div class="w-full max-w-md mx-auto">
             <h2 class="text-4xl font-bold text-primary">@yield('title', 'Masuk')</h2>
-            <p class="mb-6 font-medium text-black">@yield('description', 'Masuk dengan akun yang telah Kamu daftarkan.')</p>
+            <p class="text-black font-semibold text-sm mb-6">@yield('description', 'Masuk dengan akun yang telah Kamu daftarkan.')</p>
             @yield('content')
         </div>
     </div>

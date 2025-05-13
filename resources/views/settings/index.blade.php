@@ -14,6 +14,13 @@
     <form action="{{ route('settings.update.profile') }}" method="POST" enctype="multipart/form-data" data-reset="false">
         @csrf
         @method('PUT')
+        @if (!Auth::user()->email && !Auth::user()->phone)
+            <x-alert type="warning" message="Your email and phone number have not been set yet. Please set both." />
+        @elseif (!Auth::user()->email)
+            <x-alert type="warning" message="Your email has not been set yet. Please set your email." />
+        @elseif (!Auth::user()->phone)
+            <x-alert type="warning" message="Your phone number has not been set yet. Please set your phone number." />
+        @endif
         <div class="grid md:grid-cols-2 gap-3 mb-3">
             <x-input 
                 label="Name"
@@ -38,10 +45,19 @@
                 name="email" 
                 placeholder="Email" 
                 value="{{ auth()->user()->email }}"
-                type="text"
-                :disabled="true"
+                type="email"
+                :required="false"
             />
-             <x-input 
+            <x-input 
+                label="Phone"
+                id="phone"
+                name="phone" 
+                placeholder="Phone" 
+                value="{{ auth()->user()->phone }}"
+                type="number"
+                :required="false"
+            />
+            <x-input 
                 label="Created At"
                 id="created_at"
                 name="created_at"

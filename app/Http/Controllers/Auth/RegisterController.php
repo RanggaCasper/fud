@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
-    public function index()
-    {
-        return view('auth.register');
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -35,9 +30,9 @@ class RegisterController extends Controller
             ]);
 
             Auth::login($data);
-
-            // Redirect the user with a success message
-            return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("dashboard.index")); // Adjust route as needed
+            $request->session()->regenerate();
+            
+            return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("dashboard.index"));
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

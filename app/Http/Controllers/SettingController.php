@@ -27,11 +27,15 @@ class SettingController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $this->user->id,
+            'phone' => 'nullable|string|max:15',
         ]);
 
         try {
             $this->user->update([
                 'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
             ]);
             return ResponseFormatter::success('Profile updated successfully.');
         } catch (\Exception $e) {
