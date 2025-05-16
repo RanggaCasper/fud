@@ -1,15 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\User\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
 
-Route::get('/list', function () {
-    return view('list');
-})->name('list');
+Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
 Route::get('/detail', function () {
     return view('detail');
@@ -59,3 +55,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
 });
 
 Route::post('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'store'])->name('logout');
+
+// SerpApiService example
+Route::get('/serpapi', [\App\Http\Controllers\Api\SerpApiController::class, 'search'])->name('serapi.search');

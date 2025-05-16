@@ -1,0 +1,79 @@
+// Role
+Table roles {
+    id int [pk]
+    name varchar
+}
+
+// User
+Table users {
+    id int [pk]
+    name varchar
+    username varchar
+    phone varchar
+    email varchar
+    avatar varchar
+    password varchar
+    role_id int [ref: > roles.id]
+}
+
+Table social_accounts {
+    id int [pk]
+    social_provider varchar
+    social_id varchar
+    user_id int [ref: > users.id]
+}
+
+Table restaurants {
+    id int [pk]
+    name varchar //title
+    address varchar // address
+    latitude float // latitude
+    longitude float // longitude
+    phone varchar // phone
+    thumbnail varchar // thumbnail
+    website varchar // website
+    price_range varchar // price
+    rating float // rating
+    reviews int // reviews
+    is_halal boolean // extensions -> offerings [Halal food]
+    user_id int [ref: > users.id] // owner [status verifed]
+}
+
+Table restaurant_photos {
+    id int [pk]
+    image varchar // image
+    video varchar // video
+    restaurant_id int [ref: > restaurants.id]
+}
+
+Table resstaurant_reviews {
+    id int [pk]
+    rating int // rating
+    comment varchar // snippet
+    source varchar // source [user, google]
+    link varchar // link
+    user_id int [ref: > users.id] // reviewer [status verified]
+    restaurant_id int [ref: > restaurants.id]
+    created_at datetime // iso_date
+    updated_at datetime // iso_date_of_last_edit
+}
+
+Table restaurant_opening_hours { // operating_hours
+    id int [pk]
+    day varchar // day [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+    operating_hours varchar // operating_hours [open, close]
+    restaurant_id int [ref: > restaurants.id]
+}
+
+Table resstaurant_reviews_likes {
+    id int [pk]
+    user_id int [ref: > users.id]
+    review_id int [ref: > resstaurant_reviews.id]
+}
+
+Table resstaurant_reviews_replies {
+    id int [pk]
+    comment varchar
+    user_id int [ref: > users.id] // owner [status verified]
+    review_id int [ref: > resstaurant_reviews.id]
+}

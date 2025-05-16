@@ -8,21 +8,32 @@
     'distance' => null,
     'isPromotion' => true,
     'isClosed' => true,
-    'isHalal' => true
+    'isHalal' => true,
+    'score' => null,
 ])
 
-<div class="bg-white rounded-lg shadow-md">
-    <div class="p-3 relative rounded-lg">
-       <div class="mb-2">
-            <a href="/detail" class="relative">
-                <!-- Conditionally apply grayscale if the item is closed -->
-                <img data-src="{{ $image }}" loading="lazy" class="lazyload h-56 w-full object-cover rounded-lg" alt="{{ $title }}">
+@php
+    $cardClasses = $isClosed ? 'bg-gray-100 pointer-events-none' : 'bg-white';
+    $imageClasses = $isClosed ? 'filter' : '';
+    $textColor = $isClosed ? 'text-gray-500' : 'text-dark';
+@endphp
 
+<div data-aos="zoom-in-up" class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
+    <div class="p-3 relative rounded-lg">
+        <div class="mb-2 relative">
+            <a href="{{ $isClosed ? '#' : '/detail' }}" class="relative block">
+                <img data-src="{{ $image }}" loading="lazy"
+                     class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
+                     alt="{{ $title }}">
+
+                <!-- Overlay gradient -->
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-16 rounded-b-lg"></div>
 
-                <!-- Closed Badge -->
+                <!-- Closed Full Overlay -->
                 @if ($isClosed)
-                    <div class="absolute top-0 left-0 bg-danger px-3 pt-0.5 pb-1 text-xs rounded-br-lg text-white font-semibold">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg">
+                    </div>
+                    <div class="absolute top-0 left-0 bg-danger px-3 pt-0.5 pb-1 text-xs rounded-tl-lg rounded-br-lg text-white font-semibold">
                         Closed
                     </div>
                 @endif
@@ -35,7 +46,8 @@
 
                 @if($isHalal)
                     <div class="absolute bottom-2 right-0">
-                        <img src="https://taucocapmeong.com/assets/img/logo_halal.png" class="w-12 h-12 object-contain" alt="Logo">
+                        <img src="https://taucocapmeong.com/assets/img/logo_halal.png"
+                             class="w-12 h-12 object-contain" alt="Logo Halal">
                     </div>
                 @endif
             </a>
@@ -43,7 +55,10 @@
 
         <div class="flex items-start justify-between">
             <div>
-                <a href="/detail" class="text-lg font-bold text-dark mb-2 line-clamp-2 cursor-pointer hover:text-primary">{{ $title }}</a>
+                <a href="{{ $isClosed ? '#' : '/detail' }}"
+                   class="text-lg font-bold mb-2 line-clamp-1 cursor-pointer hover:text-primary {{ $textColor }}">
+                    {{ $title }}
+                </a>
             </div>
             <div>
                 <span class="inline-block px-3 py-1 text-xs rounded-lg bg-gray-200/50">
@@ -59,13 +74,14 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+        <div class="grid grid-cols-2 gap-2 text-sm {{ $textColor }}">
             <div class="flex items-center">
                 <span class="line-clamp-1">{{ $location }}</span>
             </div>
             
-            <div class="flex items-center justify-end">
+            <div class="flex items-center justify-end gap-1">
                 <span>{{ $distance }}</span>
+                <span>{{ $score }}</span>
             </div>
         </div>
     </div>

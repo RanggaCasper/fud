@@ -44,7 +44,7 @@ html {
 }
 
 .btn {
-    @apply text-white font-medium rounded-lg text-center transition-all duration-300;
+    @apply text-white font-medium rounded-lg text-center transition-all duration-100;
 }
 
 .btn-primary {
@@ -80,37 +80,36 @@ html {
 }
 
 .btn-outline-primary {
-    @apply border-2 border-primary text-primary hover:bg-primary/10;
+    @apply border-2 border-primary text-dark hover:bg-primary hover:text-white;
 }
 
 .btn-outline-danger {
-    @apply border-2 border-danger text-danger hover:bg-danger/10;
+    @apply border-2 border-danger text-dark hover:bg-danger hover:text-white;
 }
 
 .btn-outline-success {
-    @apply border-2 border-success text-success hover:bg-success/10;
+    @apply border-2 border-success text-dark hover:bg-success hover:text-white;
 }
 
 .btn-outline-warning {
-    @apply border-2 border-warning text-warning hover:bg-warning/10;
+    @apply border-2 border-warning text-dark hover:bg-warning hover:text-white;
 }
 
 .btn-outline-info {
-    @apply border-2 border-info text-info hover:bg-info/10;
+    @apply border-2 border-info text-dark hover:bg-info hover:text-white;
 }
 
 .btn-outline-secondary {
-    @apply border-2 border-secondary text-secondary hover:bg-secondary/10;
+    @apply border-2 border-secondary text-dark hover:bg-secondary hover:text-white;
 }
 
 .btn-outline-light {
-    @apply border-2 border-light text-light hover:bg-light/10;
+    @apply border-2 border-light text-dark hover:bg-light hover:text-white;
 }
 
 .btn-outline-dark {
-    @apply border-2 border-dark text-dark hover:bg-dark/10;
+    @apply border-2 border-dark text-dark hover:bg-dark hover:text-white;
 }
-
 
 .btn-sm {
     @apply text-xs px-3 py-1.5;
@@ -122,6 +121,20 @@ html {
 
 .btn-lg {
     @apply text-lg px-5 py-3;
+}
+
+.btn-icon {
+    @apply inline-flex items-center justify-center gap-0.5;
+}
+
+/* Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
 }
 
 /* Datatable */

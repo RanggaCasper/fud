@@ -2,6 +2,8 @@ import './bootstrap';
 import './action.js';
 import './swiper.init.js';
 import './datatable.js';
+import './AOS.js';
+import './waypoints.js';
 import 'flowbite';
 
 import Swal from 'sweetalert2';

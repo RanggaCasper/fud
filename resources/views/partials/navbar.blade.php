@@ -1,4 +1,4 @@
-<nav class="bg-white px-4 md:px-2 border-b border-gray-200 fixed top-0 left-0 right-0 z-30 shadow">
+<nav class="bg-white px-4 md:px-2 border-b border-gray-200 fixed top-0 left-0 right-0 z-30">
     <div class="py-4 max-w-screen-xl mx-auto flex items-center justify-between space-x-4">
 
         <!-- Logo + Search -->
@@ -46,7 +46,7 @@
             <!-- Menu Navigasi (Tombol Dropdown atau Menu) -->
             <div id="main-nav" class="hidden md:flex items-center space-x-6 text-sm text-black font-medium">
                 <a href="{{ route('home') }}" class="nav-link">Home</a>
-                <a href="{{ route('list') }}" class="nav-link">Restoran</a>
+                <a href="{{ route('list') }}" class="nav-link">Restaurant</a>
                 <a href="#review" class="nav-link">Review</a>
                 <a href="#download" class="nav-link">Download</a>
                 <a href="#">Work with Us</a>

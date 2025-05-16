@@ -6,7 +6,7 @@
     :videoSource="asset('assets/video/IMG_44891.mp4')"
     title="Are you Hungry?"
     description="Discover your next favorite meal, whether you're craving a quick snack or a full-course feast."
-    scrollToId="#restoran"
+    scrollToId="#restaurant"
 >
     <div class="flex space-x-2">
         <a href="#">
@@ -27,20 +27,21 @@
     title="Restoran"
     description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
 >
-    @foreach(range(1, 6) as $i)
-        <x-card.service-card 
-            title="Lorem {{ $i }}" 
-            slug="lorem" 
-            :rating="rand(3, 5)"
-            :reviews="rand(0, 1000)"
-            location="Jakarta"
-            :distance="rand(1, 10) . ' km'"
-            image="https://picsum.photos/200/300?random={{ $i }}"
-            :isPromotion="rand(0, 1)"
-            :isClosed="rand(0, 1)"
-            :isHalal="rand(0, 1)"
-        />
-    @endforeach
+@foreach($ranked->take(6) as $restaurant)
+    <x-card.service-card
+        :title="$restaurant->name"
+        :slug="Str::slug($restaurant->name)"
+        :rating="$restaurant->rating"
+        :reviews="$restaurant->reviews"
+        :location="$restaurant->address"
+        :distance="$restaurant->distance . 'km'"
+        :image="$restaurant->thumbnail"
+        :isPromotion="false"
+        :isClosed="$restaurant->isClosed()"
+        :isHalal="$restaurant->is_halal"
+    />
+@endforeach
+
 </x-section.restaurant-section>
 
 @php
