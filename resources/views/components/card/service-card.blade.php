@@ -75,11 +75,11 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2 text-sm {{ $textColor }}">
-            <div class="flex items-center">
+            <div class="flex items-center text-secondary">
                 <span class="line-clamp-1">{{ $location }}</span>
             </div>
             
-            <div class="flex items-center justify-end gap-1">
+            <div class="flex items-center text-secondary justify-end gap-1">
                 <span>{{ $distance }}</span>
                 <span>{{ $score }}</span>
             </div>

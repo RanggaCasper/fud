@@ -12,25 +12,29 @@ class SerpApiController extends Controller
     public function search(Request $request)
     {
         $query = 'restaurant';
-        $latitude = '-8.7980879';
-        $longitude = '115.2231997';
+        $latitude = '-8.7998524';
+        $longitude = '115.2079624';
         $zoom = '11';
 
         $serpApiService = new \App\Services\SerpApiService();
 
-        $start = 0; // Start parameter for pagination
-        $processedResultsCount = 0; // Counter to track the number of results processed
+        $start = 0;
+        $processedResultsCount = 0;
+        $loopCount = 0; // counter loop
+        $maxLoops = 5;
 
-        // Initial API call
         $results = $serpApiService->searchPlaces($query, $latitude, $longitude, $zoom, $start);
 
-        while ($results) {
+        while ($results && $loopCount < $maxLoops) {
             foreach ($results['local_results'] as $restaurantData) {
                 $operatingHours = $restaurantData['operating_hours'] ?? [];
 
                 $isHalal = false;
-                if (isset($restaurantData['offerings']) && is_array($restaurantData['offerings'])) {
-                    $isHalal = in_array('Halal food', $restaurantData['offerings']);
+                foreach ($restaurantData['extensions'] ?? [] as $extension) {
+                    if (isset($extension['offerings']) && is_array($extension['offerings'])) {
+                        $isHalal = in_array('Halal food', $extension['offerings']);
+                        break;
+                    }
                 }
 
                 $thumbnailUrl = strstr($restaurantData['thumbnail'], '=w', true) ?: $restaurantData['thumbnail'];
@@ -61,17 +65,16 @@ class SerpApiController extends Controller
                 }
 
                 $processedResultsCount++;
-
-                // After processing 20 results, increase the start index for pagination
-                if ($processedResultsCount % 20 === 0) {
-                    $start += 20; // Increase the start index by 20 for the next batch
-                    $results = $serpApiService->searchPlaces($query, $latitude, $longitude, $zoom, $start);
-                }
             }
 
-            // Exit loop if there are no more results to process
-            if ($processedResultsCount % 20 !== 0) {
-                break;
+            $loopCount++; // tambahkan loop counter
+
+            // Pagination: jika sudah proses kelipatan 20, ambil batch selanjutnya
+            if ($processedResultsCount % 20 === 0 && $loopCount < $maxLoops) {
+                $start += 20;
+                $results = $serpApiService->searchPlaces($query, $latitude, $longitude, $zoom, $start);
+            } else {
+                break; // keluar jika bukan kelipatan 20 atau sudah maksimum loop
             }
         }
 
