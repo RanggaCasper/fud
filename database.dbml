@@ -77,3 +77,35 @@ Table resstaurant_reviews_replies {
     user_id int [ref: > users.id] // owner [status verified]
     review_id int [ref: > resstaurant_reviews.id]
 }
+
+
+Table ads {
+    id int [pk]
+    title varchar // title
+    source varchar // image/video
+    type enum('video', 'image') // type
+    start_date datetime // start_date
+    end_date datetime // end_date
+}
+
+Table ads_clicks {
+    id int [pk]
+    ip_address varchar // ip_address
+    ad_id int [ref: > ads.id]
+    created_at datetime // iso_date
+}
+
+Table ads_views {
+    id int [pk]
+    ip_address varchar // ip_address
+    ad_id int [ref: > ads.id]
+    created_at datetime // iso_date
+}
+
+Table ads_pricing {
+    id int [pk]
+    ad_id int [ref: > ads.id]
+    price float // price
+    currency varchar // currency
+    created_at datetime // iso_date
+}

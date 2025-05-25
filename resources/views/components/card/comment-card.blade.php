@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6">
+<div class="mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6">
     <!-- Comment Card Content -->
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">

@@ -11,6 +11,19 @@ Route::get('/detail', function () {
     return view('detail');
 });
 
+Route::get('/my-reviews', function () {
+    return view('panel.my-reviews');
+})->name('my-reviews.index');
+
+Route::get('/my-favorite', function () {
+    $ranked = \App\Models\Restaurant::all();
+    return view('panel.my-favorite', compact('ranked'));
+})->name('my-favorite.index');
+
+Route::get('/business', function () {
+    return view('panel.business');
+})->name('business.index');
+
 Route::get('/dashboard', function () {
     return view('user.dashboard');
 })->name('dashboard.index');
@@ -24,8 +37,7 @@ Route::prefix('auth')->as('auth.')->middleware('guest')->group(function () {
         Route::get('{provider}/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
     });
 
-    Route::get('disconnect/{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'deleteSocialAccount'])
-        ->name('disconnect.social');
+    Route::get('disconnect/{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'deleteSocialAccount'])->name('disconnect.social');
 
     Route::prefix('register')->as('register.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('index');
