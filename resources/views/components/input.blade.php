@@ -17,7 +17,7 @@
             class="w-full text-sm text-dark rounded-lg border focus:border-primary focus:border-2 p-2.5 
                 {{ $type === 'password' ? 'password-field' : '' }} 
                 {{ $disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-400' : '' }}" 
-            {{ $attr }} 
+            {{ $attributes }} 
             @if($disabled) disabled @endif
         >
         @if ($type === 'password' && !$disabled)

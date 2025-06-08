@@ -21,7 +21,7 @@
 <div data-aos="zoom-in-up" class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
     <div class="p-3 relative rounded-lg">
         <div class="mb-2 relative">
-            <a href="{{ $isClosed ? '#' : '/detail' }}" class="relative block">
+            <a href="{{ $isClosed ? '#' : route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
                 <img data-src="{{ $image }}" loading="lazy"
                      class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                      alt="{{ $title }}">

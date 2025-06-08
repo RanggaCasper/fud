@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Restaurant;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
-    protected $tables = 'restaurants';
+    protected $table = 'restaurants';
 
     protected $guarded = ['id'];
 
@@ -19,7 +19,20 @@ class Restaurant extends Model
 
     public function operatingHours()
     {
-        return $this->hasMany(RestaurantOperatingHours::class);
+        return $this->hasMany(OperatingHours::class);
+    }
+
+    public function offerings()
+    {
+        return $this->hasMany(Offering::class);
+    }
+
+    public function getTodayOperatingHours()
+    {
+        $timezone = session('timezone', 'Asia/Jakarta');
+        $today = \Carbon\Carbon::now($timezone)->format('l');
+
+        return $this->operatingHours()->where('day', $today)->first()->operating_hours;
     }
 
     public function isClosed()

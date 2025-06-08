@@ -32,7 +32,7 @@ class RegisterController extends Controller
             Auth::login($data);
             $request->session()->regenerate();
             
-            return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("dashboard.index"));
+            return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("home"));
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

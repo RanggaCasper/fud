@@ -15,9 +15,9 @@
             icon="https://cdn.lordicon.com/tqvrfslk.json" title="Restoran"
             description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren.">
            @foreach($ranked as $restaurant)
-                <x-card.service-card
+                 <x-card.service-card
                     :title="$restaurant->name"
-                    :slug="Str::slug($restaurant->name)"
+                    :slug="$restaurant->slug"
                     :rating="$restaurant->rating"
                     :reviews="$restaurant->reviews"
                     :location="$restaurant->address"
@@ -25,7 +25,9 @@
                     :image="$restaurant->thumbnail"
                     :isPromotion="false"
                     :isClosed="$restaurant->isClosed()"
-                    :isHalal="$restaurant->is_halal"
+                    :isHalal="($restaurant->offerings->contains(function ($offering) {
+                        return str_contains(strtolower($offering->name), 'halal');
+                    }))"
                 />
             @endforeach
         </x-section.restaurant-section>

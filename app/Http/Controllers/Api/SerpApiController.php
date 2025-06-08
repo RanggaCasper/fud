@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Restaurant;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
+use App\Models\Restaurant\Offering;
 use App\Http\Controllers\Controller;
+
+use App\Models\Restaurant\Restaurant;
 
 class SerpApiController extends Controller
 {
@@ -27,21 +30,24 @@ class SerpApiController extends Controller
 
         while ($results && $loopCount < $maxLoops) {
             foreach ($results['local_results'] as $restaurantData) {
-                $operatingHours = $restaurantData['operating_hours'] ?? [];
+                $offerings = [];
 
-                $isHalal = false;
-                foreach ($restaurantData['extensions'] ?? [] as $extension) {
-                    if (isset($extension['offerings']) && is_array($extension['offerings'])) {
-                        $isHalal = in_array('Halal food', $extension['offerings']);
-                        break;
+                foreach ($restaurantData['extensions'] as $extension) {
+                    if (isset($extension['offerings'])) {
+                        $offerings = $extension['offerings'];  // Menyimpan penawaran yang ditemukan
+                        break;  // Berhenti mencari setelah menemukan offerings pertama
                     }
                 }
+
+                $operatingHours = $restaurantData['operating_hours'] ?? [];
+                $offerings = $restaurantData['extensions'][4]['offerings'] ?? []; // Mengambil offerings dari index yang tepat
 
                 $thumbnailUrl = strstr($restaurantData['thumbnail'], '=w', true) ?: $restaurantData['thumbnail'];
 
                 $restaurant = Restaurant::firstOrCreate(
                     [
                         'name' => $restaurantData['title'],
+                        'slug' => Str::slug($restaurantData['title']),
                         'address' => $restaurantData['address'],
                     ],
                     [
@@ -53,14 +59,23 @@ class SerpApiController extends Controller
                         'rating' => $restaurantData['rating'],
                         'reviews' => $restaurantData['reviews'],
                         'price_range' => $restaurantData['price'] ?? null,
-                        'is_halal' => $isHalal,
                     ]
                 );
 
+                // Menyimpan Operating Hours
                 foreach ($operatingHours as $day => $hours) {
                     $restaurant->operatingHours()->firstOrCreate(
                         ['day' => ucfirst($day)],
                         ['operating_hours' => $hours]
+                    );
+                }
+
+                // Menyimpan Offerings (Penawaran) ke Tabel Pivot
+                foreach ($offerings as $offering) {
+
+                    // Menghubungkan restoran dengan offering yang disimpan di tabel pivot
+                    $restaurant->offerings()->firstOrCreate(
+                        ['name' => $offering]
                     );
                 }
 

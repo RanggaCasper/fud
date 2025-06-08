@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Restaurant;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RestaurantOperatingHours extends Model
+class OperatingHours extends Model
 {
     protected $table = 'restaurant_operating_hours';
 

@@ -7,16 +7,12 @@ Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
-Route::get('/detail', function () {
-    return view('detail');
-});
-
 Route::get('/my-reviews', function () {
     return view('panel.my-reviews');
 })->name('my-reviews.index');
 
 Route::get('/my-favorite', function () {
-    $ranked = \App\Models\Restaurant::all();
+    $ranked = \App\Models\Restaurant\Restaurant::all();
     return view('panel.my-favorite', compact('ranked'));
 })->name('my-favorite.index');
 
@@ -27,6 +23,8 @@ Route::get('/business', function () {
 Route::get('/dashboard', function () {
     return view('user.dashboard');
 })->name('dashboard.index');
+
+Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant.index');
 
 Route::prefix('auth')->as('auth.')->middleware('guest')->group(function () {
     Route::prefix('login')->as('login.')->group(function () {
@@ -53,6 +51,7 @@ Route::prefix('settings')->as('settings.')->group(function () {
 });
 
 Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
     Route::prefix('user')->as('user.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\User\UserController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\User\UserController::class, 'get'])->name('get');
@@ -61,9 +60,19 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::put('/{id}', [\App\Http\Controllers\Admin\User\UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\User\UserController::class, 'destroy'])->name('destroy');
     });
+
+     Route::prefix('restaurant')->as('restaurant.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'get'])->name('get');
+        Route::post('/fetch', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\Restaurant\RestaurantController::class, 'destroy'])->name('destroy');
+    });
 });
 
 Route::post('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'store'])->name('logout');
 
 // SerpApiService example
-Route::get('/serpapi', [\App\Http\Controllers\Api\SerpApiController::class, 'search'])->middleware('checkRole:admin')->name('serapi.search');
+Route::get('/serpapi', [\App\Http\Controllers\Api\SerpApiController::class, 'search'])->name('serapi.search');

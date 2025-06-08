@@ -6,7 +6,6 @@ import './AOS.js';
 import './waypoints.js';
 import 'flowbite';
 
-import Swal from 'sweetalert2';
 
 // Lazy Loading
 const images = document.querySelectorAll('.lazyload');

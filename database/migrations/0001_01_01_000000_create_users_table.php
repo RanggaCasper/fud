@@ -38,6 +38,21 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('point_levels', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('target_points');
+            $table->timestamps();
+        });
+
+        Schema::create('user_points', function (Blueprint $table) {
+            $table->id();
+            $table->integer('points')->default(0);
+            $table->foreignId('point_level_id')->constrained('point_levels')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -48,5 +63,7 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('point_levels');
+        Schema::dropIfExists('user_points');
     }
 };

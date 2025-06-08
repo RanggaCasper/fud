@@ -65,12 +65,21 @@ $(document).on('submit', 'form', function(e) {
         },
         error: function(xhr) {
             let response = xhr.responseJSON;
+            // console.info(response.message);
             let errors = response.errors;
 
             // Clear existing error messages
             $('.error-message').remove();
 
-            if (errors && Object.keys(errors).length > 0) {
+            if (response.message) {
+                if (response.errors) {
+                    $(e.target).before(generateAlertHtml('danger', response.errors));
+                } else {
+                    $(e.target).before(generateAlertHtml('danger', response.message));
+                }
+            }
+
+            if (errors && typeof errors === 'object' && Object.keys(errors).length > 0) {
                 // Iterate over field errors and display them below the inputs
                 $.each(errors, function(field, message) {
                     let input = $(`[name="${field}"]`);
@@ -81,9 +90,10 @@ $(document).on('submit', 'form', function(e) {
                         <div class="error-message text-xs text-danger mt-1">${message[0]}</div>
                     `);
                 });
-            } else if (response.message) {
-                $(e.target).before(generateAlertHtml('danger', response.message));
-            }
+            } 
+
+            // $(e.target).before(generateAlertHtml('danger', response.message));
+            
         },
         complete: function() {  
             button.prop('disabled', false);

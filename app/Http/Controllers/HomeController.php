@@ -2,87 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Restaurant;
 use App\Services\SAWService;
-use Illuminate\Http\Request;
+use App\Models\Restaurant\Restaurant;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $restaurants = Restaurant::all();
-
-        $userLat = session('latitude');
-        $userLng = session('longitude');
-
-        if (!$userLat || !$userLng) {
-            return view('home', ['ranked' => $restaurants]);
-        }
-
-        $restaurantData = $restaurants->map(function ($restaurant) use ($userLat, $userLng) {
-            $distance = $this->haversineDistance(
-                $userLat,
-                $userLng,
-                $restaurant->latitude,
-                $restaurant->longitude
-            );
-
-            $restaurant->distance = round($distance, 2); 
-            $restaurant->is_halal = $restaurant->is_halal ? 1 : 0;
-            $restaurant->is_closed = $restaurant->isClosed() ? 1 : 0;
-
-            return $restaurant;
-        });
-        
-        $weights = [
-            'rating'    => 0.235,
-            'reviews'   => 0.118,
-            'distance'  => 0.588,
-            'is_halal'  => 0.029,
-            'is_closed' => 0.029,
-        ];
-
-
-        $criteriaTypes = [
-            'rating' => 'benefit',
-            'reviews' => 'benefit',
-            'distance' => 'cost',
-            'is_halal' => 'benefit',
-            'is_closed' => 'benefit',
-        ];
-
-        $sawService = new SAWService();
-        $ranked = $sawService->calculate($restaurantData, $weights, $criteriaTypes);
-
-        return view('home', compact('ranked'));
+        return $this->getRankedRestaurants('home');
     }
 
     public function list()
     {
-        $restaurants = Restaurant::all();
+        return $this->getRankedRestaurants('list');
+    }
 
+    private function getRankedRestaurants($view)
+    {
+        $restaurants = Restaurant::all();
         $userLat = session('latitude');
         $userLng = session('longitude');
 
+        // If the user's location is not available, return the unranked list
         if (!$userLat || !$userLng) {
-            return view('list', ['ranked' => $restaurants]);
+            return view($view, ['ranked' => $restaurants]);
         }
 
+        // Process restaurant data with distances and other attributes
         $restaurantData = $restaurants->map(function ($restaurant) use ($userLat, $userLng) {
-            $distance = $this->haversineDistance(
-                $userLat,
-                $userLng,
-                $restaurant->latitude,
-                $restaurant->longitude
-            );
-
-            $restaurant->distance = round($distance, 2); 
-            $restaurant->is_halal = $restaurant->is_halal ? 1 : 0;
-            $restaurant->is_closed = $restaurant->isClosed() ? 1 : 0;
-
-            return $restaurant;
+            return $this->processRestaurantData($restaurant, $userLat, $userLng);
         });
-        
+
+        // Weights for SAW algorithm
         $weights = [
             'rating'    => 0.235,
             'reviews'   => 0.118,
@@ -90,7 +41,6 @@ class HomeController extends Controller
             'is_halal'  => 0.029,
             'is_closed' => 0.029,
         ];
-
 
         $criteriaTypes = [
             'rating' => 'benefit',
@@ -100,16 +50,27 @@ class HomeController extends Controller
             'is_closed' => 'benefit',
         ];
 
+        // Calculate rankings using SAWService
         $sawService = new SAWService();
         $ranked = $sawService->calculate($restaurantData, $weights, $criteriaTypes);
 
-        return view('list', compact('ranked'));
+        // Return the ranked list to the specified view
+        return view($view, compact('ranked'));
+    }
+
+    private function processRestaurantData($restaurant, $userLat, $userLng)
+    {
+        $distance = $this->haversineDistance($userLat, $userLng, $restaurant->latitude, $restaurant->longitude);
+        $restaurant->distance = round($distance, 2);
+        $restaurant->is_halal = $restaurant->is_halal ? 1 : 0;
+        $restaurant->is_closed = $restaurant->isClosed() ? 1 : 0;
+
+        return $restaurant;
     }
 
     private function haversineDistance($lat1, $lon1, $lat2, $lon2)
     {
         $earthRadius = 6371; // km
-
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 

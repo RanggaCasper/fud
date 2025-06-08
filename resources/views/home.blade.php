@@ -24,8 +24,8 @@
 <x-section.restaurant-section 
     backgroundImage="https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg" 
     icon="https://cdn.lordicon.com/tqvrfslk.json"
-    title="Restoran"
-    description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
+    title="Dine Around You"
+    description="Popular picks, tasty bites, near you. All ready to explore!"
 >
 @foreach($ranked->take(6) as $restaurant)
     <x-card.service-card
@@ -38,7 +38,9 @@
         :image="$restaurant->thumbnail"
         :isPromotion="false"
         :isClosed="$restaurant->isClosed()"
-        :isHalal="$restaurant->is_halal"
+        :isHalal="($restaurant->offerings->contains(function ($offering) {
+            return str_contains(strtolower($offering->name), 'halal');
+        }))"
     />
 @endforeach
 
@@ -85,32 +87,35 @@
     sectionId="review"
     iconSrc="https://cdn.lordicon.com/abhwievu.json"
     title="Every Bite Has a Story"
-    description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
+    description="Real reviews, honest bites. See what people are loving to eat!"
     :comments="$comments" />
 
 @php
     $faqs = [
         [
-            'question' => 'What is Flowbite?',
-            'answer' => 'Flowbite is an open-source library of interactive components built on top of Tailwind CSS...',
-            'link' => '/docs/getting-started/introduction/'
+            'question' => 'What is the purpose of this website?',
+            'answer' => 'This website is designed to help you discover and explore the best restaurants in your area based on personalized recommendations and user reviews.',
         ],
         [
-            'question' => 'Is there a Figma file available?',
-            'answer' => 'Flowbite is first conceptualized and designed using the Figma software...',
-            'link' => 'https://flowbite.com/figma/'
+            'question' => 'How are restaurant recommendations made?',
+            'answer' => 'Our system uses a combination of factors like user reviews, restaurant ratings, food preferences, and location to provide tailored restaurant recommendations.',
         ],
         [
-            'question' => 'What are the differences between Flowbite and Tailwind UI?',
-            'answer' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+            'question' => 'Can I leave a review for a restaurant?',
+            'answer' => 'Yes! You can share your experience with other users by leaving a review and rating for any restaurant you’ve visited.',
+        ],
+        [
+            'question' => 'How can I find the best restaurants near me?',
+            'answer' => 'Simply enable location services, and our website will suggest the best restaurants near your location based on popular trends and user ratings.',
         ]
     ];
+
 @endphp
 
 <x-section.faq-section 
     sectionId="faq"
     title="FAQ"
-    description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
+    description="Frequently Asked Questions"
     :faqs="$faqs" />
 
 @endsection

@@ -9,7 +9,7 @@ class SerpApiService
 {
     protected $apiUrl = 'https://serpapi.com/search';
 
-    public function searchPlaces($query, $latitude, $longitude, $zoom, $start = 0)
+    public function searchPlaces($query, $latitude, $longitude, $start = 0)
     {
         if (empty($query) || empty($latitude) || empty($longitude)) {
             throw new InvalidArgumentException('Query, latitude, and longitude are required.');
@@ -18,7 +18,7 @@ class SerpApiService
         $response = Http::get($this->apiUrl, [
             'engine' => 'google_maps',
             'q' => $query,
-            'll' => "@$latitude,$longitude,$zoom"."z",
+            'll' => "@$latitude,$longitude,20"."z",
             'api_key' => config('serpapi.api_key'),
             'start' => $start,
         ]);

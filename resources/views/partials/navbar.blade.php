@@ -48,8 +48,6 @@
                 <a href="{{ route('home') }}" class="nav-link">Home</a>
                 <a href="{{ route('list') }}" class="nav-link">Restaurant</a>
                 <a href="#review" class="nav-link">Review</a>
-                <a href="#download" class="nav-link">Download</a>
-                <a href="#">Work with Us</a>
                 <a href="#faq" class="nav-link">FAQ</a>
             </div>
 
@@ -81,16 +79,16 @@
                         </div>
                         <ul class="py-2 text-sm text-black" aria-labelledby="dropdownUserAvatarButton">
                             <li>
-                                <a href="{{ route('dashboard.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-dashboard-line me-1.5"></i>Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Favorite</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Review</a>
-                            </li>
-                            <li>
                                 <a href="{{ route('settings.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>Settings</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('my-reviews.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-message-2-line me-1.5"></i>My Reviews</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('my-favorite.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-settings-line me-1.5"></i>My Favorite</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('business.index') }}" class="block px-4 py-2 hover:bg-gray-100"><i class="ri ri-briefcase-2-line me-1.5"></i>{{ config('app.name') }} For Business</a>
                             </li>
                         </ul>
                         <div class="py-2">

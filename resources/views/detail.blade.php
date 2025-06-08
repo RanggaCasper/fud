@@ -3,23 +3,24 @@
 @section('header')
 <div class="mt-[72px]">
     <!-- Background image with gradient overlay -->
-        <div class="py-6 px-4 md:px-2 bg-[url('https://b.zmtcdn.com/data/pictures/3/20863533/118f53d82aeefc075bfc84ca724490d3.jpeg?fit=around|771.75:416.25&crop=771.75:416.25;*,*')] bg-cover bg-no-repeat relative">
+       <div class="py-6 px-4 md:px-2 relative">
+            <img data-src="{{ $restaurant->thumbnail }}" alt="{{ $restaurant->name }}" class="lazyload w-full h-full object-cover absolute inset-0 z-0" />
             <div class="absolute inset-0 bg-black opacity-25"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-75"></div>
             
             <div class="max-w-screen-xl mx-auto pt-[100px] relative z-10">
                 <div class="flex flex-col space-y-2">
-                    <h5 class="font-bold text-4xl text-white">Cé La Vie Kitchen & Bar</h5>
+                    <h5 class="font-bold text-4xl text-white">{{ $restaurant->name }}</h5>
                     <div class="flex items-center gap-2">
                         <div class="bg-primary flex items-center text-white text-sm font-bold gap-0.5 px-2 py-0.5 rounded-lg shadow-md">
                             <svg class="size-3.5 text-warning" fill="currentColor" viewBox="0 0 22 20">
                                 <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
                             </svg>
-                            <span>4.5</span>
+                            <span>{{ $restaurant->rating }}</span>
                         </div>
                         <div class="flex flex-col">
                             <h5 class="text-sm text-white">
-                                10.000+ (Ratings)
+                                {{ number_format($restaurant->reviews, 0,',','.') }}+ (Ratings)
                             </h5>
                         </div>
                     </div>
@@ -27,14 +28,19 @@
                 <div class="flex flex-col mt-4">
                     <div class="mb-3">
                         <h5 class="text-white">
-                            Indonesian, Asian, Seafood
+                            {{ implode(', ', $restaurant->offerings->take(5)->pluck('name')->toArray()) }}
                         </h5>
-                        <p class="text-sm text-white">Bali, Denpasar Timur, Gg. Trengguli (Alamat Lengkap)</p>
+                        <p class="text-sm text-white">{{ $restaurant->address }}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-1 mb-3">
                         <div class="text-white">
-                            <span class="bg-success text-xs font-medium px-2.5 py-0.5 rounded-lg">Open</span>
-                            <span class="font-semibold">11:00 AM - 7:00 PM</span>
+                            @if ($restaurant->isClosed())
+                                <span class="bg-danger text-xs font-medium px-2.5 py-0.5 rounded-lg">Closed</span>
+                            @else
+                                <span class="bg-success text-xs font-medium px-2.5 py-0.5 rounded-lg">Open</span>
+                            @endif
+
+                            <span class="font-semibold">{{ $restaurant->getTodayOperatingHours() }}</span>
                         </div>
                         <span class="border-s mx-2 border-white/50"></span>
                         <span class="text-sm font-semibold text-white flex items-center">
@@ -45,7 +51,7 @@
                                     <path d="M13.5 2l.5 2.5" />
                                     <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2c-8.072 -.49 -14.51 -6.928 -15 -15a2 2 0 0 1 2 -2" />
                                 </svg>
-                                +6283189944777
+                                {{ $restaurant->phone }}
                             </a>
                         </span>
                     </div>
@@ -53,22 +59,14 @@
 
                 <!-- Share, View Photo, and Favorite Buttons (Responsive layout) -->
                 <div class="md:absolute md:bottom-4 md:right-0 flex md:gap-3 gap-1 z-20 text-white">
-                    <button class="bg-primary flex gap-2 items-center py-2 px-4 border border-secondary rounded-lg text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                            <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                            <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                            <path d="M8.7 10.7l6.6 -3.4" />
-                            <path d="M8.7 13.3l6.6 3.4" />
-                        </svg>
+                    <x-button class="btn-icon" data-modal-target="shareModal" data-modal-toggle="shareModal">
+                        <i class="ri ri-share-line text-sm me-1.5"></i>
                         Share
-                    </button>
-                    <button class="bg-primary flex gap-2 items-center py-2 px-4 border border-secondary rounded-lg text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.286 21.09q -1.69 .001 -5.288 -2.615q -3.596 2.617 -5.288 2.616q -2.726 0 -.495 -6.8q -9.389 -6.775 2.135 -6.775h.076q 1.785 -5.516 3.574 -5.516q 1.785 0 3.574 5.516h.076q 11.525 0 2.133 6.774q 2.23 6.802 -.497 6.8" />
-                        </svg>
+                    </x-button>
+                    <x-button class="btn-icon">
+                        <i class="ri ri-star-line text-sm me-1.5"></i>
                         Favorite
-                    </button>
+                    </x-button>
                 </div>
             </div>
         </div>
@@ -78,69 +76,46 @@
 
 @section('content')
 <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6"  id="restaurant-detail">
-    <div id="menu-header" class="sticky top-[72px] z-10 bg-transparent">
-        <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
-            <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
-                <x-button class="btn-icon shadow-md" data-modal-target="filterModal" data-modal-toggle="filterModal">
-                    <svg
-                    class="size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    >
-                    <path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
-                    </svg>
-                    <span>Write a Review</span>
-                </x-button>
-                <x-button class="btn-icon" :outline="true">
-                    <svg
-                    class="size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    >
-                    <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
-                    <path d="M11 13l9 -9" />
-                    <path d="M15 4h5v5" />
-                    </svg>
-                    <span>
-                        Resto Website
-                    </span>
-                </x-button>
-                <x-button class="btn-icon" :outline="true">
-                    <svg
-                    class="size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    >
-                    <path d="M19 4v16h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12z" />
-                    <path d="M19 16h-12a2 2 0 0 0 -2 2" />
-                    <path d="M9 8h6" />
-                    </svg>
-                    <span>
-                        Full Menu
-                    </span>
-                </x-button>
-            </div>
+    <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
+        <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
+            <a href="#write-a-review" class="btn btn-md btn-outline-primary btn-icon">
+                <svg
+                class="size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                >
+                <path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
+                </svg>
+                <span>Write a Review</span>
+            </a>
+            <a href="{{ $restaurant->website }}" target="_blank" class="btn btn-md btn-outline-primary btn-icon">
+                <svg
+                class="size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                >
+                <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+                <path d="M11 13l9 -9" />
+                <path d="M15 4h5v5" />
+                </svg>
+                <span>
+                    Resto Website
+                </span>
+            </a>
         </div>
     </div>
     <div class="px-4 md:px-2 ">
@@ -154,37 +129,29 @@
                                 <div>
                                     <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
                                     <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">Rp. 10.000</span>    
                                     </div>
                                 </div>
                                 <div>
                                     <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
                                     <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">Rp. 10.000</span>    
                                     </div>
                                 </div>
                                 <div>
                                     <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
                                     <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">Rp. 10.000</span>    
                                     </div>
                                 </div>
                                 <div>
                                     <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
                                     <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">Rp. 10.000</span>    
                                     </div>
                                 </div>
                             </div>
@@ -194,109 +161,80 @@
                         <x-card title="About Restaurant">
                             <div class="grid grid-cols-2 md:grid-cols-4">
                                 <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <img class="size-44 object-cover lazyload" data-src="{{ $restaurant->thumbnail }}" alt="Image description">
+                                    <h6 class="text-lg font-medium text-black">Inside</h6>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">1 Photos</span>    
                                     </div>
                                 </div>
                                 <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <img class="size-44 object-cover lazyload" data-src="{{ $restaurant->thumbnail }}" alt="Image description">
+                                    <h6 class="text-lg font-medium text-black">Outside</h6>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">1 Photos</span>    
                                     </div>
                                 </div>
                                 <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <div class="relative size-44">
+                                        <div class="absolute inset-0 bg-black opacity-70"></div>
+                                        <div class="absolute text-center text-white z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold">
+                                            <span>2+</span>
+                                        </div>
+                                        <img class="size-44 object-cover lazyload" data-src="{{ $restaurant->thumbnail }}" alt="Image description">
                                     </div>
-                                </div>
-                                <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <img class="size-44 object-cover" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description">
-                                    <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                    <div class="flex items-center mt-0.5">
-                                        <span class="text-sm text-secondary">90 Photos</span>
-                                        <span class="mx-2 text-secondary">•</span>
-                                        <span class="text-sm text-secondary">200 Reviews</span>
+                                    <h6 class="text-lg font-medium text-black">All Photos</h6>
+                                    <div class="flex items-center">
+                                        <span class="text-xs text-secondary">2 Photos</span>    
                                     </div>
                                 </div>
                             </div>
                         </x-card>
                     </div>
-                    <div class="mb-3">
-                        <x-card title="Recomended Reviews">
-                            <div class="flex justify-between">
-                                <div class="flex items-center gap-2">
-                                    <img class="size-24 rounded-full" src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg" alt="Image description" srcset="">
-                                    <div class="flex flex-col">
-                                        <h5 class="text-lg font-semibold">John Doe</h5>
-                                        <p class="text-sm text-secondary">Location</p>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <div class="flex justify-between">
-                                        <div class="flex items-center gap-1">
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
-                                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                                            </svg>
+                    <div class="mb-3" id="write-a-review">
+                        <x-card title="Write a Review">
+                            @if (Auth::check())
+                                <div class="flex justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <img class="size-24 rounded-full" src="{{ Auth::user()->avatar }}" alt="Image description" srcset="">
+                                        <div class="flex flex-col">
+                                            <h5 class="text-lg font-semibold">{{ Auth::user()->name }}</h5>
+                                            <p class="text-sm text-secondary">Local Explorer Level 6</p>
                                         </div>
-                                        <span class="text-sm text-secondary font-semibold">
-                                            0/5
-                                        </span>
                                     </div>
-                                    <div>
-                                        <button type="button" data-modal-target="reviewModal" data-modal-toggle="reviewModal" class="text-xs text-primary" href="">Add your review of restaurant</button>
+                                    <div class="flex flex-col">
+                                        <div class="flex justify-between">
+                                            <div class="flex items-center gap-1">
+                                                <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                                <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                                <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                                <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                                <svg class="size-3 md:size-4 text-secondary" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                            </div>
+                                            <span class="text-sm text-secondary font-semibold">
+                                                0/5
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button type="button" data-modal-target="reviewModal" data-modal-toggle="reviewModal" class="text-xs text-primary" href="">Add your review of restaurant</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="text-center">
+                                    <p class="text-sm text-secondary mb-2">You need to be logged in to write a review.</p>
+                                    <a href="{{ route('auth.login.index') }}" class="btn btn-md btn-primary">Login</a>
+                                </div>
+                            @endif
                         </x-card>
                     </div>
                     <div class="mb-3">
@@ -407,49 +345,27 @@
                     </div>
                 </div>
                 <div class="col-span-12 md:col-span-4">
-                    <div class="sticky top-[142px]">
+                    <div class="sticky top-[78px]">
                         <x-card title="Location & Hours">
-                            <img alt="image" data-src="https://maps.zomato.com/php/staticmap?center=28.6354845416,77.2194425014&amp;maptype=zomato&amp;markers=28.6354845416,77.2194425014,pin_res32&amp;sensor=false&amp;scale=2&amp;zoom=16&amp;language=id&amp;size=240x150&amp;size=400x240&amp;size=650x250" loading="lazy" class="lazyload w-full h-auto rounded-lg mb-3">
+                            <div id="map" class="h-44"></div>
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <span class="text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+                                    <span class="text-sm">{{ $restaurant->address }}</span>
                                 </div>
                                 <div class="flex">
-                                    <x-button class="btn-icon">
+                                    <a href="{{ 'https://maps.google.com/maps?ll=' . $restaurant->latitude . ',' . $restaurant->longitude }}" target="_blank" class="btn btn-primary btn-md">
                                         Directions
-                                    </x-button>
+                                    </a>
                                 </div>
                             </div>
                             <table class="min-w-full table-auto">
                                 <tbody>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Mon</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Tue</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Wed</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Thu</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Fri</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Sat</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-dark font-semibold py-1">Sun</td>
-                                        <td class="text-dark font-semibold py-1">11:30 AM - 9:30 PM</td>
-                                    </tr>
+                                    @foreach ($restaurant->operatingHours as $hours)
+                                        <tr>
+                                            <td class="text-dark font-semibold py-1">{{ $hours->day }}</td>
+                                            <td class="text-dark font-semibold py-1">{{ $hours->operating_hours }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </x-card>
@@ -460,7 +376,7 @@
     </div>
 </section>
 
-<x-modal title="Restaurant Name" id="reviewModal">
+<x-modal title="{{ $restaurant->name }}" id="reviewModal">
     <form>
         <div class="mb-3">
             <label class="block mb-2 text-sm font-medium text-dark" for="file_input">Upload file</label>
@@ -506,6 +422,53 @@
         </x-button>
     </form>
 </x-modal>
+
+<x-modal title="Share" id="shareModal">
+    <h5 class="font-semibold text-lg">Share this restaurant</h5>
+    <div class="mb-3">
+        <div class="flex flex-wrap items-center">
+           <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}" target="_blank" class="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 me-2 mb-2">
+                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19">
+                <path fill-rule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z" clip-rule="evenodd"/>
+                </svg>
+                Facebook
+            </a>
+            <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->fullUrl()) }}" target="_blank" class="text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55 me-2 mb-2">
+                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 17">
+                <path fill-rule="evenodd" d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z" clip-rule="evenodd"/>
+                </svg>
+                Twitter
+            </a>
+            <a href="https://api.whatsapp.com/send?text={{ urlencode(request()->fullUrl()) }}" target="_blank" class="text-white bg-[#25D366] hover:bg-[#25D366]/90 focus:ring-4 focus:outline-none focus:ring-[#25D366]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#25D366]/55 me-2 mb-2">
+                <svg class="w-4 h-4 me-2" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-brand-whatsapp"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18.497 4.409a10 10 0 0 1 -10.36 16.828l-.223 -.098l-4.759 .849l-.11 .011a1 1 0 0 1 -.11 0l-.102 -.013l-.108 -.024l-.105 -.037l-.099 -.047l-.093 -.058l-.014 -.011l-.012 -.007l-.086 -.073l-.077 -.08l-.067 -.088l-.056 -.094l-.034 -.07l-.04 -.108l-.028 -.128l-.012 -.102a1 1 0 0 1 0 -.125l.012 -.1l.024 -.11l.045 -.122l1.433 -3.304l-.009 -.014a10 10 0 0 1 1.549 -12.454l.215 -.203a10 10 0 0 1 13.226 -.217m-8.997 3.09a1.5 1.5 0 0 0 -1.5 1.5v1a6 6 0 0 0 6 6h1a1.5 1.5 0 0 0 0 -3h-1l-.144 .007a1.5 1.5 0 0 0 -1.128 .697l-.042 .074l-.022 -.007a4.01 4.01 0 0 1 -2.435 -2.435l-.008 -.023l.075 -.041a1.5 1.5 0 0 0 .704 -1.272v-1a1.5 1.5 0 0 0 -1.5 -1.5" /></svg>
+                WhatsApp
+            </a>
+            <a href="https://www.instagram.com/share?url={{ urlencode(request()->fullUrl()) }}" target="_blank" class="text-white bg-[#d62976] hover:bg-[#d62976]/90 focus:ring-4 focus:outline-none focus:ring-[#d62976]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#d62976]/55 me-2 mb-2">
+                <svg class="w-4 h-4 me-2"  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-8a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-4 5a4 4 0 0 0 -3.995 3.8l-.005 .2a4 4 0 1 0 4 -4m4.5 -1.5a1 1 0 0 0 -.993 .883l-.007 .127a1 1 0 0 0 1.993 .117l.007 -.127a1 1 0 0 0 -1 -1" /></svg>
+                Instagram
+            </a>
+        </div>
+    </div>
+    <div class="mb-3">
+        <h5 class="font-semibold text-lg">Share this restaurant link</h5>
+        <div class="grid grid-cols-8 gap-2 w-full">
+            <label for="restaurantLink" class="sr-only">Label</label>
+            <input id="restaurantLink" type="text" class="col-span-6 bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5" value="{{ request()->fullUrl() }}" disabled readonly>
+            <button data-copy-to-clipboard-target="restaurantLink" class="col-span-2 text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center items-center inline-flex justify-center">
+                <span id="default-message">Copy</span>
+                <span id="success-message" class="hidden">
+                    <div class="inline-flex items-center">
+                        <svg class="w-3 h-3 text-white me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                        </svg>
+                        Copied!
+                    </div>
+                </span>
+            </button>
+        </div>
+    </div>
+</x-modal>
+
 @endsection
 
 @push('scripts')
@@ -537,5 +500,43 @@
             });
         });
 
+    </script>
+    <script>
+        var latitude = {{ $restaurant->latitude }};
+        var longitude = {{ $restaurant->longitude }};
+        
+        var map = L.map('map').setView([latitude, longitude], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        var marker = L.marker([latitude, longitude]).addTo(map);
+        marker.bindPopup('<b>{{ $restaurant->name }}</b><br>{{ $restaurant->address }}').openPopup();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const copyButton = document.querySelector('[data-copy-to-clipboard-target="restaurantLink"]');
+            const inputField = document.getElementById('restaurantLink');
+            const defaultMessage = document.getElementById('default-message');
+            const successMessage = document.getElementById('success-message');
+            
+            copyButton.addEventListener('click', function() {
+                inputField.select();
+                inputField.setSelectionRange(0, 99999);
+
+                navigator.clipboard.writeText(inputField.value).then(function() {
+                    defaultMessage.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+
+                    setTimeout(function() {
+                        defaultMessage.classList.remove('hidden');
+                        successMessage.classList.add('hidden');
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Error copying text: ', err);
+                });
+            });
+        });
     </script>
 @endpush

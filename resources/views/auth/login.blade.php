@@ -130,7 +130,6 @@
     </div>
 </div>
 
-
 <div id="loginModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-lg max-h-full">
         <!-- Modal content -->
@@ -189,9 +188,76 @@
                         Login
                     </button>
                 </form>
-                <button type="button" class="text-primary border-2 border-primary shadow-sm bg-white hover:bg-primary/10 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-9">
+                <button data-modal-target="forgotModal" data-modal-toggle="forgotModal" type="button" class="text-primary border-2 border-primary shadow-sm bg-white hover:bg-primary/10 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-9">
                     Forgot Password?
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="forgotModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-lg max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm">
+            <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="forgotModal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="px-4 pt-4 mb-3">
+                <x-logo />
+            </div>
+            <div class="p-4 flex flex-col md:w-sm mx-auto">
+                <div class="mb-6">
+                    <h5 class="text-4xl font-bold text-primary">Forgot Password</h5>
+                    <p class="text-black font-semibold text-sm">No worries! Reset your password with OTP.</p>
+                </div>
+                <form method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <x-input 
+                            label="Email"
+                            id="forgotEmail"
+                            name="email" 
+                            placeholder="Email" 
+                            type="email"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <x-input 
+                            label="Token"
+                            id="forgotToken"
+                            name="token" 
+                            placeholder="Token" 
+                            type="text"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <x-input 
+                            label="Password"
+                            id="forgotPassword"
+                            name="password" 
+                            placeholder="Password" 
+                            type="password"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <x-input 
+                            label="Confirm Password"
+                            id="forgotPasswordConfirmation"
+                            name="password_confirmation"
+                            placeholder="Password" 
+                            type="password"
+                        />
+                    </div>
+    
+                    <!-- Modal footer -->
+                    <button type="submit" class="text-white shadow-sm bg-primary hover:bg-primary/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-6 w-full">
+                        Reset Password
+                    </button>
+                </form>
             </div>
         </div>
     </div>

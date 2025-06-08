@@ -1,17 +1,19 @@
 <section class="px-4 md:px-2 py-6 bg-primary" id="{{ $sectionId }}">
     <div class="max-w-screen-xl py-4 mx-auto">
-        <div class="text-white mb-3">
-            <h5 class="flex text-2xl font-semibold me-3">
-                <lord-icon
-                    src="{{ $iconSrc }}"
-                    trigger="loop"
-                    style="width:32px;height:32px">
-                </lord-icon>
-                {{ $title }}
-            </h5>
-            <span class="text-xs">{{ $description }}</span>
+        <div class="flex text-white mb-3">
+            <lord-icon
+                src="{{ $iconSrc }}"
+                trigger="loop"
+                class="size-12"
+            >
+            </lord-icon>
+            <div class="flex flex-col">
+                <h5 class="flex text-xl font-bold">
+                    {{ $title }}
+                </h5>
+                <span class="text-xs">{{ $description }}</span>
+            </div>
         </div>
-        
         <div class="swiper">
             <div class="swiper-wrapper py-3">
                 @foreach($comments as $comment)

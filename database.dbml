@@ -1,111 +1,185 @@
-// Role
+// Tabel Role
 Table roles {
-    id int [pk]
-    name varchar
+    id int [pk, increment]  // Primary Key
+    name varchar(100) // Nama role (misalnya, admin, user, dll.)
 }
 
-// User
+// Tabel User
 Table users {
-    id int [pk]
-    name varchar
-    username varchar
-    phone varchar
-    email varchar
-    avatar varchar
-    password varchar
-    role_id int [ref: > roles.id]
+    id int [pk, increment]  // Primary Key
+    name varchar(255) // Nama lengkap pengguna
+    username varchar(100) // Nama pengguna unik
+    phone varchar(15) // Nomor telepon pengguna
+    email varchar(255) // Alamat email pengguna
+    avatar varchar(255) // URL atau path ke gambar avatar
+    password varchar(255) // Kata sandi terenkripsi
+    role_id int [ref: > roles.id] // Foreign Key tabel roles
 }
 
+// Tabel Point Levels
+Table point_levels {
+    id int [pk, increment]  // Primary Key
+    name varchar(100) // Nama level (misalnya, Local Explorer, Expert)
+    target_points int // Poin yang dibutuhkan untuk mencapai level ini
+}
+
+// Tabel User Points
+Table user_points {
+    id int [pk, increment] // Primary Key
+    user_id int [ref: > users.id] // Foreign Key tabel users
+    level_id int [ref: > point_levels.id] // Foreign Key tabel point_levels
+    points int // Poin yang dimiliki pengguna saat ini
+}
+
+// Tabel Social Accounts
 Table social_accounts {
-    id int [pk]
-    social_provider varchar
-    social_id varchar
-    user_id int [ref: > users.id]
+    id int [pk, increment] // Primary Key
+    social_provider varchar(50) // Nama penyedia layanan sosial (misalnya, Facebook, Google)
+    social_id varchar(255) // ID media sosial
+    user_id int [ref: > users.id] // Foreign Key tabel users
 }
 
+// Tabel Restaurants
 Table restaurants {
-    id int [pk]
-    name varchar //title
-    address varchar // address
-    latitude float // latitude
-    longitude float // longitude
-    phone varchar // phone
-    thumbnail varchar // thumbnail
-    website varchar // website
-    price_range varchar // price
-    rating float // rating
-    reviews int // reviews
-    is_halal boolean // extensions -> offerings [Halal food]
-    user_id int [ref: > users.id] // owner [status verifed]
+    id int [pk, increment] // Primary Key
+    name varchar(255) // Nama restoran
+    address varchar(255) // Alamat lengkap restoran
+    latitude float // Latitude untuk geolokasi
+    longitude float // Longitude untuk geolokasi
+    phone varchar(20) // Nomor telepon kontak restoran
+    thumbnail varchar(255) // URL atau path ke gambar thumbnail restoran
+    website varchar(255) // URL situs web restoran
+    price_range varchar(50) // Rentang harga (misalnya, $, $$, $$$)
+    slug varchar(255) // Slug untuk URL yang ramah SEO
+    rating float // Rating rata-rata
+    reviews int // Jumlah ulasan
+    user_id int [ref: > users.id] // Foreign Key pemilik restoran (pengguna)
 }
 
+// Tabel Restaurant Menus
+Table restaurant_menus {
+    id int [pk, increment] // Primary Key
+    name varchar(255) // Nama item menu
+    description varchar(1000) // Deskripsi item menu
+    image varchar(255) // URL atau path ke gambar item menu
+    price float // Harga item menu
+    restaurant_id int [ref: > restaurants.id] // Foreign Key tabel restaurants
+}
+
+// Tabel Restaurant Photos
 Table restaurant_photos {
-    id int [pk]
-    image varchar // image
-    video varchar // video
-    restaurant_id int [ref: > restaurants.id]
+    id int [pk, increment] // Primary Key
+    image varchar(255) // URL atau path ke gambar
+    video varchar(255) // URL atau path ke video (opsional)
+    restaurant_id int [ref: > restaurants.id] // Foreign Key tabel restaurants
 }
 
-Table resstaurant_reviews {
-    id int [pk]
-    rating int // rating
-    comment varchar // snippet
-    source varchar // source [user, google]
-    link varchar // link
-    user_id int [ref: > users.id] // reviewer [status verified]
-    restaurant_id int [ref: > restaurants.id]
-    created_at datetime // iso_date
-    updated_at datetime // iso_date_of_last_edit
+// Tabel Restaurant Reviews
+Table restaurant_reviews {
+    id int [pk, increment] // Primary Key
+    rating int // Rating (misalnya, 1-5 bintang)
+    comment varchar(1000) // Ulasan komentar
+    source varchar(50) // Sumber ulasan (misalnya, 'user', 'google')
+    link varchar(255) // Link ke ulasan (opsional)
+    user_id int [ref: > users.id] // Foreign Key pengguna yang mengulas
+    restaurant_id int [ref: > restaurants.id] // Foreign Key restoran yang diulas
 }
 
-Table restaurant_opening_hours { // operating_hours
-    id int [pk]
-    day varchar // day [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
-    operating_hours varchar // operating_hours [open, close]
-    restaurant_id int [ref: > restaurants.id]
+// Table Review Images
+Table review_attachments {
+    id int [pk, increment] // Primary Key
+    image varchar(255) // URL atau path ke gambar ulasan
+    review_id int [ref: > restaurant_reviews.id] // Foreign key ke ulasan yang memiliki gambar
 }
 
-Table resstaurant_reviews_likes {
-    id int [pk]
-    user_id int [ref: > users.id]
-    review_id int [ref: > resstaurant_reviews.id]
+// Tabel Review Reports (Laporan Ulasan)
+Table review_reports {
+    id int [pk, increment] // Primary Key
+    review_id int [ref: > restaurant_reviews.id] // Foreign key ke ulasan yang dilaporkan
+    user_id int [ref: > users.id] // Foreign key ke pengguna yang melaporkan ulasan
+    reason varchar(255) // Alasan laporan (misalnya, 'spam', 'konten tidak pantas', dll.)
+    status enum('pending', 'reviewed', 'resolved') // Status laporan (misalnya, 'pending', 'reviewed', 'resolved')
 }
 
-Table resstaurant_reviews_replies {
-    id int [pk]
-    comment varchar
-    user_id int [ref: > users.id] // owner [status verified]
-    review_id int [ref: > resstaurant_reviews.id]
+// Tabel Restaurant Opening Hours
+Table restaurant_opening_hours {
+    id int [pk, increment] // Primary Key
+    day varchar(20) // Hari dalam seminggu (misalnya, 'Monday')
+    operating_hours varchar(50) // Jam operasional (misalnya, '9:00 AM - 9:00 PM')
+    restaurant_id int [ref: > restaurants.id] // Foreign Key tabel restaurants
 }
 
-
-Table ads {
-    id int [pk]
-    title varchar // title
-    source varchar // image/video
-    type enum('video', 'image') // type
-    start_date datetime // start_date
-    end_date datetime // end_date
+// Tabel Restaurant Offerings
+Table restaurant_offerings {
+    id int [pk, increment] // Primary Key
+    name varchar(100) // Nama penawaran (misalnya, 'Delivery', 'Takeout')
+    restaurant_id int [ref: > restaurants.id] // Foreign Key tabel restaurants
 }
 
+// Tabel Restaurant Reviews Likes
+Table restaurant_reviews_likes {
+    id int [pk, increment] // Primary Key
+    user_id int [ref: > users.id] // Foreign Key pengguna yang menyukai ulasan
+    review_id int [ref: > restaurant_reviews.id] // Foreign Key ulasan yang disukai
+}
+
+// Tabel Restaurant Reviews Replies
+Table restaurant_reviews_replies {
+    id int [pk, increment] // Primary Key
+    comment varchar(1000) // Komentar balasan
+    user_id int [ref: > users.id] // Foreign Key pemilik restoran (pengguna)
+    review_id int [ref: > restaurant_reviews.id] // Foreign Key ulasan yang dibalas
+}
+
+// Tabel Ads Types (Tipe Iklan)
+Table ads_types {
+    id int [pk, increment] // Primary Key
+    title varchar(255) // Judul iklan
+    source varchar(255) // URL atau path ke gambar/video iklan
+    type enum('video', 'image') // Tipe iklan (baik 'video' atau 'image')
+    price double // Harga iklan
+    start_date datetime // Tanggal mulai kampanye iklan
+    end_date datetime // Tanggal berakhir kampanye iklan
+}
+
+// Tabel Ads Clicks (Klik Iklan)
 Table ads_clicks {
-    id int [pk]
-    ip_address varchar // ip_address
-    ad_id int [ref: > ads.id]
-    created_at datetime // iso_date
+    id int [pk, increment] // Primary Key
+    ip_address varchar(45) // Alamat IP pengguna yang mengklik
+    ad_id int [ref: > ads_types.id] // Foreign key ke tabel ads_types
+    restaurant_id int [ref: > restaurants.id] // Foreign key ke restoran yang menyewa iklan
+    created_at datetime // Waktu klik dilakukan
 }
 
+// Tabel Ads Views (Tampilan Iklan)
 Table ads_views {
-    id int [pk]
-    ip_address varchar // ip_address
-    ad_id int [ref: > ads.id]
-    created_at datetime // iso_date
+    id int [pk, increment] // Primary Key
+    ip_address varchar(45) // Alamat IP pengguna yang melihat
+    ad_id int [ref: > ads_types.id] // Foreign key ke tabel ads_types
+    restaurant_id int [ref: > restaurants.id] // Foreign key ke restoran yang menyewa iklan
+    created_at datetime // Waktu tampilan dilakukan
 }
 
-Table ads_pricing {
-    id int [pk]
-    ad_id int [ref: > ads.id]
-    price float // price
-    currency varchar // currency
-    created_at datetime // iso_date
+// Tabel Restaurant Ads (Iklan yang disewa oleh restoran)
+Table restaurant_ads {
+    id int [pk, increment] // Primary Key
+    restaurant_id int [ref: > restaurants.id] // Foreign key ke restoran yang menyewa iklan
+    ad_id int [ref: > ads_types.id] // Foreign key ke tabel ads_types (iklan yang disewa)
+    start_date datetime // Tanggal mulai sewa iklan
+    end_date datetime // Tanggal berakhir sewa iklan
+    total_cost double // Biaya total sewa iklan
+}
+
+// Tabel SAW Criteria (untuk pengambilan keputusan)
+Table saw_criteria {
+    id int [pk, increment] // Primary Key
+    name varchar(255) // Nama kriteria (misalnya, 'cost', 'benefit')
+    type enum('benefit', 'cost') // Tipe kriteria (baik 'benefit' atau 'cost')
+}
+
+// Tabel SAW Criteria Weights
+Table saw_criteria_weights {
+    id int [pk, increment] // Primary Key
+    criteria_id int [ref: > saw_criteria.id] // Foreign Key tabel saw_criteria
+    weight float // Bobot kriteria dalam pengambilan keputusan
 }

@@ -24,10 +24,26 @@
     
     <!-- Left Section (Fixed Image) -->
     <div class="hidden lg:flex lg:w-7/12 fixed top-0 left-0 h-screen">
-        <img src="https://w.wallhaven.cc/full/ly/wallhaven-ly9qzq.jpg" 
-             alt="Background Image" 
-             loading="lazy"
-             class="object-cover w-full h-full">
+        <div class="owl-carousel owl-theme w-full h-screen" id="owl-carousel">
+            <div class="item w-full h-screen">
+                <img data-src="https://w.wallhaven.cc/full/4y/wallhaven-4yg19d.jpg  " 
+                    alt="Background Image" 
+                    loading="lazy"
+                    class="lazyload object-cover w-full h-screen">
+            </div>
+            <div class="item w-full h-screen">
+                <img data-src="https://w.wallhaven.cc/full/k7/wallhaven-k7rvlq.png" 
+                    alt="Background Image" 
+                    loading="lazy"
+                    class="lazyload object-cover w-full h-screen">
+            </div>
+            <div class="item w-full h-screen">
+                <img data-src="https://w.wallhaven.cc/full/vm/wallhaven-vm67rp.jpg" 
+                    alt="Background Image" 
+                    loading="lazy"
+                    class="lazyload object-cover w-full h-screen">
+            </div>
+        </div>
     </div>
 
     <!-- Right Section (Scrolls) -->
@@ -41,6 +57,21 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     @stack('scripts')
+    <script>
+        $(document).ready(function() {
+            $("#owl-carousel").owlCarousel({
+                items: 1,
+                loop: true,
+                margin: 0,
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true,
+                nav: false,
+                dots: false,
+            });
+        });
+    </script>
 </body>
 </html>

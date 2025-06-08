@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->socialAccounts()->where('social_provider', 'facebook')->exists();
     }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role && $this->role->name === $role;
+    }
 }
