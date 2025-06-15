@@ -13,7 +13,7 @@
 ])
 
 @php
-    $cardClasses = $isClosed ? 'bg-gray-100 pointer-events-none' : 'bg-white';
+    $cardClasses = $isClosed ? 'bg-gray-100' : 'bg-white';
     $imageClasses = $isClosed ? 'filter' : '';
     $textColor = $isClosed ? 'text-gray-500' : 'text-dark';
 @endphp
@@ -21,7 +21,7 @@
 <div data-aos="zoom-in-up" class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
     <div class="p-3 relative rounded-lg">
         <div class="mb-2 relative">
-            <a href="{{ $isClosed ? '#' : route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
+            <a href="{{ route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
                 <img data-src="{{ $image }}" loading="lazy"
                      class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                      alt="{{ $title }}">
@@ -55,20 +55,16 @@
 
         <div class="flex items-start justify-between">
             <div>
-                <a href="{{ $isClosed ? '#' : '/detail' }}"
+                <a href="{{ route('restaurant.index', ['slug' => $slug]) }}"
                    class="text-lg font-bold mb-2 line-clamp-1 cursor-pointer hover:text-primary {{ $textColor }}">
                     {{ $title }}
                 </a>
             </div>
             <div>
-                <span class="inline-block px-3 py-1 text-xs rounded-lg bg-gray-200/50">
+                <span class="inline-block px-3 py-1 text-xs rounded-lg bg-primary text-white font-semibold">
                     <div class="flex items-center justify-center gap-0.5">
-                        <svg class="size-3 text-warning" fill="currentColor" viewBox="0 0 22 20">
-                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                        <span class="text-sm">{{ $rating }}</span>
-                        <span class="flex-grow h-3 mx-0.5 border-r-[1px] border-dark/25"></span>
-                        <span class="text-sm">{{ $reviews }}</span>
+                        <i class="ti ti-star-filled text-warning"></i>
+                        <span class="text-xs">{{ $rating }}</span>
                     </div>
                 </span>
             </div>
@@ -76,12 +72,12 @@
 
         <div class="grid grid-cols-2 gap-2 text-sm {{ $textColor }}">
             <div class="flex items-center text-secondary">
-                <span class="line-clamp-1">{{ $location }}</span>
+                <span class="h-3 mx-0.5 border-r-2 border-secondary"></span><span>{{ $distance }}</span>
             </div>
             
             <div class="flex items-center text-secondary justify-end gap-1">
-                <span>{{ $distance }}</span>
-                <span>{{ $score }}</span>
+                <span>{{ $reviews }}</span>
+                Reviews
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 
 @section('content')
-<x-card title="Manage User">
+<x-card title="Manage Users">
     <x-button label="Create" data-modal-target="createModal" data-modal-toggle="createModal" />
     <table id="datatables" class="display">
         <thead>
@@ -9,6 +9,7 @@
                 <th>NO</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -42,11 +43,35 @@
         </div>
         <div class="mb-3">
             <x-input 
+                label="Phone"
+                id="phone"
+                name="phone" 
+                placeholder="Phone" 
+                type="number"
+                :required="false"
+            />
+        </div>
+        <div class="mb-3">
+            <x-input 
                 label="Email"
                 id="email"
                 name="email" 
                 placeholder="Email" 
                 type="email"
+            />
+        </div>
+        <div class="mb-3">
+            @php
+                $roles = \App\Models\Role::all()->map(function ($role) {
+                    return ['value' => $role->id, 'label' => ucfirst($role->name)];
+                })->toArray();
+            @endphp
+            <x-select 
+                label="Role"
+                id="role"
+                name="role" 
+                :options="$roles" 
+                placeholder="Select Role"
             />
         </div>
         <x-button label="Submit" type="submit" />
@@ -78,11 +103,35 @@
         </div>
         <div class="mb-3">
             <x-input 
+                label="Phone"
+                id="phone_update"
+                name="phone" 
+                placeholder="Phone" 
+                type="number"
+                :required="false"
+            />
+        </div>
+        <div class="mb-3">
+            <x-input 
                 label="Email"
                 id="email_update"
                 name="email" 
                 placeholder="Email" 
                 type="email"
+            />
+        </div>
+        <div class="mb-3">
+            @php
+                $roles = \App\Models\Role::all()->map(function ($role) {
+                    return ['value' => $role->id, 'label' => ucfirst($role->name)];
+                })->toArray();
+            @endphp
+            <x-select 
+                label="Role"
+                id="role_update"
+                name="role" 
+                :options="$roles" 
+                placeholder="Select Role"
             />
         </div>
         <x-button label="Submit" type="submit" />
@@ -97,11 +146,13 @@
             {
                 processing: true,
                 serverSide: false,
+                scrollX: true, 
                 ajax: "{{ route('admin.user.get') }}",
                 columns: [
                     { data: 'no', name: 'no' },
                     { data: 'name', name: 'name' },
                     { data: 'email', name: 'email' },
+                    { data: 'role.name', name: 'role.name' },
                     { data: 'action', name: 'action' }
                 ]
             }
@@ -117,6 +168,8 @@
                     $('#name_update').val(response.data.name);
                     $('#username_update').val(response.data.username);
                     $('#email_update').val(response.data.email);
+                    $('#phone_update').val(response.data.phone);
+                    $('#role_update').val(response.data.role_id).trigger('change');
                 },
                 error: function(error) {
                     console.error(error);

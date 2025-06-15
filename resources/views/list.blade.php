@@ -11,51 +11,71 @@
 
         <x-section.carousel-section sectionId="home" :items="$carouselItems" />
 
-        <x-section.restaurant-section backgroundImage="https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg"
-            icon="https://cdn.lordicon.com/tqvrfslk.json" title="Restoran"
-            description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren.">
-           @foreach($ranked as $restaurant)
-                 <x-card.service-card
-                    :title="$restaurant->name"
-                    :slug="$restaurant->slug"
-                    :rating="$restaurant->rating"
-                    :reviews="$restaurant->reviews"
-                    :location="$restaurant->address"
-                    :distance="$restaurant->distance . 'km'"
-                    :image="$restaurant->thumbnail"
-                    :isPromotion="false"
-                    :isClosed="$restaurant->isClosed()"
-                    :isHalal="($restaurant->offerings->contains(function ($offering) {
-                        return str_contains(strtolower($offering->name), 'halal');
-                    }))"
-                />
-            @endforeach
-        </x-section.restaurant-section>
+        <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">
+            <div id="restaurant-header" class="sticky top-[72px] z-10 bg-transparent">
+                <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
+                    <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
+                        <x-button class="btn-icon" :outline="true" data-modal-target="filterModal" data-modal-toggle="filterModal">
+                            <i class="ti ti-filter text-lg"></i>
+                            <span>Filter</span>
+                        </x-button>
+                        <x-button class="btn-icon" :outline="true">
+                            <i class="ti ti-arrows-sort text-lg"></i>
+                            <span>
+                                Rating
+                            </span>
+                        </x-button>
+                        <x-button class="rounded-full" :outline="true">Halal</x-button>
+                        <x-button class="rounded-full" :outline="true">Beer</x-button>
+                    </div>
+                </div>
+            </div>
 
-        @php
-            $faqs = [
-                [
-                    'question' => 'What is Flowbite?',
-                    'answer' =>
-                        'Flowbite is an open-source library of interactive components built on top of Tailwind CSS...',
-                    'link' => '/docs/getting-started/introduction/',
-                ],
-                [
-                    'question' => 'Is there a Figma file available?',
-                    'answer' => 'Flowbite is first conceptualized and designed using the Figma software...',
-                    'link' => 'https://flowbite.com/figma/',
-                ],
-                [
-                    'question' => 'What are the differences between Flowbite and Tailwind UI?',
-                    'answer' =>
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                ],
-            ];
-        @endphp
+            <div class="px-4 md:px-2">
+                <div class="max-w-screen-xl mx-auto">
+                    <div class="flex mb-3">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/tqvrfslk.json"
+                            trigger="loop"
+                            class="size-12"
+                        >
+                        </lord-icon>
+                        <div class="flex flex-col">
+                            <h5 class="flex text-lg font-bold">
+                                Dine Around You
+                            </h5>
+                            <span class="text-xs">Popular picks, tasty bites, near you. All ready to explore!</span>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="restaurant-list">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            @foreach($ranked as $restaurant)
+                                <x-card.restaurant-card
+                                    :title="$restaurant->name"
+                                    :slug="Str::slug($restaurant->name)"
+                                    :rating="$restaurant->rating"
+                                    :reviews="$restaurant->reviews"
+                                    :distance="$restaurant->distance . 'km'"
+                                    :image="$restaurant->thumbnail"
+                                    :isPromotion="false"
+                                    :isClosed="$restaurant->isClosed()"
+                                    :isHalal="($restaurant->offerings->contains(function ($offering) {
+                                        return str_contains(strtolower($offering->name), 'halal');
+                                    }))"
+                                />
+                            @endforeach
+                        </div>
+                    </div>    
+                </div>
+            </div>
+        </section>
 
-        <x-section.faq-section sectionId="faq" title="FAQ"
-            description="Jelajahi daftar terpilih untuk restoran, kafe, dan bar terbaik di dan di sekitar Delhi NCR, berdasarkan tren."
-            :faqs="$faqs" />
+        <!-- Filter Modal -->
+        <x-modal title="Filter" id="filterModal">
+
+        </x-modal>
+
+        @include('partials.faq')
     </div>
 
 @endsection
@@ -75,4 +95,85 @@
             });
         });
     </script>
+@endpush
+
+@push('scripts')
+<script>
+    let sendLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+                    $.ajax({
+                        url: '{{ route("location.store") }}',
+                        method: 'POST',
+                        data: {
+                            latitude: lat,
+                            longitude: lng,
+                            timezone: timezone,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log('Location sent successfully:', response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error sending location:', error);
+                        }
+                    });
+                },
+                function(error) {
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Permission Denied',
+                                text: 'User denied the request for Geolocation.',
+                            });
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Position Unavailable',
+                                text: 'Location information is unavailable.',
+                            });
+                            break;
+                        case error.TIMEOUT:
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Timeout',
+                                text: 'The request to get user location timed out.',
+                            });
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Unknown Error',
+                                text: 'An unknown error occurred.',
+                            });
+                            break;
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Geolocation not supported',
+                text: 'Your browser does not support geolocation.',
+            });
+        }
+    }
+
+    sendLocation();
+
+    setInterval(sendLocation, 60000);
+</script>
 @endpush

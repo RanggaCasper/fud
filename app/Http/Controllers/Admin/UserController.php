@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
 use App\Models\User;
@@ -15,13 +15,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('admin.user.index');
+        return view('admin.users');
     }
 
     public function get(): JsonResponse
     {
         try {
-            $data = User::whereHas('role', function ($query) {
+            $data = User::with('role')->whereHas('role', function ($query) {
                         $query->where('name', 'user');
                     })->get();
             return DataTables::of($data)  
@@ -60,6 +60,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|min:10|max:13',
+            'role' => 'required|exists:roles,id',
         ]);
 
         try {
@@ -68,7 +70,8 @@ class UserController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => bcrypt('password'), // Default password
-                'role_id' => Role::where('name', 'user')->first()->id,
+                'phone' => $request->phone,
+                'role_id' => Role::find($request->role)->id,
             ]);
 
             return ResponseFormatter::created();
@@ -83,6 +86,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'phone' => 'nullable|string|min:10|max:13',
+            'role' => 'required|exists:roles,id',
         ]);
 
         try {
@@ -91,6 +96,8 @@ class UserController extends Controller
                 'name' => $request->name,
                 'username' => $request->username,
                 'email' => $request->email,
+                'phone' => $request->phone,
+                'role_id' => Role::find($request->role)->id,
             ]);
 
             return ResponseFormatter::success('Data updated successfully.');

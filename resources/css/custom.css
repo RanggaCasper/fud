@@ -1,0 +1,171 @@
+.text-xxs {
+    @apply text-[10px];
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+button {
+    cursor: pointer;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Button */
+.btn {
+    @apply text-white font-semibold rounded-lg text-center transition-all duration-100;
+}
+
+.btn-primary {
+    @apply border-2 border-primary bg-primary focus:ring-2 focus:ring-primary hover:bg-primary/80;
+}
+
+.btn-danger {
+    @apply border-2 border-danger bg-danger focus:ring-2 focus:ring-danger hover:bg-danger/80;
+}
+
+.btn-success {
+    @apply border-2 border-success bg-success focus:ring-2 focus:ring-success hover:bg-success/80;
+}
+
+.btn-warning {
+    @apply border-2 border-warning bg-warning focus:ring-2 focus:ring-warning hover:bg-warning/80;
+}
+
+.btn-info {
+    @apply border-2 border-info bg-info focus:ring-2 focus:ring-info hover:bg-info/80;
+}
+
+.btn-secondary {
+    @apply border-2 border-secondary bg-secondary focus:ring-2 focus:ring-secondary hover:bg-secondary/80;
+}
+
+.btn-light {
+    @apply border-2 border-light bg-light focus:ring-2 focus:ring-light hover:bg-light/80;
+}
+
+.btn-dark {
+    @apply border-2 border-dark bg-dark focus:ring-2 focus:ring-dark hover:bg-dark/80;
+}
+
+.btn-outline-primary {
+    @apply border-2 border-primary text-muted hover:bg-primary hover:text-white;
+}
+
+.btn-outline-danger {
+    @apply border-2 border-danger text-muted hover:bg-danger hover:text-white;
+}
+
+.btn-outline-success {
+    @apply border-2 border-success text-muted hover:bg-success hover:text-white;
+}
+
+.btn-outline-warning {
+    @apply border-2 border-warning text-muted hover:bg-warning hover:text-white;
+}
+
+.btn-outline-info {
+    @apply border-2 border-info text-muted hover:bg-info hover:text-white;
+}
+
+.btn-outline-secondary {
+    @apply border-2 border-secondary text-muted hover:bg-secondary hover:text-white;
+}
+
+.btn-outline-light {
+    @apply border-2 border-light text-muted hover:bg-light hover:text-white;
+}
+
+.btn-outline-dark {
+    @apply border-2 border-dark text-muted hover:bg-dark hover:text-white;
+}
+
+.btn-sm {
+    @apply text-xs px-3 py-1.5;
+}
+
+.btn-md {
+    @apply text-sm px-4 py-2;
+}
+
+.btn-lg {
+    @apply text-lg px-5 py-3;
+}
+
+.btn-icon {
+    @apply inline-flex items-center justify-center gap-1.5;
+}
+
+/* Swiper */
+.swiper-slide img {
+    @apply rounded-lg cursor-pointer;
+}
+
+.swiper-tripple .swiper-slide-prev,
+.swiper-tripple .swiper-slide-next {
+    @apply grayscale-100 opacity-50;
+}
+
+/* Table */
+td,.dt-layout-cell {
+    @apply text-sm text-muted;
+}
+
+.dt-column-title {
+    @apply text-sm font-semibold;
+}
+
+.dt-input {
+    @apply rounded-lg shadow-sm focus:ring focus:ring-primary focus:border-primary;
+}
+
+html.dark .dt-container .dt-search input {
+    @apply bg-secondary-background text-sm hover:ring-2 hover:ring-primary hover:border-primary focus:ring-2 focus:ring-primary focus:border-primary;
+}
+
+html.dark .dt-container .dt-length select {
+    @apply bg-secondary-background text-sm pr-8 hover:ring-2 hover:ring-primary hover:border-primary focus:ring-2 focus:ring-primary focus:border-primary;
+}
+
+html .dt-container .dt-length select {
+    @apply bg-secondary-background text-sm pr-8 hover:ring-2 hover:ring-primary hover:border-primary focus:ring-2 focus:ring-primary focus:border-primary;
+}
+
+.dt-info,.dt-search {
+    @apply text-sm text-muted;
+}
+
+.paging {
+    @apply flex items-center justify-between mt-4;
+}
+
+.pagelink {
+    @apply inline-flex items-center justify-center ml-0.5 me-0.5 rounded-md bg-light px-2 text-sm !text-dark transition-all shadow-md hover:shadow-lg focus:bg-primary focus:shadow-none active:bg-primary hover:bg-primary hover:!text-white focus:!text-white active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
+
+    height: 35.56px;
+    min-width: 2.25rem;
+}
+
+html.dark .pagelink {
+    @apply !text-white;
+}
+
+.ellipsis {
+    @apply text-gray-600 pointer-events-none opacity-50;
+}
+
+.pagelink.active {
+    @apply bg-primary !text-white;
+}
+
+.pagelink.disabled {
+    @apply text-gray-600 pointer-events-none opacity-50;
+}

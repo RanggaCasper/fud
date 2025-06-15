@@ -9,6 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        return view('admin.dashboard', 
+        [
+            'userCount' => \App\Models\User::count(),
+            'restaurantCount' => \App\Models\Restaurant\Restaurant::count(),
+        ]);
     }
 }

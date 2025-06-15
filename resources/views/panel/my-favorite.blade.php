@@ -5,7 +5,7 @@
     <div class="mb-3">
         <div class="grid grid-cols-2 gap-4">
             @foreach($ranked->take(6) as $restaurant)
-                <x-card.service-card
+                <x-card.restaurant-card
                     :title="$restaurant->name"
                     :slug="Str::slug($restaurant->name)"
                     :rating="$restaurant->rating"

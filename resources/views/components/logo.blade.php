@@ -1,1 +1,1 @@
-<img src="https://www.casperproject.my.id/assets/images/logo.jpg" class="h-8" alt="Logo">
+<img src="{{ asset('assets/image/logo.png') }}" class="h-8" alt="Logo">

@@ -3,21 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Services\SAWService;
+use App\Models\Restaurant\Review;
 use App\Models\Restaurant\Restaurant;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return $this->getRankedRestaurants('home');
+        $comment = Review::get();
+        return view('home', [
+            'ranked' => $this->getRankedRestaurants(),
+            'comments' => $comment
+        ]);
     }
 
     public function list()
     {
-        return $this->getRankedRestaurants('list');
+        return view('list', [
+            'ranked' => $this->getRankedRestaurants()
+        ]);
     }
 
-    private function getRankedRestaurants($view)
+    public function reviews()
+    {
+        $comment = Review::get();
+        return view('reviews', [
+            'comments' => $comment
+        ]);
+    }
+
+    private function getRankedRestaurants()
     {
         $restaurants = Restaurant::all();
         $userLat = session('latitude');
@@ -25,7 +40,7 @@ class HomeController extends Controller
 
         // If the user's location is not available, return the unranked list
         if (!$userLat || !$userLng) {
-            return view($view, ['ranked' => $restaurants]);
+            return $restaurants;
         }
 
         // Process restaurant data with distances and other attributes
@@ -55,7 +70,7 @@ class HomeController extends Controller
         $ranked = $sawService->calculate($restaurantData, $weights, $criteriaTypes);
 
         // Return the ranked list to the specified view
-        return view($view, compact('ranked'));
+        return $ranked;
     }
 
     private function processRestaurantData($restaurant, $userLat, $userLng)

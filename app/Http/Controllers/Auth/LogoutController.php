@@ -15,12 +15,15 @@ class LogoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function __invoke(Request $request)
     {
+        // $name = Auth::user()?->name;
+
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        return ResponseFormatter::redirected('Logout successful!', route("auth.login.index"));
+
+        return redirect()->route('home');
     }
 }

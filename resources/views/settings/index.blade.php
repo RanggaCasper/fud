@@ -27,7 +27,7 @@
                 id="name"
                 name="name" 
                 placeholder="Name" 
-                value="{{ auth()->user()->name }}"
+                value="{{ Auth::user()->name }}"
                 type="text"
             />
             <x-input 
@@ -36,7 +36,7 @@
                 name="username" 
                 placeholder="Username" 
                 type="text"
-                value="{{ auth()->user()->username }}"
+                value="{{ Auth::user()->username }}"
                 :disabled="true"
             />
             <x-input 
@@ -44,7 +44,7 @@
                 id="email"
                 name="email" 
                 placeholder="Email" 
-                value="{{ auth()->user()->email }}"
+                value="{{ Auth::user()->email }}"
                 type="email"
                 :required="false"
             />
@@ -53,16 +53,25 @@
                 id="phone"
                 name="phone" 
                 placeholder="Phone" 
-                value="{{ auth()->user()->phone }}"
+                value="{{ Auth::user()->phone }}"
                 type="number"
                 :required="false"
+            />
+            <x-input 
+                label="Role"
+                id="role"
+                name="role" 
+                placeholder="Role" 
+                value="{{ ucfirst(Auth::user()->role->name) }}"
+                type="text"
+                :disabled="true"
             />
             <x-input 
                 label="Created At"
                 id="created_at"
                 name="created_at"
                 placeholder="created_at" 
-                value="{{ auth()->user()->created_at }}"
+                value="{{ Auth::user()->created_at }}"
                 type="text"
                 :disabled="true"
             />

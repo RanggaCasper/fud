@@ -13,24 +13,22 @@
                     <h5 class="font-bold text-4xl text-white">{{ $restaurant->name }}</h5>
                     <div class="flex items-center gap-2">
                         <div class="bg-primary flex items-center text-white text-sm font-bold gap-0.5 px-2 py-0.5 rounded-lg shadow-md">
-                            <svg class="size-3.5 text-warning" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                            </svg>
+                            <i class="ti ti-star-filled text-warning"></i>
                             <span>{{ $restaurant->rating }}</span>
                         </div>
                         <div class="flex flex-col">
                             <h5 class="text-sm text-white">
-                                {{ number_format($restaurant->reviews, 0,',','.') }}+ (Ratings)
+                                {{ number_format($restaurant->reviews, 0,',','.') }}+ <strong>Google</strong> | {{ number_format($restaurant->reviews()->count(), 0,',','.') }}+ <strong>{{ config('app.name') }}</strong> Reviews
                             </h5>
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col mt-4">
                     <div class="mb-3">
-                        <h5 class="text-white">
-                            {{ implode(', ', $restaurant->offerings->take(5)->pluck('name')->toArray()) }}
+                        <h5 class="text-white font-semibold ">
+                            {{ implode(', ', $restaurant->offerings->take(8)->pluck('name')->toArray()) }}
                         </h5>
-                        <p class="text-sm text-white">{{ $restaurant->address }}</p>
+                        <p class="text-xs md:text-sm text-white/90">{{ $restaurant->address }}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-1 mb-3">
                         <div class="text-white">
@@ -40,17 +38,12 @@
                                 <span class="bg-success text-xs font-medium px-2.5 py-0.5 rounded-lg">Open</span>
                             @endif
 
-                            <span class="font-semibold">{{ $restaurant->getTodayOperatingHours() }}</span>
+                            <span class="font-semibold text-xs md:text-sm">{{ $restaurant->getTodayOperatingHours() }}</span>
                         </div>
                         <span class="border-s mx-2 border-white/50"></span>
-                        <span class="text-sm font-semibold text-white flex items-center">
-                            <a href="tel:6283189944777" class="underline flex items-center gap-1 hover:text-primary text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 4l-2 2" />
-                                    <path d="M22 10.5l-2.5 -.5" />
-                                    <path d="M13.5 2l.5 2.5" />
-                                    <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2c-8.072 -.49 -14.51 -6.928 -15 -15a2 2 0 0 1 2 -2" />
-                                </svg>
+                        <span class="text-xs md:text-sm font-semibold text-white flex items-center">
+                            <a href="tel:6283189944777" class="hover:underline flex items-center gap-1 hover:text-primary text-white">
+                                <i class="ti ti-phone text-primary"></i>
                                 {{ $restaurant->phone }}
                             </a>
                         </span>
@@ -60,11 +53,11 @@
                 <!-- Share, View Photo, and Favorite Buttons (Responsive layout) -->
                 <div class="md:absolute md:bottom-4 md:right-0 flex md:gap-3 gap-1 z-20 text-white">
                     <x-button class="btn-icon" data-modal-target="shareModal" data-modal-toggle="shareModal">
-                        <i class="ri ri-share-line text-sm me-1.5"></i>
+                        <i class="ti ti-share text-sm"></i>
                         Share
                     </x-button>
                     <x-button class="btn-icon">
-                        <i class="ri ri-star-line text-sm me-1.5"></i>
+                        <i class="ti ti-star-filled text-sm"></i>
                         Favorite
                     </x-button>
                 </div>
@@ -79,39 +72,11 @@
     <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
         <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
             <a href="#write-a-review" class="btn btn-md btn-outline-primary btn-icon">
-                <svg
-                class="size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                >
-                <path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
-                </svg>
+                <i class="ti ti-writing text-lg"></i>
                 <span>Write a Review</span>
             </a>
             <a href="{{ $restaurant->website }}" target="_blank" class="btn btn-md btn-outline-primary btn-icon">
-                <svg
-                class="size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                >
-                <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
-                <path d="M11 13l9 -9" />
-                <path d="M15 4h5v5" />
-                </svg>
+                <i class="ti ti-link text-lg"></i>
                 <span>
                     Resto Website
                 </span>
@@ -290,67 +255,41 @@
                             </x-button>
                         </div>
                         <div class="grid grid-cols-12 gap-2">
-                            <div class="col-span-12">
-                                @php
-                                    $comments = [
-                                        [
-                                            'userName' => 'Alexandre Petrov',
-                                            'commentDate' => '07 May 2025',
-                                            'userImage' => 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
-                                            'rating' => 3,
-                                            'commentImage' => 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzgzNjl8MHwxfHNlYXJjaHwxOXx8Zm9vZHxlbnwwfHx8fDE3NDY1NTA0NzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-                                            'commentText' => 'Taste like lorem ipsum kolor si memet, consectetur adipiscing elit. Mauris scelerisque tortor et magna feugiat, eu vehicula erat consequat.'
-                                        ],
-                                        [
-                                            'userName' => 'Alexandre Petrov',
-                                            'commentDate' => '07 May 2025',
-                                            'userImage' => 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
-                                            'rating' => 3,
-                                            'commentImage' => 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzgzNjl8MHwxfHNlYXJjaHwxOXx8Zm9vZHxlbnwwfHx8fDE3NDY1NTA0NzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-                                            'commentText' => 'Taste like lorem ipsum kolor si memet, consectetur adipiscing elit. Mauris scelerisque tortor et magna feugiat, eu vehicula erat consequat.'
-                                        ],
-                                        [
-                                            'userName' => 'Alexandre Petrov',
-                                            'commentDate' => '07 May 2025',
-                                            'userImage' => 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
-                                            'rating' => 3,
-                                            'commentImage' => 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzgzNjl8MHwxfHNlYXJjaHwxOXx8Zm9vZHxlbnwwfHx8fDE3NDY1NTA0NzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-                                            'commentText' => 'Taste like lorem ipsum kolor si memet, consectetur adipiscing elit. Mauris scelerisque tortor et magna feugiat, eu vehicula erat consequat.'
-                                        ],
-                                        [
-                                            'userName' => 'Alexandre Petrov',
-                                            'commentDate' => '07 May 2025',
-                                            'userImage' => 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
-                                            'rating' => 3,
-                                            'commentImage' => 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NzgzNjl8MHwxfHNlYXJjaHwxOXx8Zm9vZHxlbnwwfHx8fDE3NDY1NTA0NzF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-                                            'commentText' => 'Taste like lorem ipsum kolor si memet, consectetur adipiscing elit. Mauris scelerisque tortor et magna feugiat, eu vehicula erat consequat.'
-                                        ],
-                                    ];
-                                @endphp
-    
-                                @foreach($comments as $comment)
+                            @forelse($restaurant->reviews()->get() as $comment)
+                                <div class="col-span-6">
                                     <div class="mb-3">
-                                        <x-card.comment-card 
-                                            :userName="$comment['userName']" 
-                                            :commentDate="$comment['commentDate']" 
-                                            :userImage="$comment['userImage']" 
-                                            :rating="$comment['rating']" 
-                                            :commentImage="$comment['commentImage']" 
-                                            :commentText="$comment['commentText']" 
+                                        <x-card.review-card 
+                                            :userName="$comment->user->name" 
+                                            :commentDate="$comment->created_at->format('d M Y')" 
+                                            :userImage="$comment->user->avatar" 
+                                            :rating="$comment->rating" 
+                                            :restaurantName="$restaurant->name"
+                                            :commentImage="$comment->image" 
+                                            :commentText="$comment->comment" 
+                                            :commentId="$comment->id"
                                         />
                                     </div>
-                                @endforeach
+                                </div>
+                            @empty
+                            <div class="col-span-12">
+                                <div class="mt-6">
+                                    <img src="{{ asset('assets/svg/undraw_empty_4zx0.svg') }}" class="h-64 mx-auto" alt="No reviews">
+                                    <div class="text-center text-muted font-semibold mt-3">
+                                        This restaurant has no reviews yet.
+                                    </div>
+                                </div>
                             </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
                 <div class="col-span-12 md:col-span-4">
                     <div class="sticky top-[78px]">
                         <x-card title="Location & Hours">
-                            <div id="map" class="h-44"></div>
-                            <div class="flex items-center justify-between">
+                            <div id="map" class="h-44 mb-3"></div>
+                            <div class="flex items-center justify-between mb-3">
                                 <div>
-                                    <span class="text-sm">{{ $restaurant->address }}</span>
+                                    <span class="text-sm line-clamp-2">{{ $restaurant->address }}</span>
                                 </div>
                                 <div class="flex">
                                     <a href="{{ 'https://maps.google.com/maps?ll=' . $restaurant->latitude . ',' . $restaurant->longitude }}" target="_blank" class="btn btn-primary btn-md">
@@ -377,47 +316,32 @@
 </section>
 
 <x-modal title="{{ $restaurant->name }}" id="reviewModal">
-    <form>
+    <form method="POST" action="{{ route('user.review.store', ['slug' => $restaurant->slug]) }}">
+        @csrf
+        <input type="hidden" name="rating" id="rating-input" value="5">
         <div class="mb-3">
             <label class="block mb-2 text-sm font-medium text-dark" for="file_input">Upload file</label>
-            <input class="block w-full text-sm text-dark border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="file_input" type="file" multi>
+            <input class="block w-full text-sm text-dark border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" name="files" id="file_input" type="file" multi>
         </div>
 
         <!-- Rating section -->
         <div class="relative mb-4">
             <!-- Star rating on top of the textarea -->
             <div class="absolute top-2 left-2 flex items-center space-x-2">
-                <div class="flex items-center">
-                    <!-- Star 1 -->
-                    <svg class="size-4 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 22 20" data-index="1">
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                    </svg>
-                    <!-- Star 2 -->
-                    <svg class="size-4 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 22 20" data-index="2">
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                    </svg>
-                    <!-- Star 3 -->
-                    <svg class="size-4 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 22 20" data-index="3">
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                    </svg>
-                    <!-- Star 4 -->
-                    <svg class="size-4 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 22 20" data-index="4">
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                    </svg>
-                    <!-- Star 5 -->
-                    <svg class="size-4 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 22 20" data-index="5">
-                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"></path>
-                    </svg>
+                <div id="star-rating" class="flex space-x-1 cursor-pointer">
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="ti ti-star-filled text-warning" data-index="{{ $i }}"></i>
+                    @endfor
                 </div>
-                <span class="text-sm text-dark">
+                <span class="text-sm font-semibold text-dark">
                     Rate
                 </span>
             </div>
             <!-- Review text area with space for stars -->
-            <textarea placeholder="Start your review..." class="w-full h-32 px-2 py-6 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" rows="5"></textarea>
+            <textarea placeholder="Start your review..." name="comment" class="w-full h-32 px-2 py-8 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" rows="5"></textarea>
         </div>
         <!-- Post review button -->
-        <x-button>
+        <x-button type="submit">
             Post Review
         </x-button>
     </form>
@@ -473,33 +397,28 @@
 
 @push('scripts')
     <script>
-        const stars = document.querySelectorAll('.star');
+        const stars = document.querySelectorAll('#star-rating i');
+        const ratingInput = document.getElementById('rating-input');
 
-        stars.forEach(star => {
-            star.addEventListener('mouseover', () => {
-                let rating = star.getAttribute('data-index');
-                stars.forEach(s => {
-                    if (s.getAttribute('data-index') <= rating) {
-                        s.classList.add('text-yellow-500');
-                    } else {
-                        s.classList.remove('text-gray-400');
-                    }
-                });
-            });
-
-
+        stars.forEach((star, index) => {
             star.addEventListener('click', () => {
-                let rating = star.getAttribute('data-index');
-                stars.forEach(s => {
-                    if (s.getAttribute('data-index') <= rating) {
-                        s.classList.add('text-yellow-500');
+                const rating = index + 1;
+
+                // Update hidden input
+                ratingInput.value = rating;
+
+                // Update star styles
+                stars.forEach((s, i) => {
+                    if (i < rating) {
+                        s.classList.remove('text-gray-300');
+                        s.classList.add('text-warning');
                     } else {
-                        s.classList.remove('text-yellow-500');
+                        s.classList.remove('text-warning');
+                        s.classList.add('text-gray-300');
                     }
                 });
             });
         });
-
     </script>
     <script>
         var latitude = {{ $restaurant->latitude }};

@@ -1,27 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Restaurant;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ResponseFormatter;
-use App\Services\RestaurantService;
 use App\Http\Controllers\Controller;
-use App\Models\Restaurant\Restaurant;
 use Illuminate\Support\Facades\Blade;
+use App\Models\Restaurant\Review\Report;
 
-class RestaurantController extends Controller
+class ReportedReviewController extends Controller
 {
     public function index()
     {
-        return view('admin.restaurant.index');
+        return view('admin.reported-reviews');
     }
 
     public function get(): JsonResponse
     {
         try {
-            $data = Restaurant::get();
+            $data = Report::with(
+                'user',
+                'review',
+                'review.user',
+                'review.restaurant',
+            )->get();
+            // dd($data);
             return DataTables::of($data)  
                 ->addColumn('no', function ($row) {  
                     static $counter = 0;  
@@ -37,22 +42,6 @@ class RestaurantController extends Controller
                 })  
                 ->rawColumns(['action'])
                 ->make(true);
-        } catch (\Exception $e) {
-            return ResponseFormatter::handleError($e);
-        }
-    }
-
-    public function fetch(Request $request, RestaurantService $restaurantService): JsonResponse
-    {
-        $request->validate([
-            'lat' => 'required|numeric',
-            'lon' => 'required|numeric',
-        ]);
-
-        try {
-            $restaurantService->fetchRestaurant((float) $request->lat, (float) $request->lon);
-
-            return ResponseFormatter::success('Data fetched successfully');
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

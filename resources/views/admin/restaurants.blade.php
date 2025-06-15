@@ -10,7 +10,7 @@
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Address</th>
-                <th>Action</th>
+                {{-- <th>Action</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -100,7 +100,7 @@
                     { data: 'name', name: 'name' },
                     { data: 'phone', name: 'phone' },
                     { data: 'address', name: 'address' },
-                    { data: 'action', name: 'action' }
+                    // { data: 'action', name: 'action' }
                 ]
             }
         );

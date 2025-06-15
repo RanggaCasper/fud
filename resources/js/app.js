@@ -38,20 +38,42 @@ images.forEach(image => {
 
 // Sidebar Menu
 document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('#main-nav a');
-    const sidebarMenu = document.getElementById('sidebar-menu');
+    const navbarMenu = document.getElementById('navbarMenu');
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    sidebarMenu.innerHTML = navbarMenu.innerHTML;
 
-    navLinks.forEach(link => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
+    const sidebarUl = sidebarMenu.querySelector('ul');
+    if (sidebarUl) {
+        sidebarUl.classList.add('flex-col', 'space-y-2');
+    }
 
-      a.href = link.href;
-      a.textContent = link.textContent;
-      a.className = 'block py-2 px-4 rounded hover:bg-primary/10 text-dark hover:text-primary transition';
+    const sidebarLi = sidebarMenu.querySelector('li');
+    if (sidebarLi) {
+        sidebarMenu.querySelectorAll('li').forEach(item => {
+            item.classList.add('flex-col');
+        });
+    }
 
-      li.appendChild(a);
-      sidebarMenu.appendChild(li);
-    });
+    const sidebarMultiMenu = sidebarMenu.querySelector('button');
+    if (sidebarMultiMenu) {
+        sidebarMultiMenu.removeAttribute('data-dropdown-placement');
+        sidebarMultiMenu.removeAttribute('data-dropdown-toggle');
+
+        sidebarMultiMenu.setAttribute('aria-controls', 'dropdown-example');
+        sidebarMultiMenu.setAttribute('data-collapse-toggle', 'dropdown-example');
+        sidebarMultiMenu.classList.add('w-full')
+    }
+
+    const dropdown = sidebarMenu.querySelector('#dropdown');
+    if (dropdown) {
+        dropdown.id = 'dropdown-example'; 
+        dropdown.classList.remove('z-10', 'bg-white', 'divide-y', 'divide-gray-100', 'rounded-lg', 'shadow-sm', 'w-44', 'dark:bg-gray-700');
+        
+        dropdown.querySelectorAll('a').forEach(item => {
+            item.classList.remove('block', 'px-4', 'py-2', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'dark:hover:text-white');
+            item.classList.add('flex', 'items-center', 'p-2', 'text-dark', 'w-full', 'transition', 'duration-75', 'rounded-lg', 'pl-8.5', 'group', 'hover:text-primary', 'dark:text-white', 'hover:bg-primary/10', 'font-medium');
+        });
+    }
 });
 // End Sidebar Menu
 

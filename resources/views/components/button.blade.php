@@ -5,6 +5,7 @@
     'class' => '', 
     'isDisabled' => false, 
     'type' => 'button', 
+    'rounded' => false,
     'outline' => false
 ])
 

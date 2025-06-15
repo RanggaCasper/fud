@@ -115,10 +115,9 @@ function generateAlertHtml(type, message) {
     
     return `
         <div class="alert flex items-center p-4 mb-4 text-sm ${alertClasses} border rounded-lg" role="alert">
-            <i class="ri ri-information-line text-lg me-1"></i>
-            <span class="sr-only">${capitalize(type)}</span>
+            <i class="ti ti-info-circle text-lg me-1"></i>
             <div>
-                <span class="font-medium">${capitalize(type)}!</span> ${message}
+                ${message}
             </div>
         </div>
     `;

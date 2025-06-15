@@ -1,9 +1,30 @@
-<section class="px-4 md:px-2 py-6 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]" id="{{ $sectionId }}">
+@php
+    $faqs = [
+        [
+            'question' => 'What is Flowbite?',
+            'answer' =>
+                'Flowbite is an open-source library of interactive components built on top of Tailwind CSS...',
+            'link' => '/docs/getting-started/introduction/',
+        ],
+        [
+            'question' => 'Is there a Figma file available?',
+            'answer' => 'Flowbite is first conceptualized and designed using the Figma software...',
+            'link' => 'https://flowbite.com/figma/',
+        ],
+        [
+            'question' => 'What are the differences between Flowbite and Tailwind UI?',
+            'answer' =>
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit... Lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+        ],
+    ];
+    @endphp
+
+<section class="px-4 md:px-2 py-6 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]" id="faq">
     <div class="max-w-screen-xl py-4 mx-auto">
         <h5 class="block mb-1 text-2xl font-semibold text-muted">
-            {{ $title }}
+            FAQ
         </h5>
-        <span class="text-xs">{{ $description }}</span>
+        <span class="text-xs">Frequently Asked Questions</span>
 
         <div id="accordion-flush" data-accordion="collapse" data-active-classes="text-muted" data-inactive-classes="text-light">
             @foreach($faqs as $index => $faq)
