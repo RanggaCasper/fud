@@ -10,7 +10,7 @@
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Address</th>
-                {{-- <th>Action</th> --}}
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -100,7 +100,7 @@
                     { data: 'name', name: 'name' },
                     { data: 'phone', name: 'phone' },
                     { data: 'address', name: 'address' },
-                    // { data: 'action', name: 'action' }
+                    { data: 'action', name: 'action' }
                 ]
             }
         );
@@ -133,10 +133,10 @@
             Swal.fire({
                 html: `
                     <div class="mt-3">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" delay="2000" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
                         <div class="pt-2 mx-5 mt-4 fs-15">
-                            <h4>Are you sure?</h4>
-                            <p class="mx-4 mb-0 text-muted">You won't be able to revert this!</p>
+                            <h5 class="font-semibold text-xl">Are you sure?</h5>
+                            <p class="mx-4 mb-0">You won't be able to revert this!</p>
                         </div>
                     </div>
                 `,

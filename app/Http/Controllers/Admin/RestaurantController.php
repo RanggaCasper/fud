@@ -30,13 +30,24 @@ class RestaurantController extends Controller
                 ->addColumn('action', function ($row) {  
                     return Blade::render('
                         <div class="flex gap-2">
-                            <x-button type="button" data-modal-target="updateModal" data-update-id="{{ $id }}" size="sm">Update</x-button>
                             <x-button type="button" color="danger" data-delete-id="{{ $id }}" size="sm">Delete</x-button>
                         </div>
                     ', ['id' => $row->id]);
                 })  
                 ->rawColumns(['action'])
                 ->make(true);
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function destroy(Request $request, $id): JsonResponse
+    {
+        try {
+            $restaurant = Restaurant::findOrFail($id);
+            $restaurant->delete();
+
+            return ResponseFormatter::success('Data deleted successfully');
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

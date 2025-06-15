@@ -15,7 +15,7 @@
             <!-- Desktop view -->
             <div class="hidden md:block w-full max-w-sm">
                 <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Cari Restoran"
+                    <input type="text" id="searchInput" placeholder="Find Restaurant"
                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
                     <div class="absolute left-3 top-2.5 text-gray-400">
                         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -34,7 +34,7 @@
             <div id="searchContainer"
                 class="w-0 max-w-xl hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-lg p-4 transition-all duration-500 ease-in-out opacity-0">
                 <div class="relative">
-                    <input type="text" id="searchInputMobile" placeholder="Cari Restoran"
+                    <input type="text" id="searchInputMobile" placeholder="Find Restaurant"
                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
                     <div class="absolute left-3 top-2.5 text-gray-400">
                         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">

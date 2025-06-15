@@ -6,7 +6,6 @@ import './AOS.js';
 import './waypoints.js';
 import 'flowbite';
 
-
 // Lazy Loading
 const images = document.querySelectorAll('.lazyload');
 
@@ -108,26 +107,26 @@ if (togglePasswordButtons.length > 0) {
 
 // Modal
 document.addEventListener('click', function(event) {
-    if (event.target.hasAttribute('data-modal-target')) {
-        const modalId = event.target.getAttribute('data-modal-target');
-        const modalElement = document.getElementById(modalId);
+    const modalTargetEl = event.target.closest('[data-modal-target]');
+    const modalHideEl = event.target.closest('[data-modal-hide]');
 
+    if (modalTargetEl) {
+        const modalId = modalTargetEl.getAttribute('data-modal-target');
+        const modalElement = document.getElementById(modalId);
         if (modalElement) {
             new Modal(modalElement).show();
         }
     }
-});
 
-document.addEventListener('click', function(event) {
-    if (event.target.hasAttribute('data-modal-hide')) {
-        const modalId = event.target.getAttribute('data-modal-hide');
+    if (modalHideEl) {
+        const modalId = modalHideEl.getAttribute('data-modal-hide');
         const modalElement = document.getElementById(modalId);
-
         if (modalElement) {
             new Modal(modalElement).hide();
         }
     }
 });
+
 
 // Search
 document.getElementById('showSearch').addEventListener('click', function() {

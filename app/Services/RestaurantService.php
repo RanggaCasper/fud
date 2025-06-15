@@ -58,6 +58,7 @@ class RestaurantService
                     'address' => $restaurantData['address'],
                 ],
                 [
+                    'place_id' => $restaurantData['place_id'] ?? null,
                     'phone' => $restaurantData['phone'] ?? null,
                     'website' => $restaurantData['website'] ?? null,
                     'thumbnail' => $thumbnailUrl,

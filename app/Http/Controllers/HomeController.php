@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Services\SAWService;
 use App\Models\Restaurant\Review;
+use Illuminate\Support\Collection;
 use App\Models\Restaurant\Restaurant;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -17,10 +20,68 @@ class HomeController extends Controller
         ]);
     }
 
-    public function list()
+    public function list(Request $request)
     {
+        $allRestaurants = $this->getRankedRestaurants();
+
+        // Apply filters
+        if ($request->filled('sort_by')) {
+            $sortBy = $request->input('sort_by');
+
+            if ($sortBy == 'rating_desc') {
+                $allRestaurants = $allRestaurants->sortByDesc('rating');
+            } elseif ($sortBy == 'rating_asc') {
+                $allRestaurants = $allRestaurants->sortBy('rating');
+            } elseif ($sortBy == 'distance_asc') {
+                $allRestaurants = $allRestaurants->sortBy('distance');
+            } elseif ($sortBy == 'distance_desc') {
+                $allRestaurants = $allRestaurants->sortByDesc('distance');
+            } else {
+                $allRestaurants = $allRestaurants->sortByDesc('popularity');
+            }
+        }
+
+        if ($request->filled('offerings')) {
+            $selectedOfferings = $request->input('offerings');
+            $allRestaurants = $allRestaurants->filter(function ($restaurant) use ($selectedOfferings) {
+                $restaurantOfferingNames = collect($restaurant['offerings'])->pluck('name')->all();
+                return !empty(array_intersect($restaurantOfferingNames, $selectedOfferings));
+            });
+        }
+
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $status = $request->input('status');
+
+            $allRestaurants = $allRestaurants->filter(function ($restaurant) use ($status) {
+                return $status === 'open'
+                    ? !$restaurant->isClosed()
+                    : $restaurant->isClosed();
+            });
+        }
+
+        $perPage = 9;
+        $currentPage = $request->input('page', 1);
+
+        if (!($allRestaurants instanceof Collection)) {
+            $allRestaurants = collect($allRestaurants);
+        }
+
+        $pagedRestaurants = $allRestaurants->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $paginator = new LengthAwarePaginator(
+            $pagedRestaurants,
+            $allRestaurants->count(),
+            $perPage,
+            $currentPage,
+            ['path' => url()->current()]
+        );
+
+        if ($request->ajax()) {
+            return view('partials.restaurant-items', ['restaurants' => $paginator])->render();
+        }
+
         return view('list', [
-            'ranked' => $this->getRankedRestaurants()
+            'restaurants' => $paginator,
         ]);
     }
 
@@ -34,7 +95,7 @@ class HomeController extends Controller
 
     private function getRankedRestaurants()
     {
-        $restaurants = Restaurant::all();
+        $restaurants = Restaurant::with('offerings')->get();
         $userLat = session('latitude');
         $userLng = session('longitude');
 

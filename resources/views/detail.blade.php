@@ -292,7 +292,7 @@
                                     <span class="text-sm line-clamp-2">{{ $restaurant->address }}</span>
                                 </div>
                                 <div class="flex">
-                                    <a href="{{ 'https://maps.google.com/maps?ll=' . $restaurant->latitude . ',' . $restaurant->longitude }}" target="_blank" class="btn btn-primary btn-md">
+                                    <a href="{{ 'https://www.google.com/maps/place/?q=place_id:' . $restaurant->place_id }}" target="_blank" class="btn btn-primary btn-md">
                                         Directions
                                     </a>
                                 </div>

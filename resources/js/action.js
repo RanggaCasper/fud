@@ -1,4 +1,8 @@
 $(document).on('submit', 'form', function(e) {
+    if ($(this).data('action') === false) {
+        return; // biarkan form submit secara default
+    }
+    
     e.preventDefault();
 
     $(this).find('input').removeClass('border-danger');
