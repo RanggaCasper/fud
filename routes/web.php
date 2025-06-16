@@ -6,6 +6,7 @@ Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('h
 Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
 // Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('restalist');
 Route::get('/reviews', [\App\Http\Controllers\HomeController::class, 'reviews'])->name('reviews');
+Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 

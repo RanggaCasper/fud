@@ -7,52 +7,38 @@
                 <i class="ti ti-menu-2 text-xl"></i>
             </button>
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center space-x-3 rtl:space-x-reverse shrink-0">
+            <a href="{{ route('home') }}" class="hidden lg:flex items-center space-x-3 rtl:space-x-reverse shrink-0">
                 <x-logo />
             </a>
 
             <!-- Search Bar -->
             <!-- Desktop view -->
-            <div class="hidden md:block w-full max-w-sm">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Find Restaurant"
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                    <div class="absolute left-3 top-2.5 text-gray-400">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387-1.414 1.414-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <!-- Hasil Pencarian -->
-                    <div id="searchResults"
-                        class="absolute left-0 right-0 bg-white border border-gray-300 mt-2 rounded-lg max-h-60 overflow-y-auto hidden">
-                    </div>
-                </div>
-            </div>
+            <button data-modal-target="searchModal" data-modal-toggle="searchModal" type="button" class="hidden lg:flex items-center gap-2 px-4 py-1.5 w-full max-w-3xs border border-gray-300 rounded-lg bg-gray-100 text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                <i class="ti ti-search"></i>
+                <span>Search</span>
+                <kbd class="ml-auto px-1 py-1 text-xs text-nowrap font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl + K</kbd>
+            </button>
 
-            <div id="searchContainer"
-                class="w-0 max-w-xl hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-lg p-4 transition-all duration-500 ease-in-out opacity-0">
-                <div class="relative">
-                    <input type="text" id="searchInputMobile" placeholder="Find Restaurant"
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-                    <div class="absolute left-3 top-2.5 text-gray-400">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387-1.414 1.414-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <!-- Hasil Pencarian -->
-                    <div id="searchResultsMobile"
-                        class="absolute left-0 right-0 bg-white border border-gray-300 mt-2 rounded-lg max-h-60 overflow-y-auto hidden">
-                    </div>
-                    <!-- Close Button -->
-                    <button id="closeSearch" type="button"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-                        <i class="ri ri-close-line text-xl"></i>
-                    </button>
-                </div>
+            <button class="btn !text-primary text-sm btn-icon" data-dropdown-toggle="locationDropdown" data-dropdown-placement="bottom-start" >
+                <i class="ti ti-location text-lg"></i>
+                <span>Select Location</span>
+            </button>
+
+            <div id="locationDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-56">
+                <ul class="py-2 text-sm text-gray-700" aria-labelledby="locationDropdownButton">
+                    <li>
+                        <a href="#" class="block px-4 py-2 font-semibold text-primary hover:bg-gray-100" id="useCurrentLocation">
+                            <i class="ti ti-current-location mr-1"></i> Current Location
+                        </a>
+                    </li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.670458" data-lng="115.212629">Denpasar, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.717911" data-lng="115.168518">Kuta, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.690727" data-lng="115.167175">Seminyak, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.506939" data-lng="115.262476">Ubud, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.807981" data-lng="115.225939">Nusa Dua, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.692945" data-lng="115.261116">Sanur, Bali, Indonesia</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.647817" data-lng="115.138519">Canggu, Bali, Indonesia</a></li>
+                </ul>
             </div>
         </div>
 
@@ -92,9 +78,9 @@
             </div>
 
             <div class="flex gap-2">
-                <button id="showSearch" type="button"
-                    class="inline-flex p-2 hover:bg-primary/10 font-semibold items-center justify-center rounded-lg border text-primary border-primary md:hidden">
-                    <i class="ti ti-search text-lg"></i>
+                <button data-modal-target="searchModal" data-modal-toggle="searchModal" type="button"
+                    class="flex sm:hidden items-center !text-primary justify-center p-2 border border-primary rounded-lg bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <i class="ti ti-search text-xl"></i>
                 </button>
                 @auth
                     <!-- Dropdown Button -->

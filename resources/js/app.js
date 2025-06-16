@@ -127,58 +127,22 @@ document.addEventListener('click', function(event) {
     }
 });
 
+// Search Modal
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key === "k") {
+        event.preventDefault();
 
-// Search
-document.getElementById('showSearch').addEventListener('click', function() {
-    var searchContainer = document.getElementById('searchContainer');
-    searchContainer.classList.remove('hidden');
-    
-    setTimeout(function() {
-        searchContainer.style.width = '100%';
-        searchContainer.style.opacity = '1';
-    }, 10);
-});
+        const searchModal = document.getElementById('searchModal');
+        const modal = new Modal(searchModal);
 
-document.getElementById('closeSearch').addEventListener('click', function() {
-    var searchContainer = document.getElementById('searchContainer');
-    
-    searchContainer.style.width = '0';
-    searchContainer.style.opacity = '0';
-
-    setTimeout(function() {
-        searchContainer.classList.add('hidden');
-    }, 500);
-});
-
-function showSearchResults(query, containerId) {
-    const resultsContainer = document.getElementById(containerId);
-
-    if (!query.trim()) {
-        resultsContainer.classList.add('hidden');
-        return;
+        // Check if the modal is currently visible
+        if (searchModal.classList.contains('hidden')) {
+            modal.show();
+            const searchInput = document.getElementById("simple-search");
+            searchInput.focus();
+        } else {
+            modal.hide();
+        }
     }
-
-    const results = [
-        'Restoran A',
-        'Restoran B',
-        'Restoran C',
-        'Restoran D',
-    ].filter(result => result.toLowerCase().includes(query.toLowerCase()));
-
-    if (results.length > 0) {
-        resultsContainer.innerHTML = results.map(result => `<div class="p-2 hover:bg-gray-100 cursor-pointer">${result}</div>`).join('');
-        resultsContainer.classList.remove('hidden');
-    } else {
-        resultsContainer.classList.add('hidden');
-    }
-}
-
-document.getElementById('searchInput').addEventListener('input', function() {
-    const query = this.value;
-    showSearchResults(query, 'searchResults');
 });
 
-document.getElementById('searchInputMobile').addEventListener('input', function() {
-    const query = this.value;
-    showSearchResults(query, 'searchResultsMobile');
-});

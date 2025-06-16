@@ -35,6 +35,8 @@
         </div>
     </div>
 
+    @include('partials.search-modal')
+
     @include('partials.footer')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>

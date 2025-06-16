@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\SAWService;
+use Illuminate\Http\Request;
 use App\Models\Restaurant\Review;
 use Illuminate\Support\Collection;
 use App\Models\Restaurant\Restaurant;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -15,7 +16,7 @@ class HomeController extends Controller
     {
         $comment = Review::get();
         return view('home', [
-            'ranked' => $this->getRankedRestaurants(),
+            'restaurants' => $this->getRankedRestaurants()->take(6),
             'comments' => $comment
         ]);
     }
@@ -59,7 +60,7 @@ class HomeController extends Controller
             });
         }
 
-        $perPage = 9;
+        $perPage = 6;
         $currentPage = $request->input('page', 1);
 
         if (!($allRestaurants instanceof Collection)) {
@@ -142,6 +143,31 @@ class HomeController extends Controller
         $restaurant->is_closed = $restaurant->isClosed() ? 1 : 0;
 
         return $restaurant;
+    }
+
+    public function search(Request $request)
+    {
+        $query = trim($request->input('search'));
+
+        if (empty($query)) {
+            $filtered = collect();
+        } else {
+            $rankedRestaurants = $this->getRankedRestaurants();
+
+            $filtered = $rankedRestaurants->filter(function ($restaurant) use ($query) {
+                return stripos($restaurant->name, $query) !== false ||
+                    stripos($restaurant->description, $query) !== false;
+            });
+        }
+
+        if ($request->ajax()) {
+            return view('partials.search-items', ['restaurants' => $filtered])->render();
+        }
+
+        return view('search', [
+            'restaurants' => $filtered,
+            'query' => $query,
+        ]);
     }
 
     private function haversineDistance($lat1, $lon1, $lat2, $lon2)

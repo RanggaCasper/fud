@@ -33,16 +33,8 @@
                         <span class="text-xs">Popular picks, tasty bites, near you. All ready to explore!</span>
                     </div>
                 </div>
-                <div class="mb-3" id="restaurant-list">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        @foreach ($ranked->take(6) as $restaurant)
-                            <x-card.restaurant-card :title="$restaurant->name" :slug="Str::slug($restaurant->name)" :rating="$restaurant->rating" :reviews="$restaurant->reviews"
-                                :location="$restaurant->address" :distance="$restaurant->distance . 'km'" :image="$restaurant->thumbnail" :isPromotion="false"
-                                :isClosed="$restaurant->isClosed()" :isHalal="$restaurant->offerings->contains(function ($offering) {
-                                    return str_contains(strtolower($offering->name), 'halal');
-                                })" />
-                        @endforeach
-                    </div>
+                <div id="restaurant-list" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    @include('partials.restaurant-items', ['restaurants' => $restaurants])
                 </div>
             </div>
         </div>
@@ -79,92 +71,11 @@
             <div class="flex justify-center mt-4">
                 <a href="{{ route('reviews') }}" class="btn btn-md btn-warning btn-icon">
                     Explore
-                    <i class="ti ti-arrow-right text-lg"></i>
+                    <i class="ti ti-compass text-lg"></i>
                 </a>
             </div>
         </div>
     </section>
 
     @include('partials.faq')
-
 @endsection
-
-@push('scripts')
-    <script>
-        let sendLocation = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        const accuracy = position.coords.accuracy;
-                        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-                        $.ajax({
-                            url: '{{ route('location.store') }}',
-                            method: 'POST',
-                            data: {
-                                latitude: lat,
-                                longitude: lng,
-                                timezone: timezone,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                console.log('Location sent successfully:', response);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error sending location:', error);
-                            }
-                        });
-                    },
-                    function(error) {
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Permission Denied',
-                                    text: 'User denied the request for Geolocation.',
-                                });
-                                break;
-                            case error.POSITION_UNAVAILABLE:
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Position Unavailable',
-                                    text: 'Location information is unavailable.',
-                                });
-                                break;
-                            case error.TIMEOUT:
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Timeout',
-                                    text: 'The request to get user location timed out.',
-                                });
-                                break;
-                            case error.UNKNOWN_ERROR:
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Unknown Error',
-                                    text: 'An unknown error occurred.',
-                                });
-                                break;
-                        }
-                    }, {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Geolocation not supported',
-                    text: 'Your browser does not support geolocation.',
-                });
-            }
-        }
-
-        sendLocation();
-
-        setInterval(sendLocation, 60000);
-    </script>
-@endpush
