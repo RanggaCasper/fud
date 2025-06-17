@@ -10,11 +10,6 @@ Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
-Route::get('/my-favorite', function () {
-    $ranked = \App\Models\Restaurant\Restaurant::all();
-    return view('panel.my-favorite', compact('ranked'));
-})->name('my-favorite.index');
-
 Route::get('/business', function () {
     return view('panel.business');
 })->name('business.index');
@@ -28,10 +23,13 @@ Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::cl
 Route::post('/reason/report', \App\Http\Controllers\ReasonController::class)->name('reason.report');
 
 Route::get('/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('logout');
-Route::prefix('auth')->as('auth.')->middleware('guest')->group(function () {
+
+Route::prefix('auth')->as('auth.')->group(function () {
     Route::prefix('login')->as('login.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Auth\LoginController::class, 'index'])->name('index');
-        Route::post('/', [\App\Http\Controllers\Auth\LoginController::class, 'store'])->name('store');
+        Route::middleware('guest')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Auth\LoginController::class, 'index'])->middleware('guest')->name('index');
+            Route::post('/', [\App\Http\Controllers\Auth\LoginController::class, 'store'])->middleware('guest')->name('store');
+        });
 
         Route::get('{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider'])->name('social');
         Route::get('{provider}/callback', [\App\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback']);
@@ -39,7 +37,7 @@ Route::prefix('auth')->as('auth.')->middleware('guest')->group(function () {
 
     Route::get('disconnect/{provider}', [\App\Http\Controllers\Auth\SocialLoginController::class, 'deleteSocialAccount'])->name('disconnect.social');
 
-    Route::prefix('register')->as('register.')->group(function () {
+    Route::prefix('register')->as('register.')->middleware('guest')->group(function () {
         Route::get('/', [\App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('store');
     });
@@ -81,12 +79,16 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
     });
 });
 
-Route::prefix('user')->as('user.')->group(function () {
-
+Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('review')->as('review.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ReviewController::class, 'index'])->name('index');
         Route::post('/{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
     });
+    Route::prefix('favorite')->as('favorite.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\FavoriteController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\User\FavoriteController::class, 'store'])->name('store');
+        Route::delete('/', [\App\Http\Controllers\User\FavoriteController::class, 'destroy'])->name('destroy');
+    });
 });
-// SerpApiService example
+
 Route::get('/serpapi', [\App\Http\Controllers\Api\SerpApiController::class, 'search'])->name('serapi.search');

@@ -169,3 +169,7 @@ html.dark .pagelink {
 .pagelink.disabled {
     @apply text-gray-600 pointer-events-none opacity-50;
 }
+
+.swiper-pagination-bullet-active {
+    @apply !bg-primary;
+}

@@ -26,3 +26,18 @@ const swiper = new Swiper('.swiper', {
     }
 });
 
+const reviewSwiper = new Swiper('.reviewSwiper', {
+    modules: [Navigation, Pagination],
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+    },
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+});
+

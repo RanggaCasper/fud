@@ -18,13 +18,13 @@
                     Manage Reported Reviews
                 </x-nav-item>
             @else
-                <x-nav-item href="{{ route('user.review.index') }}" icon="ri-message-2-line" active="{{ request()->routeIs('user.review.index') }}">
+            <x-nav-item href="{{ route('user.review.index') }}" icon="ti ti-message-2" active="{{ request()->routeIs('user.review.index') }}">
                     My Reviews
                 </x-nav-item>
-                <x-nav-item href="{{ route('my-favorite.index') }}" icon="ri-heart-line" active="{{ request()->routeIs('my-favorite.index') }}">
+                <x-nav-item href="{{ route('user.favorite.index') }}" icon="ti ti-heart" active="{{ request()->routeIs('user.favorite.index') }}">
                     My Favorite
                 </x-nav-item>
-                <x-nav-item href="{{ route('business.index') }}" icon="ri-briefcase-2-line" active="{{ request()->routeIs('business.index') }}">
+                <x-nav-item href="{{ route('business.index') }}" icon="ti ti-briefcase-2" active="{{ request()->routeIs('business.index') }}">
                     {{ config('app.name') }} For Business
                 </x-nav-item>
             @endif

@@ -72,7 +72,9 @@
 
         <div class="grid grid-cols-2 gap-2 text-sm {{ $textColor }}">
             <div class="flex items-center text-secondary">
+                @if ($distance)
                 <span class="h-3 mx-0.5 border-r-2 border-secondary"></span><span>{{ $distance }}</span>
+                @endif
             </div>
             
             <div class="flex items-center text-secondary justify-end gap-1">

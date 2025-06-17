@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $comment = Review::get();
+        $comment = Review::with('user', 'restaurant')->get();
         return view('home', [
             'restaurants' => $this->getRankedRestaurants()->take(6),
             'comments' => $comment
@@ -88,7 +88,7 @@ class HomeController extends Controller
 
     public function reviews()
     {
-        $comment = Review::get();
+        $comment = Review::with(['user','attachments'])->orderBy('created_at', 'desc')->paginate(6);
         return view('reviews', [
             'comments' => $comment
         ]);
@@ -96,21 +96,34 @@ class HomeController extends Controller
 
     private function getRankedRestaurants()
     {
-        $restaurants = Restaurant::with('offerings')->get();
+        $restaurants = Restaurant::with(['offerings', 'reviews'])->get();
         $userLat = session('latitude');
         $userLng = session('longitude');
 
-        // If the user's location is not available, return the unranked list
         if (!$userLat || !$userLng) {
             return $restaurants;
         }
 
-        // Process restaurant data with distances and other attributes
         $restaurantData = $restaurants->map(function ($restaurant) use ($userLat, $userLng) {
-            return $this->processRestaurantData($restaurant, $userLat, $userLng);
+            $processed = $this->processRestaurantData($restaurant, $userLat, $userLng);
+
+            $googleRating = $processed['rating'] ?? 0;
+            $googleReviews = $processed['reviews'] ?? 0;
+
+            $fudReviews = $restaurant->reviews()->count();
+            $fudRating = $restaurant->reviews()->avg('rating') ?? 0;
+
+            $totalReviews = $googleReviews + $fudReviews;
+            $combinedRating = $totalReviews > 0
+                ? round((($googleRating * $googleReviews) + ($fudRating * $fudReviews)) / $totalReviews, 2)
+                : 0;
+
+            $processed['rating'] = $combinedRating;
+            $processed['reviews'] = $totalReviews;
+
+            return $processed;
         });
 
-        // Weights for SAW algorithm
         $weights = [
             'rating'    => 0.235,
             'reviews'   => 0.118,
@@ -120,18 +133,16 @@ class HomeController extends Controller
         ];
 
         $criteriaTypes = [
-            'rating' => 'benefit',
-            'reviews' => 'benefit',
-            'distance' => 'cost',
-            'is_halal' => 'benefit',
+            'rating'    => 'benefit',
+            'reviews'   => 'benefit',
+            'distance'  => 'cost',
+            'is_halal'  => 'benefit',
             'is_closed' => 'benefit',
         ];
 
-        // Calculate rankings using SAWService
         $sawService = new SAWService();
         $ranked = $sawService->calculate($restaurantData, $weights, $criteriaTypes);
 
-        // Return the ranked list to the specified view
         return $ranked;
     }
 

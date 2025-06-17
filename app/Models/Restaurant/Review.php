@@ -25,4 +25,9 @@ class Review extends Model
     {
         return $this->hasMany(Review\Report::class, 'review_id');
     }
+
+    public function attachments()
+    {
+        return $this->hasMany(Review\Attachment::class, 'restaurant_review_id');
+    }
 }

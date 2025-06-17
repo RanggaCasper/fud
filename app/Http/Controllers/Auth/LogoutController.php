@@ -17,13 +17,22 @@ class LogoutController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // $name = Auth::user()?->name;
+        $name = Auth::user()?->name;
+
+        $location = [
+            'latitude' => session('latitude'),
+            'longitude' => session('longitude'),
+            'timezone' => session('timezone'),
+        ];
 
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        session($location);
+
+        flash()->success('Goodbye, <strong>' . $name . '</strong>! 👋');
         return redirect()->route('home');
     }
 }

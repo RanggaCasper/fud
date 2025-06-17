@@ -21,7 +21,7 @@
 
             <button class="btn !text-primary text-sm btn-icon" data-dropdown-toggle="locationDropdown" data-dropdown-placement="bottom-start" >
                 <i class="ti ti-location text-lg"></i>
-                <span>Select Location</span>
+                <span class="text-nowrap">Select Location</span>
             </button>
 
             <div id="locationDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-56">
@@ -127,7 +127,7 @@
                         </ul>
                     </div>
                 @else
-                    <div class="hidden md:flex gap-2">
+                    <div class="flex gap-2">
                         <a href="{{ route('auth.login.index') }}" class="btn btn-primary btn-md">Login</a>
                     </div>
                 @endauth

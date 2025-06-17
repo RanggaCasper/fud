@@ -15,9 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'checkAjax' => \App\Http\Middleware\CheckAjax::class,
             'checkRole' => \App\Http\Middleware\CheckRole::class,
-        ]);
-        $middleware->web(append: [
-            HandleInertiaRequests::class,
+            'auth' => \App\Http\Middleware\AuthMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

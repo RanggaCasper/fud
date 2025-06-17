@@ -39,6 +39,7 @@ class LoginController extends Controller
             if ($user && Hash::check($request->password, $user->password)) {
                 Auth::login($user);
                 $request->session()->regenerate();
+                flash()->success('Wellcome back, <strong>' . $user->name . '</strong>! 👋');
                 return ResponseFormatter::redirected('Login successful!', route("home"));
             }
 
@@ -48,5 +49,4 @@ class LoginController extends Controller
             return ResponseFormatter::handleError($e);  
         }
     }
-
 }

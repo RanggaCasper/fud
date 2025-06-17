@@ -33,7 +33,7 @@
                     <div class="col-span-12 md:col-span-6">
                         <div class="mb-3">
                             <x-card.review-card :userName="$comment->user->name" :commentDate="$comment->created_at->format('d M Y')" :userImage="$comment->user->avatar" :rating="$comment->rating"
-                                :restaurantName="$comment->restaurant->name" :commentImage="$comment->image" :commentText="$comment->comment" :commentId="$comment->id" />
+                                :restaurantName="$comment->restaurant->name" :commentAttachments="$comment->attachments" :commentText="$comment->comment" :commentId="$comment->id" />
                         </div>
                     </div>
                 @empty

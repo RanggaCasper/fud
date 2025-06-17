@@ -37,7 +37,9 @@ class Restaurant extends Model
         $timezone = session('timezone', 'Asia/Jakarta');
         $today = \Carbon\Carbon::now($timezone)->format('l');
 
-        return $this->operatingHours()->where('day', $today)->first()->operating_hours;
+        $hours = $this->operatingHours()->where('day', $today)->first();
+
+        return $hours ? $hours->operating_hours : 'Not Available';
     }
 
     public function isClosed()

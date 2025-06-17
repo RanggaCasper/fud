@@ -12,7 +12,7 @@
                   <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Get In Touch</h2>
                   <ul class="text-gray-500 font-medium">
                       <li class="mb-4">
-                          <a href="#" class="hover:underline">Flowbite</a>
+                          <a href="#" class="hover:underline">Fud</a>
                       </li>
                       <li>
                           <a href="https://tailwindcss.com/" class="hover:underline">Tailwind CSS</a>

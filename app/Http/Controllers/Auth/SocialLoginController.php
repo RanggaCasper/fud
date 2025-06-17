@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
@@ -24,19 +25,21 @@ class SocialLoginController extends Controller
             $user = Auth::user();
 
             $alreadyConnected = SocialAccount::where('user_id', $user->id)
-                                            ->where('social_provider', $provider)
-                                            ->first();
+                ->where('social_provider', $provider)
+                ->first();
 
             if ($alreadyConnected) {
-                return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account already connected.');
+                flash()->error(ucfirst($provider) . ' account already connected.');
+                return redirect()->route('settings.index');
             }
 
             $existingAccount = SocialAccount::where('social_provider', $provider)
-                                            ->where('social_id', $socialUser->getId())
-                                            ->first();
+                ->where('social_id', $socialUser->getId())
+                ->first();
 
             if ($existingAccount) {
-                return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account is already linked to another user.');
+                flash()->error(ucfirst($provider) . ' account is already linked to another user.');
+                return redirect()->route('settings.index');
             }
 
             SocialAccount::create([
@@ -46,17 +49,18 @@ class SocialLoginController extends Controller
                 'avatar' => $socialUser->getAvatar(),
             ]);
 
-            return redirect()->route('settings.index')->with('swalSuccess', ucfirst($provider) . ' account connected successfully!');
+            flash()->success(ucfirst($provider) . ' account connected successfully!');
+            return redirect()->route('settings.index');
         } else {
             $socialLogin = SocialAccount::where('social_provider', $provider)
-                            ->where('social_id', $socialUser->getId())
-                            ->first();
+                ->where('social_id', $socialUser->getId())
+                ->first();
 
             if ($socialLogin) {
                 $user = User::find($socialLogin->user_id);
 
                 Auth::login($user);
-
+                flash()->success('Welcome back, <strong>' . $user->name . '</strong>! 👋');
                 return redirect()->route('home');
             } else {
                 $user = User::create([
@@ -74,12 +78,13 @@ class SocialLoginController extends Controller
                 ]);
 
                 Auth::login($user);
-
+                flash()->success('Account created and logged in with ' . ucfirst($provider));
                 return redirect()->route('home');
             }
         }
 
-        return redirect()->route('settings.index')->with('swalError', ucfirst($provider) . ' account already connected.');
+        flash()->error(ucfirst($provider) . ' account already connected.');
+        return redirect()->route('settings.index');
     }
 
     public function deleteSocialAccount($provider)
@@ -88,8 +93,8 @@ class SocialLoginController extends Controller
             $user = Auth::user();
 
             $socialAccount = SocialAccount::where('user_id', $user->id)
-                                        ->where('social_provider', $provider)
-                                        ->first();
+                ->where('social_provider', $provider)
+                ->first();
 
             if (!$socialAccount) {
                 return redirect()->route('settings.index')->with('error', ucfirst($provider) . ' account is not connected.');
@@ -110,7 +115,7 @@ class SocialLoginController extends Controller
         $username = strtolower(implode('', $nameParts));
 
         while (User::where('username', $username)->exists()) {
-            $username = strtolower(implode('', $nameParts)) .'-'. rand(1000, 9999);
+            $username = strtolower(implode('', $nameParts)) . '-' . rand(1000, 9999);
         }
 
         return $username;

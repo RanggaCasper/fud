@@ -63,7 +63,7 @@
                     @foreach ($comments as $comment)
                         <div class="swiper-slide">
                             <x-card.review-card :userName="$comment->user->name" :commentDate="$comment->created_at->format('d M Y')" :userImage="$comment->user->avatar" :rating="$comment->rating"
-                                :restaurantName="$restaurant->name" :commentImage="$comment->image" :commentText="$comment->comment" :commentId="$comment->id" />
+                                :restaurantName="$comment->restaurant->name" :commentAttachments="$comment->attachments" :commentText="$comment->comment" :commentId="$comment->id" />
                         </div>
                     @endforeach
                 </div>

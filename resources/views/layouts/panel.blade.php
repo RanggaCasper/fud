@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link href="https://cdn.datatables.net/v/ju/dt-2.3.0/datatables.min.css" rel="stylesheet" integrity="sha384-+x/E2KZ93ibXj/usuRdE/vr2kctLTVcFrDD4d7u0VdTut8YB5R/TetuZ/1U5t6ZB" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/v/ju/dt-2.3.0/datatables.min.css" rel="stylesheet" integrity="sha384-+x/E2KZ93ibXj/usuRdE/vr2kctLTVcFrDD4d7u0VdTut8YB5R/TetuZ/1U5t6ZB" crossorigin="anonymous">\
+    @stack('styles')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-light">

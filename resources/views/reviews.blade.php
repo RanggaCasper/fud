@@ -12,7 +12,7 @@
 </div>
 
 <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">
-    <div id="restaurant-header" class="sticky top-[70px] z-10 bg-transparent">
+    {{-- <div id="restaurant-header" class="sticky top-[70px] z-10 bg-transparent">
         <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
             <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
                 <x-button class="btn-icon" :outline="true" data-modal-target="filterModal" data-modal-toggle="filterModal">
@@ -29,11 +29,11 @@
                 <x-button class="rounded-full" :outline="true">By Date</x-button>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="px-4 md:px-2">
         <div class="max-w-screen-xl mx-auto">
-            <div class="flex mb-3">
+            <div class="flex my-3">
                 <lord-icon
                     src="https://cdn.lordicon.com/abhwievu.json"
                     trigger="loop"
@@ -50,7 +50,7 @@
             <div class="mb-3" id="restaurant-list">
                 <div class="grid grid-cols-12 gap-6">
                     @foreach($comments as $comment)
-                        <div class="col-span-4">
+                        <div class="col-span-12 lg:col-span-4">
                             <div class="mb-3">
                                 <x-card.review-card 
                                     :userName="$comment->user->name" 
@@ -58,13 +58,16 @@
                                     :userImage="$comment->user->avatar" 
                                     :rating="$comment->rating" 
                                     :restaurantName="$comment->restaurant->name"
-                                    :commentImage="$comment->image" 
+                                    :commentAttachments="$comment->attachments" 
                                     :commentText="$comment->comment" 
                                     :commentId="$comment->id"
                                 />
                             </div>
                         </div>
                     @endforeach
+                </div>
+                <div class="mt-4">
+                    {{ $comments->links() }}
                 </div>
             </div>    
         </div>
