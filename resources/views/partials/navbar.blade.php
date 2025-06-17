@@ -69,7 +69,7 @@
                     </li>
 
                     <li class="flex">
-                        <a href="#faq" class="flex text-nowrap items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-primary hover:bg-primary/10 dark:hover:text-primary focus:ring-primary dark:hover:bg-primary/10 dark:focus:ring-primary transition duration-200 ease-in-out p-2 rounded-lg border-b-2 border-transparent hover:border-primary active:border-primary">
+                        <a href="{{ route('home') }}#about-us" class="flex text-nowrap items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-primary hover:bg-primary/10 dark:hover:text-primary focus:ring-primary dark:hover:bg-primary/10 dark:focus:ring-primary transition duration-200 ease-in-out p-2 rounded-lg border-b-2 border-transparent hover:border-primary active:border-primary">
                             <i class="ti ti-message text-xl"></i>
                             <span>About Us</span>
                         </a>
@@ -104,12 +104,16 @@
                             <p class="font-semibold line-clamp-2">{{ Auth::user()->name }}</p>
                         </div>
                         <ul class="py-2 text-sm text-black" aria-labelledby="dropdownUserAvatarButton">
-                            <li>
-                                <a href="{{ route('admin.dashboard.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
-                                    <i class="ti ti-layout-dashboard text-lg me-1.5"></i>
-                                    Dashboard
-                                </a>
-                            </li>
+                            @auth
+                                @if (Auth::user()->role->name === 'admin')
+                                    <li>
+                                        <a href="{{ route('admin.dashboard.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-layout-dashboard text-lg me-1.5"></i>
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                @endif
+                            @endauth
                             <li>
                                 <a href="{{ route('settings.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
                                     <i class="ti ti-user-cog text-lg me-1.5"></i>

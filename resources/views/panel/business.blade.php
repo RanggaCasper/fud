@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 
 @section('content')
-<x-card title="Claim your business">
+<x-card title="Claim your restaurant">
     <div class="mb-3">
         <form class="flex items-center mx-auto gap-2">
             <div class="relative w-full">
@@ -23,7 +23,7 @@
     </div>
 
 </x-card>
-<div class="flex items-center w-full my-4">
+{{-- <div class="flex items-center w-full my-4">
     <span class="flex-grow border-t border-gray-300"></span>
     <span class="mx-4 text-sm font-medium text-gray-500">OR</span>
     <span class="flex-grow border-t border-gray-300"></span>
@@ -63,5 +63,5 @@
         <x-button type="reset">Reset</x-button>
         <p class="mt-2 text-sm text-gray-500">Submit your restaurant to appear on {{ config('app.name') }} and reach more customers. All submissions go through a quick verification process to ensure accuracy and we’ll notify you once it’s approved and published.</p>
     </form>
-</x-card>
+</x-card> --}}
 @endsection

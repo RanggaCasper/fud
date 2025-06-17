@@ -17,6 +17,7 @@ class RegisterController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|min:10|max:13',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -25,6 +26,7 @@ class RegisterController extends Controller
                 'username' => $request->username,
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
                 'password' => bcrypt($request->password),
                 'role_id' => Role::where('name', 'user')->first()->id,
             ]);

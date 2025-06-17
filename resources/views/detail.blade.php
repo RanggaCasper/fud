@@ -233,8 +233,14 @@
                         @if (Auth::check())
                             <div class="flex justify-between">
                                 <div class="flex items-center gap-2">
-                                    <img class="size-24 rounded-full" src="{{ Auth::user()->avatar }}"
-                                        alt="Image description" srcset="">
+                                    @if(Auth::user()->avatar)
+                                        <!-- Show Avatar if exists -->
+                                        <img class="size-18 rounded-full" src="{{ Auth::user()->avatar }}" alt="user photo">
+                                    @else
+                                        <span class="size-18 flex items-center justify-center bg-primary text-white text-xl font-medium rounded-full">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </span>
+                                    @endif
                                     <div class="flex flex-col">
                                         <h5 class="text-lg font-semibold">{{ Auth::user()->name }}</h5>
                                         <p class="text-sm text-secondary">Local Explorer Level 6</p>

@@ -15,8 +15,6 @@ class SAWService
                 'rating' => (float) $restaurant->rating,
                 'reviews' => (int) $restaurant->reviews,
                 'distance' => (float) $restaurant->distance,
-                'is_halal' => $restaurant->is_halal ? 1 : 0,
-                'is_closed' => $restaurant->is_closed ? 1 : 0,
             ];
         }
 

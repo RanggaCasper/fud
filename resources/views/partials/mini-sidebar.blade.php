@@ -17,6 +17,19 @@
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert" active="{{ request()->routeIs('admin.reported-reviews.index') }}">
                     Manage Reported Reviews
                 </x-nav-item>
+            @elseif (Auth::user()->hasRole('owner'))
+                <x-nav-item href="{{ route('owner.dashboard.index') }}" icon="ti ti-layout-dashboard" active="{{ request()->routeIs('owner.dashboard.index') }}">
+                    Dashboard
+                </x-nav-item>
+                <x-nav-item href="#" icon="ti ti-file" :active="false">
+                    Manage Menu
+                </x-nav-item>
+                <x-nav-item href="#" icon="ti ti-rosette-discount" :active="false">
+                    Manage Ads
+                </x-nav-item>
+                <x-nav-item href="#" icon="ti ti-tools-kitchen-2" :active="false">
+                    Manage Restaurant
+                </x-nav-item>
             @else
             <x-nav-item href="{{ route('user.review.index') }}" icon="ti ti-message-2" active="{{ request()->routeIs('user.review.index') }}">
                     My Reviews

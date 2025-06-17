@@ -30,26 +30,30 @@
                             alt="Review Image">
                     </div>
                 @empty
-                    <div class="swiper-slide">
+                    {{-- <div class="swiper-slide">
                         <div class="w-full h-48 rounded-lg flex items-center justify-center bg-gray-200 text-gray-500 text-sm font-medium italic">
-                            No Image Available
+                            No images available
                         </div>
-                    </div>
+                    </div> --}}
                 @endforelse
             </div>
             <div class="swiper-pagination"></div>
         </div>
 
     <!-- Comment Text -->
-    <p class="text-sm mb-3">
-        {{ $commentText }}
-    </p>
+    <div>
+        <p class="text-sm line-clamp-2">
+            {{ $commentText }}
+        </p>
+        <span class="text-sm text-primary cursor-pointer">Read More</span>
+    </div>
+
 
     <div class="flex items-center justify-between gap-2">
         <div>
             <button class="hover:rounded-full hover:bg-gray-200 hover:text-primary py-0.5 px-1.5"><i
                     class="ri-thumb-up-line text-2xl"></i></button>
-            <span>1</span>
+            <span></span>
         </div>
         <div>
             <button data-dropdown-toggle="dropdownReview{{ $commentId }}" data-dropdown-placement="bottom-end"

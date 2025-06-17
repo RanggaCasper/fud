@@ -3,7 +3,6 @@
     <div class="flex items-center justify-between px-6 py-4 border-b border-dashed border-dark/50">  
         <a href="/" class="flex items-center gap-2">  
             <x-logo />
-            <span class="inline-block text-2xl font-bold !text-primary">{{ config('app.name') }}</span>
         </a>
     </div>
     <div class="px-3 py-4 overflow-y-auto" id="sidebarMenu">

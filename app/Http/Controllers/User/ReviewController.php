@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use App\Models\Restaurant\Review;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -28,9 +29,12 @@ class ReviewController extends Controller
     public function store(Request $request, $slug)
     {
         $request->validate([
-            'file' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
+            'attachments' => Rule::filepond([
+                'required',
+                'max:2000'
+            ]),
         ]);
 
         try {

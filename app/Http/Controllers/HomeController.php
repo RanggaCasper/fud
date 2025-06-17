@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $comment = Review::with('user', 'restaurant')->get();
+        $comment = Review::with('user', 'restaurant')->get()->take(6);
         return view('home', [
             'restaurants' => $this->getRankedRestaurants()->take(6),
             'comments' => $comment
@@ -125,19 +125,15 @@ class HomeController extends Controller
         });
 
         $weights = [
-            'rating'    => 0.235,
-            'reviews'   => 0.118,
-            'distance'  => 0.588,
-            'is_halal'  => 0.029,
-            'is_closed' => 0.029,
+            'rating'    => 0.250,
+            'reviews'   => 0.125,
+            'distance'  => 0.625,
         ];
 
         $criteriaTypes = [
-            'rating'    => 'benefit',
-            'reviews'   => 'benefit',
-            'distance'  => 'cost',
-            'is_halal'  => 'benefit',
-            'is_closed' => 'benefit',
+            'rating'    => 'benefit', // Semakin tinggi rating, semakin baik
+            'reviews'   => 'benefit', // Semakin banyak ulasan, semakin baik
+            'distance'  => 'cost', // Jika jarak semakin kecil, semakin baik
         ];
 
         $sawService = new SAWService();

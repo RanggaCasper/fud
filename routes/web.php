@@ -79,6 +79,10 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
     });
 });
 
+Route::prefix('owner')->as('owner.')->middleware('checkRole:owner')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard.index');
+});
+
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('review')->as('review.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ReviewController::class, 'index'])->name('index');
