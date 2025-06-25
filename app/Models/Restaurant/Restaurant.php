@@ -12,15 +12,35 @@ class Restaurant extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'is_halal' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
     ];
+
+    public function photos()
+    {
+        return $this->hasMany(Photo::class);
+    }
 
     public function operatingHours()
     {
         return $this->hasMany(OperatingHours::class);
     }
+    
+    public function accessibilities()
+    {
+        return $this->hasMany(Accessibility::class);
+    }
+
+    public function diningOptions()
+    {
+        return $this->hasMany(DiningOption::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 
     public function offerings()
     {

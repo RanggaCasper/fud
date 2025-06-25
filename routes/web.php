@@ -3,10 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
+Route::get('/restaurants', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
 // Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('restalist');
 Route::get('/reviews', [\App\Http\Controllers\HomeController::class, 'reviews'])->name('reviews');
 Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
+Route::get('/fetch-image/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchImage'])->name('fetch.image');
+Route::get('/fetch-reservation/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchReservation'])->name('fetch.reservation');
+Route::post('/reservation', [\App\Http\Controllers\HomeController::class, 'storeReservation'])->name('reservation.store');
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 

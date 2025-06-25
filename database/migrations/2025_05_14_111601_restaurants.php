@@ -16,12 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('place_id')->nullable();
+            $table->string('data_cid')->nullable();
             $table->string('slug')->unique();
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
             $table->longText('thumbnail')->nullable();
+            $table->longText('description')->nullable();
             $table->float('latitude');
             $table->float('longitude');
+            $table->string('reservation_link')->nullable();
             $table->string('rating')->nullable();
             $table->string('reviews')->nullable();
             $table->string('price_range')->nullable();
@@ -51,17 +54,33 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('restaurant_menus', function (Blueprint $table) {
+        Schema::create('restaurant_dining_options', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->longText('description')->nullable();
-            $table->decimal('price', 8, 2)->nullable();
-            $table->string('image')->nullable();
             $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 
-        
+        Schema::create('restaurant_accessibilities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('restaurant_payments', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('restaurant_photos', function (Blueprint $table) {
+            $table->id();
+            $table->string('source');
+            $table->foreignId('restaurant_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

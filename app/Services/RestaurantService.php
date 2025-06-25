@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Str;
-use App\Services\SerpApiService;
 use App\Models\Restaurant\Restaurant;
+use Illuminate\Database\QueryException;
 
 class RestaurantService
 {
@@ -15,117 +15,112 @@ class RestaurantService
         $this->serpApiService = $serpApiService;
     }
 
-    /**
-     * Proses pencarian restoran dan simpan data ke database
-     *
-     * @param float $latitude Latitude lokasi pencarian
-     * @param float $longitude Longitude lokasi pencarian
-     * @return int Jumlah hasil yang diproses
-     */
     public function fetchRestaurant($latitude, $longitude)
     {
-        // Fetch results for the first batch
         $results = $this->serpApiService->searchPlaces('restaurant', $latitude, $longitude, 0);
 
-        // Process and store the results
-        $processedResultsCount = 0;
-        if (isset($results['local_results'])) {
-            $processedResultsCount = $this->processResults($results['local_results']);
-        }
-
-        return $processedResultsCount;
+        return isset($results['local_results'])
+            ? $this->processResults($results['local_results'])
+            : ['total_processed' => 0, 'newly_added' => 0];
     }
 
-    /**
-     * Memproses hasil pencarian dan menyimpannya ke dalam database
-     *
-     * @param array $localResults Hasil pencarian restoran
-     * @return int Jumlah restoran yang diproses
-     */
-    private function processResults($localResults)
+    private function processResults(array $localResults)
     {
-        $processedResultsCount = 0;
+        $processed = 0;
+        $newlyAdded = 0;
 
-        foreach ($localResults as $restaurantData) {
-            $offerings = $this->getOfferings($restaurantData);
-            $operatingHours = $restaurantData['operating_hours'] ?? [];
-            $thumbnailUrl = strstr($restaurantData['thumbnail'], '=w', true) ?: $restaurantData['thumbnail'];
+        foreach ($localResults as $data) {
+            try {
+                $restaurant = $this->createOrUpdateRestaurant($data);
 
-            $restaurant = Restaurant::firstOrCreate(
-                [
-                    'name' => $restaurantData['title'],
-                    'slug' => Str::slug($restaurantData['title']),
-                    'address' => $restaurantData['address'],
-                ],
-                [
-                    'place_id' => $restaurantData['place_id'] ?? null,
-                    'phone' => $restaurantData['phone'] ?? null,
-                    'website' => $restaurantData['website'] ?? null,
-                    'thumbnail' => $thumbnailUrl,
-                    'latitude' => $restaurantData['gps_coordinates']['latitude'],
-                    'longitude' => $restaurantData['gps_coordinates']['longitude'],
-                    'rating' => $restaurantData['rating'],
-                    'reviews' => $restaurantData['reviews'],
-                    'price_range' => $restaurantData['price'] ?? null,
-                ]
-            );
+                if ($restaurant->wasRecentlyCreated) {
+                    $newlyAdded++;
+                }
 
-            // Simpan jam operasional
-            $this->saveOperatingHours($restaurant, $operatingHours);
-
-            // Simpan penawaran (offerings)
-            $this->saveOfferings($restaurant, $offerings);
-
-            $processedResultsCount++;
-        }
-
-        return $processedResultsCount;
-    }
-
-    /**
-     * Mengambil penawaran dari data restoran
-     *
-     * @param array $restaurantData Data restoran
-     * @return array Daftar penawaran
-     */
-    private function getOfferings($restaurantData)
-    {
-        // Extract offerings dari extensions jika tersedia
-        foreach ($restaurantData['extensions'] ?? [] as $extension) {
-            if (isset($extension['offerings'])) {
-                return $extension['offerings'];
+                $this->saveExtras($restaurant, $data);
+                $processed++;
+            } catch (QueryException $e) {
+                continue;
             }
         }
 
+        return ['total_processed' => $processed, 'newly_added' => $newlyAdded];
+    }
+
+    private function createOrUpdateRestaurant(array $data)
+    {
+        $placeId = $data['place_id'] ?? null;
+        $baseSlug = Str::slug($data['title']);
+        $slug = $this->generateUniqueSlug($baseSlug);
+
+        return Restaurant::firstOrCreate(
+            ['place_id' => $placeId],
+            [
+                'name' => $data['title'],
+                'data_cid' => $data['data_cid'] ?? null,
+                'description' => $data['description'] ?? null,
+                'slug' => $slug,
+                'address' => $data['address'],
+                'phone' => $data['phone'] ?? null,
+                'website' => $data['website'] ?? null,
+                'thumbnail' => isset($data['thumbnail'])
+                    ? (strstr($data['thumbnail'], '=w', true) ?: $data['thumbnail'])
+                    : 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg',
+                'latitude' => $data['gps_coordinates']['latitude'],
+                'longitude' => $data['gps_coordinates']['longitude'],
+                'rating' => $data['rating'] ?? 0,
+                'reviews' => $data['reviews'] ?? 0,
+                'price_range' => $data['price'] ?? null,
+            ]
+        );
+    }
+
+    private function generateUniqueSlug($baseSlug)
+    {
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Restaurant::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter++;
+        }
+
+        return $slug;
+    }
+
+    private function saveExtras(Restaurant $restaurant, array $data)
+    {
+        $extensions = collect($data['extensions'] ?? []);
+        $this->saveKeyedData($restaurant, $data['operating_hours'] ?? [], 'operatingHours', 'day', 'operating_hours');
+        $this->saveListData($restaurant, $this->extractExtensionData($extensions, 'offerings'), 'offerings');
+        $this->saveListData($restaurant, $this->extractExtensionData($extensions, 'dining_options'), 'diningOptions');
+        $this->saveListData($restaurant, $this->extractExtensionData($extensions, 'payments'), 'payments');
+        $this->saveListData($restaurant, $this->extractExtensionData($extensions, 'accessibility'), 'accessibilities');
+    }
+
+    private function extractExtensionData($extensions, $key)
+    {
+        foreach ($extensions as $extension) {
+            if (isset($extension[$key])) {
+                return $extension[$key]; // langsung return begitu ditemukan
+            }
+        }
         return [];
     }
 
-    /**
-     * Menyimpan jam operasional restoran
-     *
-     * @param Restaurant $restaurant Objek restoran
-     * @param array $operatingHours Jam operasional restoran
-     */
-    private function saveOperatingHours(Restaurant $restaurant, $operatingHours)
+    private function saveKeyedData(Restaurant $restaurant, array $items, $relation, $keyColumn, $valueColumn)
     {
-        foreach ($operatingHours as $day => $hours) {
-            $restaurant->operatingHours()->firstOrCreate(
-                ['day' => ucfirst($day)],
-                ['operating_hours' => $hours]
+        foreach ($items as $key => $value) {
+            $restaurant->{$relation}()->firstOrCreate(
+                [$keyColumn => ucfirst($key)],
+                [$valueColumn => $value]
             );
         }
     }
 
-    /**
-     * Menyimpan penawaran restoran ke dalam tabel pivot
-     *
-     * @param Restaurant $restaurant Objek restoran
-     * @param array $offerings Penawaran restoran
-     */
-    private function saveOfferings(Restaurant $restaurant, $offerings)
+    private function saveListData(Restaurant $restaurant, array $items, $relation)
     {
-        foreach ($offerings as $offering) {
-            $restaurant->offerings()->firstOrCreate(['name' => $offering]);
+        foreach ($items as $item) {
+            $restaurant->{$relation}()->firstOrCreate(['name' => $item]);
         }
     }
 }

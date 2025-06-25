@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use App\Services\SAWService;
 use Illuminate\Http\Request;
 use App\Models\Restaurant\Review;
+use App\Services\PlaceDataService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use App\Models\Restaurant\Restaurant;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,7 +17,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $comment = Review::with('user', 'restaurant')->get()->take(6);
+        $comment = Review::with('restaurant')->get();
+        // foreach ($comment as $item) {
+        //     dump($item->toArray());
+        // }
+        // $restaurants = Restaurant::with(['diningOptions', 'reviews'])->get()->take(5);
+        // dd($restaurants->toArray());
+
         return view('home', [
             'restaurants' => $this->getRankedRestaurants()->take(6),
             'comments' => $comment
@@ -88,10 +97,56 @@ class HomeController extends Controller
 
     public function reviews()
     {
-        $comment = Review::with(['user','attachments'])->orderBy('created_at', 'desc')->paginate(6);
+        $comment = Review::with(['user', 'attachments'])->orderBy('created_at', 'desc')->paginate(6);
         return view('reviews', [
             'comments' => $comment
         ]);
+    }
+
+    public function fetchImage($place_id, PlaceDataService $placeService)
+    {
+        $result = $placeService->fetchImages($place_id);
+        return response()->json($result, $result['success'] ? 200 : ($result['status'] ?? 500));
+    }
+
+    public function fetchReservation($place_id, PlaceDataService $placeService)
+    {
+        $result = $placeService->fetchReservationData($place_id);
+        return response()->json($result, $result['success'] ? 200 : ($result['status'] ?? 500));
+    }
+
+    public function storeReservation(Request $request)
+    {
+        $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:tomorrow'],
+            'time' => ['required'],
+            'adults' => ['required', 'integer', 'min:1'],
+            'children' => ['required', 'integer', 'min:0'],
+            'rid' => ['required', 'string', 'max:255'],
+        ]);
+
+        $params = [
+            "date" => $request->date,
+            "time" => $request->time,
+            "adults" => $request->adults,
+            "children" => $request->childern,
+            "rid" => $request->rid,
+        ];
+
+        try {
+            $response = Http::withHeaders([
+                'User-Agent' => 'Mozilla/5.0'
+            ])->get('https://book.chope.co/booking/check', $params);
+
+            $redirectedUrl = $response->effectiveUri() ?? null;
+
+            return ResponseFormatter::redirected('Redirected.', $redirectedUrl);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     private function getRankedRestaurants()

@@ -5,6 +5,7 @@
         <div class="flex items-center space-x-4 flex-1">
             <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button" class="inline-flex p-2 hover:bg-primary/10 font-semibold items-center justify-center rounded-lg border text-primary border-primary md:hidden" aria-expanded="false">
                 <i class="ti ti-menu-2 text-xl"></i>
+                <span class="sr-only">Menu</span>
             </button>
             <!-- Logo -->
             <a href="{{ route('home') }}" class="hidden lg:flex items-center space-x-3 rtl:space-x-reverse shrink-0">
@@ -110,6 +111,50 @@
                                         <a href="{{ route('admin.dashboard.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
                                             <i class="ti ti-layout-dashboard text-lg me-1.5"></i>
                                             Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.user.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-users text-lg me-1.5"></i>
+                                            Manage Users
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.restaurant.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-chef-hat text-lg me-1.5"></i>
+                                            Manage Restaurants
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.reported-reviews.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-file-alert text-lg me-1.5"></i>
+                                            Manage Reported Reviews
+                                        </a>
+                                    </li>
+                                @elseif (Auth::user()->role->name === 'owner')
+                                    <li>
+                                        <a href="{{ route('owner.dashboard.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-layout-dashboard text-lg me-1.5"></i>
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ route('user.review.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-message-2 text-lg me-1.5"></i>
+                                            My Reviews
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('user.favorite.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-heart text-lg me-1.5"></i>
+                                            My Favorite
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('business.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                                            <i class="ti ti-briefcase-2 text-lg me-1.5"></i>
+                                            {{ config('app.name') }} For Business
                                         </a>
                                     </li>
                                 @endif

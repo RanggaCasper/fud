@@ -2,26 +2,7 @@
 
 @section('content')
 <x-card title="Manage Restaurants">
-    <x-button label="Fetch Data" data-modal-target="fetchModal" data-modal-toggle="fetchModal" />
-    <table id="datatables" class="display">
-        <thead>
-            <tr>
-                <th>NO</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
-</x-card>
-
-<!-- Modal -->
-<x-modal id="fetchModal" title="Fetch Restaurant">
-    <div id="map" class="h-64"></div>
+    <div id="map" class="h-64 mb-3" style="z-index: 1;"></div>
     <form action="{{ route('admin.restaurant.fetch') }}" method="POST">
         @csrf  
         <div class="mb-3">
@@ -48,7 +29,21 @@
             Fetch
         </x-button>
     </form>
-</x-modal>
+    <table id="datatables" class="display">
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</x-card>
 
 <x-modal id="updateModal" title="Update restaurant">
     <form method="POST" id="form_update">

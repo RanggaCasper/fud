@@ -61,9 +61,9 @@ class RestaurantController extends Controller
         ]);
 
         try {
-            $restaurantService->fetchRestaurant((float) $request->lat, (float) $request->lon);
+            $data = $restaurantService->fetchRestaurant((float) $request->lat, (float) $request->lon);
 
-            return ResponseFormatter::success('Data fetched successfully');
+            return ResponseFormatter::success("Successfully added {$data['newly_added']} new restaurant(s)!");
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

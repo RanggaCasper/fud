@@ -1,17 +1,45 @@
 @extends('layouts.app')
 
+@push('styles')
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "{{ $restaurant->name }}",
+  "image": "{{ $restaurant->thumbnail }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ $restaurant->address }}",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": {{ $restaurant->latitude }},
+    "longitude": {{ $restaurant->longitude }}
+  },
+  "telephone": "{{ $restaurant->phone }}",
+  "url": "{{ route('restaurant.index', ['slug' => $restaurant->slug]) }}",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ $restaurant->rating }},
+    "reviewCount": {{ $restaurant->reviews }}
+  },
+  "priceRange": "{{ $restaurant->price_range }}"
+}
+</script>
+@endpush
+
 @section('header')
     <div class="mt-[72px]">
-        <!-- Background image with gradient overlay -->
         <div class="py-6 px-4 md:px-2 relative">
-            <img data-src="{{ $restaurant->thumbnail }}" alt="{{ $restaurant->name }}"
-                class="lazyload w-full h-full object-cover absolute inset-0 z-0" />
+            <img src="{{ $restaurant->thumbnail }}" alt="{{ $restaurant->name }}"
+                class="w-full h-full object-cover absolute inset-0 z-0" />
             <div class="absolute inset-0 bg-black opacity-25"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-75"></div>
 
             <div class="max-w-screen-xl mx-auto pt-[100px] relative z-10">
                 <div class="flex flex-col space-y-2">
-                    <h5 class="font-bold text-4xl text-white">{{ $restaurant->name }}</h5>
+                    <h5 class="font-bold text-3xl text-white">{{ $restaurant->name }} </h5>
                     <div class="flex items-center gap-2">
                         <div
                             class="bg-primary flex items-center text-white text-sm font-bold gap-0.5 px-2 py-0.5 rounded-lg shadow-md">
@@ -37,7 +65,7 @@
                 </div>
                 <div class="flex flex-col mt-4">
                     <div class="mb-3">
-                        <h5 class="text-white font-semibold ">
+                        <h5 class="text-white font-semibold line-clamp-1">
                             {{ implode(', ', $restaurant->offerings->take(8)->pluck('name')->toArray()) }}
                         </h5>
                         <p class="text-xs md:text-sm text-white/90">{{ $restaurant->address }}</p>
@@ -61,6 +89,15 @@
                                 {{ $restaurant->phone }}
                             </a>
                         </span>
+                        <span class="border-s mx-2 border-white/50"></span>
+                        <span data-tooltip-target="tooltip-claim" data-tooltip-placement="bottom" data-tooltip-trigger="click" class="flex text-xs md:text-sm gap-1 font-semibold items-center text-white space-x-2 underline">Unclaimed</span>
+                        <div id="tooltip-claim" role="tooltip" class="absolute z-10 max-w-xs invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
+                            Business owners can claim it to manage details, upload photos, respond to reviews, and more.
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                            <p>
+                                <a class="font-semibold" href="">Claim this restaurant</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -87,9 +124,9 @@
 @endsection
 
 @section('content')
-    <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6"
+    <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-3"
         id="restaurant-detail">
-        <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
+        <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-6">
             <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
                 <a href="#write-a-review" class="btn btn-md btn-outline-primary btn-icon">
                     <i class="ti ti-writing text-lg"></i>
@@ -106,92 +143,55 @@
             </div>
         </div>
         <div class="px-4 md:px-2 ">
-            <div class="max-w-screen-xl mx-auto">
-                <div class="grid grid-cols-12 gap-2 mb-3">
+            <div class="max-w-screen-xl mx-auto space-y-6">
+                <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 md:col-span-8">
-                        <div class="mb-3">
-                            <x-card title="Menu">
-                                <h5 class="text-xl font-semibold">Popular Dishes</h5>
-                                <div class="grid grid-cols-2 md:grid-cols-4">
-                                    <div>
-                                        <img class="size-44 object-cover"
-                                            src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">Rp. 10.000</span>
+                        <div class="space-y-3">
+                            <div>
+                                <h5 class="text-2xl font-semibold mb-6">Gallery</h5>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="gallery">
+                                    <!-- Skeleton placeholder (4 x 3 = 12) -->
+                                    @for ($i = 0; $i < 8; $i++)
+                                        <div class="aspect-square rounded-lg bg-gray-200 animate-pulse"></div>
+                                    @endfor
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <x-button id="load-more">Load More</x-button>
+                                </div>
+                            </div>
+                            <hr class="my-6 border-muted/10 sm:mx-auto">
+                            <div>
+                                <div class="mb-6">
+                                    <h5 class="text-2xl font-semibold">About</h5>
+                                    <p class="text-sm text-secondary">{{ $restaurant->description }}</p>
+                                </div>
+                                <div>
+                                    <h5 class="text-lg font-semibold mb-4">Features</h5>
+                                    <div class="flex flex-col space-y-3">
+                                        <div class="flex text-secondary text-sm items-start gap-2">
+                                            <i class="ti !text-muted text-xl ti-credit-card"></i>
+                                            <span>{{ implode(', ', $restaurant->payments->pluck('name')->toArray()) }}</span>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <img class="size-44 object-cover"
-                                            src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">Rp. 10.000</span>
+                                        <div class="flex text-secondary text-sm items-start gap-2">
+                                            <i class="ti !text-muted text-xl ti-disabled-2"></i>
+                                            <span>{{ implode(', ', $restaurant->accessibilities->pluck('name')->toArray()) }}</span>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <img class="size-44 object-cover"
-                                            src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">Rp. 10.000</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <img class="size-44 object-cover"
-                                            src="https://s3-media0.fl.yelpcdn.com/bphoto/IawDcF1QmHSzUQDczHYVuw/ls.jpg"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Chicken Satay</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">Rp. 10.000</span>
+                                        <div class="flex text-secondary text-sm items-start gap-2">
+                                            <i class="ti !text-muted text-xl ti-tools-kitchen-2"></i>
+                                            <span>{{ implode(', ', $restaurant->diningOptions->pluck('name')->toArray()) }}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </x-card>
-                        </div>
-                        <div class="mb-0">
-                            <x-card title="About Restaurant">
-                                <div class="grid grid-cols-2 md:grid-cols-4">
-                                    <div>
-                                        <img class="size-44 object-cover lazyload" data-src="{{ $restaurant->thumbnail }}"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Inside</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">1 Photos</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <img class="size-44 object-cover lazyload" data-src="{{ $restaurant->thumbnail }}"
-                                            alt="Image description">
-                                        <h6 class="text-lg font-medium text-black">Outside</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">1 Photos</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="relative size-44">
-                                            <div class="absolute inset-0 bg-black opacity-70"></div>
-                                            <div
-                                                class="absolute text-center text-white z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold">
-                                                <span>2+</span>
-                                            </div>
-                                            <img class="size-44 object-cover lazyload"
-                                                data-src="{{ $restaurant->thumbnail }}" alt="Image description">
-                                        </div>
-                                        <h6 class="text-lg font-medium text-black">All Photos</h6>
-                                        <div class="flex items-center">
-                                            <span class="text-xs text-secondary">2 Photos</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </x-card>
+                            </div>
                         </div>
                     </div>
                     <div class="col-span-12 md:col-span-4">
-                        <div class="sticky top-[78px]">
+                        <div class="sticky top-[78px] has-[#reservationWrapper>*]:space-y-3">
+                            <div id="reservationWrapper">
+                                <div class="animate-pulse space-y-4">
+                                    <div class="h-24 bg-gray-300 rounded w-full"></div>
+                                </div>
+                            </div>
                             <x-card title="Location & Hours">
                                 <div id="map" class="h-44 mb-3"></div>
                                 <div class="flex items-center justify-between mb-3">
@@ -207,12 +207,19 @@
                                 </div>
                                 <table class="min-w-full table-auto">
                                     <tbody>
+                                        @php
+                                            $today = strtolower(now()->format('l')); // contoh: 'monday'
+                                        @endphp
+
                                         @forelse ($restaurant->operatingHours ?? [] as $hours)
                                             @if ($hours)
                                                 <tr>
                                                     <td class="text-dark font-semibold py-1">{{ ucfirst($hours->day) }}
                                                     </td>
-                                                    <td class="text-dark py-1">{{ $hours->operating_hours }}</td>
+                                                    <td
+                                                        class="text-dark py-1 {{ strtolower($hours->day) === $today ? 'font-semibold' : '' }}">
+                                                        {{ $hours->operating_hours }}
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @empty
@@ -228,66 +235,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3" id="write-a-review">
+                <div id="write-a-review" class="w-full lg:w-8/12">
                     <x-card title="Write a Review">
                         @if (Auth::check())
-                            <div class="flex justify-between">
-                                <div class="flex items-center gap-2">
-                                    @if(Auth::user()->avatar)
-                                        <!-- Show Avatar if exists -->
-                                        <img class="size-18 rounded-full" src="{{ Auth::user()->avatar }}" alt="user photo">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                                <div class="flex items-center gap-3">
+                                    @if (Auth::user()->avatar)
+                                        <img class="w-14 h-14 rounded-full object-cover" src="{{ Auth::user()->avatar }}"
+                                            alt="user photo">
                                     @else
-                                        <span class="size-18 flex items-center justify-center bg-primary text-white text-xl font-medium rounded-full">
+                                        <span
+                                            class="w-14 h-14 flex items-center justify-center bg-primary text-white text-xl font-medium rounded-full">
                                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                         </span>
                                     @endif
                                     <div class="flex flex-col">
-                                        <h5 class="text-lg font-semibold">{{ Auth::user()->name }}</h5>
+                                        <h5 class="font-semibold text-base">{{ Auth::user()->name }}</h5>
                                         <p class="text-sm text-secondary">Local Explorer Level 6</p>
                                     </div>
                                 </div>
-                                <div class="flex flex-col">
-                                    <div class="flex justify-between">
-                                        <div class="flex items-center gap-1">
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor"
-                                                viewBox="0 0 22 20">
-                                                <path
-                                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor"
-                                                viewBox="0 0 22 20">
-                                                <path
-                                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor"
-                                                viewBox="0 0 22 20">
-                                                <path
-                                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor"
-                                                viewBox="0 0 22 20">
-                                                <path
-                                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                            <svg class="size-3 md:size-4 text-secondary" fill="currentColor"
-                                                viewBox="0 0 22 20">
-                                                <path
-                                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                            </svg>
-                                        </div>
-                                        <span class="text-sm text-secondary font-semibold">
-                                            0/5
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <button type="button" data-modal-target="reviewModal"
-                                            data-modal-toggle="reviewModal" class="text-xs text-primary"
-                                            href="">Add your review of restaurant</button>
-                                    </div>
+                                <div class="sm:self-start">
+                                    <x-button class="w-full lg:w-auto" data-modal-target="reviewModal" data-modal-toggle="reviewModal">Write a
+                                        Review</x-button>
                                 </div>
                             </div>
                         @else
-                            <div class="text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <dotlottie-player
+                                    src="https://lottie.host/ef88c8f6-7f1b-4f14-b6ba-d28b0ea036d9/LFfy4WSd69.lottie"
+                                    background="transparent" speed="1" class="h-64" loop
+                                    autoplay></dotlottie-player>
                                 <p class="text-sm text-secondary mb-2">You need to be logged in to write a review.
                                 </p>
                                 <a href="{{ route('auth.login.index') }}" class="btn btn-md btn-primary">Login</a>
@@ -295,7 +272,7 @@
                         @endif
                     </x-card>
                 </div>
-                <div class="mb-3">
+                <div>
                     <div class="flex my-3">
                         <lord-icon src="https://cdn.lordicon.com/abhwievu.json" trigger="loop" class="size-12">
                         </lord-icon>
@@ -308,41 +285,6 @@
                             </span>
                         </div>
                     </div>
-                    {{-- <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar mb-3">
-                                <x-button class="btn-icon shadow-md" data-modal-target="filterModal"
-                                    data-modal-toggle="filterModal">
-                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path
-                                            d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
-                                    </svg>
-                                    <span>Filter</span>
-                                </x-button>
-                                <x-button class="btn-icon" :outline="true">
-                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M17 3l0 18" />
-                                        <path d="M10 18l-3 3l-3 -3" />
-                                        <path d="M7 21l0 -18" />
-                                        <path d="M20 6l-3 -3l-3 3" />
-                                    </svg>
-                                    <span>
-                                        Rating
-                                    </span>
-                                </x-button>
-                                <x-button :outline="true">
-                                    <span>
-                                        Like
-                                    </span>
-                                </x-button>
-                                <x-button :outline="true">
-                                    <span>
-                                        By Date
-                                    </span>
-                                </x-button>
-                            </div> --}}
                     <div class="grid grid-cols-12 gap-2">
                         @php
                             $comments = $restaurant
@@ -353,7 +295,7 @@
                         @endphp
 
                         @forelse($comments as $comment)
-                            <div class="col-span-12 md:col-span-6 lg:col-span-4">
+                            <div class="col-span-12 md:col-span-6">
                                 <div class="mb-3">
                                     <x-card.review-card :userName="$comment->user->name" :commentDate="$comment->created_at->format('d M Y')" :userImage="$comment->user->avatar"
                                         :rating="$comment->rating" :restaurantName="$restaurant->name" :commentAttachments="$comment->attachments" :commentText="$comment->comment"
@@ -385,29 +327,38 @@
         <form method="POST" action="{{ route('user.review.store', ['slug' => $restaurant->slug]) }}">
             @csrf
             <input type="hidden" name="rating" id="rating-input" value="5">
-            <x-filepond class="filepond-image" label="Attachment" name="attachments[]" id="image" multiple
-                :required="false" />
 
             <!-- Rating section -->
-            <div class="relative mb-4">
-                <!-- Star rating on top of the textarea -->
-                <div class="absolute top-2 left-2 flex items-center space-x-2">
-                    <div id="star-rating" class="flex space-x-1 cursor-pointer">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <i class="ti ti-star-filled text-warning" data-index="{{ $i }}"></i>
-                        @endfor
-                    </div>
-                    <span class="text-sm font-semibold text-dark">
-                        Rate
-                    </span>
+            <div class="mb-3">
+                <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="star-rating">
+                    How would you rate this place?
+                </label>
+                <div id="star-rating" class="flex space-x-1 cursor-pointer">
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="ti ti-star-filled text-2xl text-warning hover:scale-110 transition-transform"
+                            data-index="{{ $i }}"></i>
+                    @endfor
                 </div>
-                <!-- Review text area with space for stars -->
-                <textarea placeholder="Start your review..." name="comment"
-                    class="w-full h-32 px-2 py-8 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    rows="5"></textarea>
             </div>
+
+            <div class="mb-3">
+                <div class="relative">
+                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="comment">
+                        Share your experience with others <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="comment"
+                        class="w-full h-32 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary px-3 py-2"
+                        placeholder="Was it amazing? Any tips for other visitors?"></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="image"
+                    multiple :required="false" />
+            </div>
+
             <!-- Post review button -->
-            <x-button type="submit">
+            <x-button type="submit" class="w-full">
                 Post Review
             </x-button>
         </form>
@@ -489,6 +440,9 @@
 @endsection
 
 @push('scripts')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
+
     <script>
         const stars = document.querySelectorAll('#star-rating i');
         const ratingInput = document.getElementById('rating-input');
@@ -513,6 +467,152 @@
             });
         });
     </script>
+    <script>
+        let allImages = [];
+        let currentIndex = 0;
+        const batchSize = 8;
+        let viewer;
+
+        function renderNextBatch() {
+            const nextImages = allImages.slice(currentIndex, currentIndex + batchSize);
+            nextImages.forEach(url => {
+                $('#gallery').append(`
+            <div class="aspect-square overflow-hidden rounded-lg bg-gray-200 cursor-zoom-in">
+                <img class="w-full h-full object-cover" src="${url}" alt="Gallery Image">
+            </div>
+        `);
+            });
+
+            currentIndex += batchSize;
+            if (currentIndex >= allImages.length) {
+                $('#load-more').hide();
+            }
+
+            if (viewer) viewer.destroy();
+            viewer = new Viewer(document.getElementById('gallery'), {
+                toolbar: true,
+                navbar: true,
+                title: false,
+                fullscreen: true,
+                tooltip: false,
+                movable: true,
+                rotatable: true,
+                scalable: true,
+                transition: true,
+            });
+        }
+
+        function fetchImages() {
+            $.ajax({
+                url: '{{ route('fetch.image', ['place_id' => $restaurant->place_id]) }}',
+                method: 'GET',
+                success: function(res) {
+                    $('#gallery').empty();
+                    if (res.success && res.images.length > 0) {
+                        $('#status').text(`Loaded ${res.count} images in ${res.duration} seconds.`);
+                        allImages = res.images;
+                        renderNextBatch();
+
+                        if (allImages.length > batchSize) {
+                            $('#load-more').show();
+                        }
+                    } else {
+                        $('#status').text('No images found.');
+                    }
+                },
+                error: function() {
+                    $('#status').text('Failed to fetch images.');
+                }
+            });
+        }
+
+        function fetchReservation() {
+            $.ajax({
+                url: '{{ route('fetch.reservation', ['place_id' => $restaurant->place_id]) }}',
+                method: 'GET',
+                success: function(res) {
+                    const data = res.data;
+
+                    const createSelect = (label, name, options, placeholder) => {
+                        const opts = [`<option value="">${placeholder}</option>`];
+                        options.forEach(val => {
+                            opts.push(`<option value="${val}">${val}</option>`);
+                        });
+
+                        return `
+                            <div class="mb-3">
+                                <label for="${name}" class="block mb-2 text-sm font-semibold">
+                                    ${label} <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="${name}" id="${name}" class="w-full bg-transparent border border-light/50 focus:border-primary focus:border-2 text-sm text-muted focus:outline-none rounded-lg p-2.5">
+                                        ${opts.join('')}
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                    };
+
+                    const createInput = (label, name, type, placeholder) => {
+                        let extraAttrs = '';
+                        if (type === 'date') {
+                            const tomorrow = new Date();
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            const minDate = tomorrow.toISOString().split('T')[0];
+                            extraAttrs = `min="${minDate}"`;
+                        }
+
+                        return `
+                            <div class="mb-3">
+                                <label for="${name}" class="block mb-2 text-sm font-semibold">
+                                    ${label} <span class="text-red-500">*</span>
+                                </label>
+                                <input type="${type}" name="${name}" id="${name}" placeholder="${placeholder}"
+                                    ${extraAttrs}
+                                    class="w-full bg-transparent border border-light/50 focus:border-primary focus:border-2 text-sm text-muted focus:outline-none rounded-lg p-2.5" />
+                            </div>
+                        `;
+                    };
+
+                    if (res.success) {
+                        $('#reservationWrapper').html(`
+                            <x-card.card title="Reserve a table" class="mb-3">
+                                 <div class="flex items-center gap-2 mb-3 text-sm text-muted">
+                                    <span>This reservation is powered by</span>
+                                    <img src="https://static.chope.co/static/mainwebsite5.0/img/Chope-with-Grab_Logo-Horizontal.png?date=20250617" alt="Chope Logo" class="h-6">
+                                </div>
+                                <form action="{{ route('reservation.store') }}" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="rid" value="${data.rid}">
+                                    ${createSelect('Adults', 'adults', data.party_sizes, 'Select adults')}
+                                    ${createSelect('Childern', 'children', data.child_sizes, 'Select children')}
+                                    ${createSelect('Time', 'time', data.time_slots, 'Select time')}
+                                    ${createInput('Reservation Date', 'date', 'date', 'Select date')}
+                                    <x-button type="submit">Submit</x-button>
+                                    <x-button type="reset">Reset</x-button>
+                                </form>
+                            </x-card.card>
+                        `);
+                    } else {
+                        $('#reservationWrapper').empty();
+                    }
+                },
+                error: function() {
+                    $('#reservationWrapper').empty();
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchImages();
+            fetchReservation();
+        });
+
+        $('#load-more').click(function() {
+            renderNextBatch();
+        });
+    </script>
+
     <script>
         var latitude = {{ $restaurant->latitude }};
         var longitude = {{ $restaurant->longitude }};

@@ -22,30 +22,24 @@
     <!-- Comment Image -->
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
-        <div class="swiper reviewSwiper rounded-lg mb-3">
-            <div class="swiper-wrapper">
-                @forelse($commentAttachments as $attachment)
-                    <div class="swiper-slide">
-                        <img class="w-full h-48 object-cover rounded-lg lazyload" data-src="{{ Storage::url($attachment->source) }}"
-                            alt="Review Image">
-                    </div>
-                @empty
-                    {{-- <div class="swiper-slide">
-                        <div class="w-full h-48 rounded-lg flex items-center justify-center bg-gray-200 text-gray-500 text-sm font-medium italic">
-                            No images available
-                        </div>
-                    </div> --}}
-                @endforelse
-            </div>
-            <div class="swiper-pagination"></div>
+    <div class="swiper reviewSwiper rounded-lg mb-3">
+        <div class="swiper-wrapper">
+            @foreach($commentAttachments as $attachment)
+                <div class="swiper-slide">
+                    <img class="w-full h-48 object-cover rounded-lg lazyload"
+                        data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
+                </div>
+            @endforeach
         </div>
+        <div class="swiper-pagination"></div>
+    </div>
 
     <!-- Comment Text -->
-    <div>
-        <p class="text-sm line-clamp-2">
+    <div class="comment-wrapper">
+        <p class="text-sm line-clamp-2 comment-text">
             {{ $commentText }}
         </p>
-        <span class="text-sm text-primary cursor-pointer">Read More</span>
+        <span class="toggle-readmore hover:underline text-sm text-primary cursor-pointer">Read More</span>
     </div>
 
 
@@ -67,13 +61,6 @@
 <div id="dropdownReview{{ $commentId }}"
     class="z-10 hidden bg-secondary-background divide-y divide-gray-100 rounded-lg shadow-sm w-36">
     <ul class="py-2 text-sm text-black" aria-labelledby="dropdownReviewButton">
-        <li>
-            <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
-                class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
-                <i class="ti ti-share text-lg me-1.5"></i>
-                Share
-            </a>
-        </li>
         <li>
             <a href="#" data-modal-target="reportModal" data-modal-toggle="reportModal"
                 data-comment-id="{{ $commentId }}"
@@ -110,6 +97,46 @@
                 </div>
             </form>
         </x-modal>
+        <script>
+            $(document).ready(function() {
+                $('.comment-wrapper').each(function() {
+                    const $wrapper = $(this);
+                    const $text = $wrapper.find('.comment-text');
+                    const $toggle = $wrapper.find('.toggle-readmore');
+
+                    // Buat elemen clone untuk ukur tinggi sebenarnya
+                    const $clone = $text.clone().css({
+                        'visibility': 'hidden',
+                        'position': 'absolute',
+                        'height': 'auto',
+                        'max-height': 'none',
+                        'overflow': 'visible'
+                    }).removeClass('line-clamp-2').appendTo('body');
+
+                    const actualHeight = $clone.height();
+                    const lineHeight = parseFloat($text.css('line-height'));
+                    const maxLines = 2;
+
+                    $clone.remove();
+
+                    if (actualHeight > lineHeight * maxLines) {
+                        $toggle.removeClass('hidden');
+                    }
+
+                    $toggle.on('click', function() {
+                        const isExpanded = !$text.hasClass('line-clamp-2');
+
+                        if (isExpanded) {
+                            $text.addClass('line-clamp-2');
+                            $toggle.text('Read More');
+                        } else {
+                            $text.removeClass('line-clamp-2');
+                            $toggle.text('Read Less');
+                        }
+                    });
+                });
+            });
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.reporting').forEach(function(el) {
