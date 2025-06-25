@@ -5,25 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }}</title>
+    <title>@yield('title', config('app.name'))</title>
 
-    <meta name="description"
-        content="{{ config('app.name') }} helps you discover the best restaurants and delivers your favorite food right to your door. Fast, easy, and delicious.">
-    <meta name="keywords"
-        content="{{ config('app.name') }}, food delivery, order food online, food courier, nearby restaurants, affordable food">
-    <meta name="author" content="RanggaCasper">
-
-    <!-- Responsive & SEO -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('meta_description', config('app.name') . ' helps you discover the best restaurants and delivers your favorite food right to your door. Fast, easy, and delicious.')">
+    <meta name="keywords" content="@yield('meta_keywords', config('app.name') . ', food delivery, order food online, food courier, nearby restaurants, affordable food')">
+    <meta name="author" content="@yield('meta_author', 'RanggaCasper')">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph (Facebook, WhatsApp, etc.) -->
-    <meta property="og:title" content="{{ config('app.name') }} - For Ur Dining" />
-    <meta property="og:description"
-        content="Discover your favorite restaurants and enjoy fast, reliable food delivery with {{ config('app.name') }}." />
-    <meta property="og:image" content="{{ asset('assets/image/logo.png') }}" />
-    <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:type" content="website" />
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="@yield('meta_og_title', config('app.name') . ' - For Ur Dining')" />
+    <meta property="og:description" content="@yield('meta_og_description', 'Discover your favorite restaurants and enjoy fast, reliable food delivery with ' . config('app.name') . '.')" />
+    <meta property="og:image" content="@yield('meta_og_image', asset('assets/image/logo.png'))" />
+    <meta property="og:url" content="@yield('meta_og_url', url()->current())" />
+    <meta property="og:type" content="@yield('meta_og_type', 'website')" />
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('assets/image/logo.png') }}" type="image/x-icon" />

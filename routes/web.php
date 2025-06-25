@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -100,4 +102,19 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
-Route::get('/serpapi', [\App\Http\Controllers\Api\SerpApiController::class, 'search'])->name('serapi.search');
+Route::get('/generate-sitemap', function () {
+    $sitemap = Sitemap::create()
+        ->add(Url::create('/'))
+        ->add(Url::create(route('list')));
+
+    foreach (\App\Models\Restaurant\Restaurant::all() as $restaurant) {
+        $sitemap->add(
+            Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
+                ->setLastModificationDate($restaurant->updated_at)
+        );
+    }
+
+    $sitemap->writeToFile(public_path('sitemap.xml'));
+
+    return 'Sitemap generated with restaurants!';
+});
