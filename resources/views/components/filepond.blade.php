@@ -1,5 +1,5 @@
 @props([
-    'class' => 'filepond-image', // filepond-image, filepond-audio
+    'class' => 'filepond-image', // filepond-image, filepond-audio, filepond-document
     'label' => 'Image',
     'id' => 'filepond',
     'required' => true,
@@ -91,6 +91,23 @@
                     labelMaxFileSizeExceed: 'Maximum file size is {filesize}',
                     allowMultiple: false,
                     maxFiles: 1,
+                });
+            });
+
+            $("input.filepond-document").each(function() {
+                FilePond.create(this, {
+                    acceptedFileTypes: [
+                        'application/pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    ],
+                    allowFileSizeValidation: true,
+                    maxFileSize: {{ 1000000 * 5 }},
+                    labelMaxFileSizeExceed: 'Maximum file size is {filesize}',
+                    allowMultiple: false,
+                    maxFiles: 1
                 });
             });
 

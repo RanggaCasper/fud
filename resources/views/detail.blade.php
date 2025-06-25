@@ -90,14 +90,41 @@
                             </a>
                         </span>
                         <span class="border-s mx-2 border-white/50"></span>
-                        <span data-tooltip-target="tooltip-claim" data-tooltip-placement="bottom" data-tooltip-trigger="click" class="flex text-xs md:text-sm gap-1 font-semibold items-center text-white space-x-2 underline">Unclaimed</span>
-                        <div id="tooltip-claim" role="tooltip" class="absolute z-10 max-w-xs invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
-                            Business owners can claim it to manage details, upload photos, respond to reviews, and more.
-                            <div class="tooltip-arrow" data-popper-arrow></div>
-                            <p>
-                                <a class="font-semibold" href="">Claim this restaurant</a>
-                            </p>
+                        @php
+                            $claimed = $restaurant->claim !== null;
+                        @endphp
+                        <div class="flex items-center gap-1">
+                            @if ($claimed)
+                                <i class="ti ti-circle-dashed-check text-success"></i>
+                            @endif
+                            <span data-tooltip-target="{{ $claimed ? 'tooltip-claimed' : 'tooltip-claim' }}"
+                                data-tooltip-placement="bottom" data-tooltip-trigger="click"
+                                class="flex cursor-pointer text-xs md:text-sm gap-1 font-semibold items-center space-x-2 underline text-white">
+                                {{ $claimed ? ' Claimed' : 'Unclaimed' }}
+                            </span>
                         </div>
+
+
+                        @if ($claimed)
+                            <div id="tooltip-claimed" role="tooltip"
+                                class="absolute z-10 max-w-xs invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
+                                This restaurant has been claimed by its owner. They can now update information, respond to
+                                reviews, and manage their presence.
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                        @else
+                            <div id="tooltip-claim" role="tooltip"
+                                class="absolute z-10 max-w-xs invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
+                                Business owners can claim it to manage details, upload photos, respond to reviews, and more.
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                <p>
+                                    <a class="font-semibold"
+                                        href="{{ route('restaurant.claim', ['slug' => $restaurant->slug]) }}">Claim this
+                                        restaurant</a>
+                                </p>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 
@@ -255,7 +282,8 @@
                                     </div>
                                 </div>
                                 <div class="sm:self-start">
-                                    <x-button class="w-full lg:w-auto" data-modal-target="reviewModal" data-modal-toggle="reviewModal">Write a
+                                    <x-button class="w-full lg:w-auto" data-modal-target="reviewModal"
+                                        data-modal-toggle="reviewModal">Write a
                                         Review</x-button>
                                 </div>
                             </div>
@@ -353,8 +381,8 @@
             </div>
 
             <div class="mb-3">
-                <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="image"
-                    multiple :required="false" />
+                <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="image" multiple
+                    :required="false" />
             </div>
 
             <!-- Post review button -->
@@ -444,7 +472,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
 
     <script>
-        const stars = document.querySelectorAll('#star-rating i');
+        const stars = document.querySelector All('#star-rating i');
         const ratingInput = document.getElementById('rating-input');
 
         stars.forEach((star, index) => {

@@ -25,7 +25,7 @@ class Restaurant extends Model
     {
         return $this->hasMany(OperatingHours::class);
     }
-    
+
     public function accessibilities()
     {
         return $this->hasMany(Accessibility::class);
@@ -41,6 +41,10 @@ class Restaurant extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function claim()
+    {
+        return $this->hasOne(Claim::class)->where('status', 'approved');
+    }
 
     public function offerings()
     {
@@ -51,7 +55,7 @@ class Restaurant extends Model
     {
         return $this->hasMany(Review::class);
     }
-    
+
     public function getTodayOperatingHours()
     {
         $timezone = session('timezone', 'Asia/Jakarta');

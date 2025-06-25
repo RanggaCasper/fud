@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'checkAjax' => \App\Http\Middleware\CheckAjax::class,
             'checkRole' => \App\Http\Middleware\CheckRole::class,
+            'checkOwned' => \App\Http\Middleware\CheckOwned::class,
             'auth' => \App\Http\Middleware\AuthMiddleware::class,
         ]);
     })

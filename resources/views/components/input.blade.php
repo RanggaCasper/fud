@@ -14,7 +14,7 @@
             name="{{ $name }}" 
             placeholder="{{ $placeholder }}" 
             value="{{ $value }}"
-            class="w-full text-sm text-dark rounded-lg border focus:border-primary focus:border-2 p-2.5 
+            class="w-full text-sm text-dark rounded-lg border border-light/90 focus:border-primary focus:border-2 p-2.5 
                 {{ $type === 'password' ? 'password-field' : '' }} 
                 {{ $disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-400' : '' }}" 
             {{ $attributes }} 

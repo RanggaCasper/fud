@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/restaurants', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
-// Route::get('/list', [\App\Http\Controllers\HomeController::class, 'list'])->name('restalist');
 Route::get('/reviews', [\App\Http\Controllers\HomeController::class, 'reviews'])->name('reviews');
 Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
 Route::get('/fetch-image/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchImage'])->name('fetch.image');
@@ -22,6 +21,8 @@ Route::get('/dashboard', function () {
 })->name('dashboard.index');
 
 Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant.index');
+Route::get('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'claim'])->name('restaurant.claim');
+Route::post('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'store'])->name('restaurant.claim.store');
 
 Route::post('/reason/report', \App\Http\Controllers\ReasonController::class)->name('reason.report');
 
@@ -82,8 +83,9 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
     });
 });
 
-Route::prefix('owner')->as('owner.')->middleware('checkRole:owner')->group(function () {
+Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'index'])->name('manage.index');
 });
 
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {

@@ -92,20 +92,28 @@ class SocialLoginController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
+            if (!$user->password) {
+                flash()->error('Set a password before disconnecting ' . ucfirst($provider) . '.');
+                return redirect()->route('settings.index');
+            }
+
             $socialAccount = SocialAccount::where('user_id', $user->id)
                 ->where('social_provider', $provider)
                 ->first();
 
             if (!$socialAccount) {
-                return redirect()->route('settings.index')->with('error', ucfirst($provider) . ' account is not connected.');
+                flash()->error(ucfirst($provider) . ' is not connected.');
+                return redirect()->route('settings.index');
             }
 
             $socialAccount->delete();
 
-            return redirect()->route('settings.index')->with('success', ucfirst($provider) . ' account disconnected successfully!');
+            flash()->success(ucfirst($provider) . ' disconnected.');
+            return redirect()->route('settings.index');
         }
 
-        return redirect()->route('auth.login.index')->with('error', 'You need to log in first.');
+        flash()->error('Please log in first.');
+        return redirect()->route('auth.login.index');
     }
 
     private function generateUsername($socialUser)

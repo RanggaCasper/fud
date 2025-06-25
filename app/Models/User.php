@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Restaurant\Claim;
 use App\Models\Restaurant\Favorite;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,6 +53,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function restaurantClaim()
+    {
+        return $this->hasOne(Claim::class, 'user_id');
+    }
+
+    public function owned()
+    {
+        return $this->hasOne(Claim::class, 'user_id')->where('status', 'approved');
+    }
+
+    public function restaurantClaims()
+    {
+        return $this->hasMany(Claim::class);
+    }
+
 
     public function role()
     {
