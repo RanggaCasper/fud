@@ -31,7 +31,7 @@
                 @foreach ($commentAttachments as $attachment)
                     <div class="swiper-slide">
                         <img class="w-full h-48 object-cover rounded-lg lazyload"
-                            data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
+                            src="{{ Storage::url($attachment->source) }}" alt="Review Image">
                     </div>
                 @endforeach
             </div>
@@ -98,19 +98,15 @@
             </form>
         </x-modal>
         <script>
-            const allImages = document.querySelectorAll('.lazyload');
+            document.addEventListener('DOMContentLoaded', function() {
+                const images = document.querySelectorAll('img');
 
-            const images = Array.from(allImages).filter(img =>
-                img.closest('[class^="gallery-"]')
-            );
-
-            images.forEach(img => {
-                img.addEventListener('load', () => {
-                    img.classList.remove('skeleton');
-                    img.classList.add('loaded');
-
+                Array.from(images).filter(img =>
+                    img.closest('[class^="gallery-"]')
+                ).forEach(img => {
                     const gallery = img.closest('[class^="gallery-"]');
-                    if (gallery && !gallery.viewerInstance) {
+
+                    if (img.complete && img.naturalHeight !== 0 && gallery && !gallery.viewerInstance) {
                         gallery.viewerInstance = new Viewer(gallery, {
                             toolbar: true,
                             navbar: true,
@@ -121,9 +117,26 @@
                             rotatable: true,
                             scalable: true,
                             transition: true,
-                            url: 'data-src'
+                            url: 'src'
                         });
                     }
+
+                    img.addEventListener('load', function() {
+                        if (gallery && !gallery.viewerInstance) {
+                            gallery.viewerInstance = new Viewer(gallery, {
+                                toolbar: true,
+                                navbar: true,
+                                title: false,
+                                fullscreen: true,
+                                tooltip: false,
+                                movable: true,
+                                rotatable: true,
+                                scalable: true,
+                                transition: true,
+                                url: 'src'
+                            });
+                        }
+                    });
                 });
             });
 
