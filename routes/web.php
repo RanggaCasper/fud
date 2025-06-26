@@ -133,7 +133,7 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     }
 
     $output = [];
-    exec('cd /var/www/fud && git pull origin main', $output);
+    exec('cd /var/www/fud && git pull', $output);
 
     return response()->json(['status' => 'ok', 'output' => $output]);
 })->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
