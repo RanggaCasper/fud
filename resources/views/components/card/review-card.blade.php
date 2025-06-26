@@ -3,12 +3,10 @@
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             <!-- Profile Image -->
-            @if ($userImage)
-                <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}"
-                    alt="profile picture">
+            @if($userImage)
+                <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}" alt="profile picture">
             @else
-                <span
-                    class="w-9 h-9 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
+                <span class="w-9 h-9 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
                     {{ strtoupper(substr($userName, 0, 1)) }}
                 </span>
             @endif
@@ -30,16 +28,12 @@
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
-        <div id="pswp-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-2">
-            @foreach ($commentAttachments as $attachment)
-                @php
-                    $imageUrl = Storage::url($attachment->source);
-                @endphp
-                <a href="{{ $imageUrl }}" data-pswp-width="1600" data-pswp-height="1200" target="_blank"
-                    class="block">
-                    <img src="{{ $imageUrl }}" class="object-cover w-full h-40 rounded-lg shadow"
-                        alt="Review Image">
-                </a>
+        <div class="swiper-wrapper">
+            @foreach($commentAttachments as $attachment)
+                <div class="swiper-slide">
+                    <img class="w-full h-48 object-cover rounded-lg lazyload"
+                        data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
+                </div>
             @endforeach
         </div>
         <div class="swiper-pagination"></div>
@@ -84,20 +78,7 @@
 </div>
 
 @once
-    @push('scripts')
-        <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
-        <script type="module">
-            import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
-
-            const lightbox = new PhotoSwipeLightbox({
-                gallery: '#pswp-gallery',
-                children: 'a',
-                pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.min.js'),
-            });
-
-            lightbox.init();
-        </script>
-    @endpush
+    <!-- Modal for reporting comments -->
 
     @push('scripts')
         <x-modal title="Report Comment" id="reportModal" size="md">
