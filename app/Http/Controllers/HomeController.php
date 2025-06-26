@@ -17,12 +17,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $comment = Review::with('restaurant')->get();
-        // foreach ($comment as $item) {
-        //     dump($item->toArray());
-        // }
-        // $restaurants = Restaurant::with(['diningOptions', 'reviews'])->get()->take(5);
-        // dd($restaurants->toArray());
+        $comment = Review::with('restaurant')->get()->take(6);
 
         return view('home', [
             'restaurants' => $this->getRankedRestaurants()->take(6),
