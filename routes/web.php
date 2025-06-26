@@ -120,3 +120,24 @@ Route::middleware([])->get('/sitemap.xml', function () {
     return \Illuminate\Support\Facades\Response::make($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');
 });
+
+Route::post('/deploy', function (\Illuminate\Http\Request $request) {
+    $token = env('DEPLOY_SECRET', 'secret-token');
+
+    if ($request->header('X-Deploy-Token') !== $token) {
+        \Illuminate\Support\Facades\Log::warning('Unauthorized deploy attempt');
+        abort(Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, 'Unauthorized');
+    }
+
+    $output = [];
+    $code = 0;
+
+    exec('cd /var/www/fud && git pull origin main 2>&1', $output, $code);
+
+    \Illuminate\Support\Facades\Log::info('Deploy run', ['output' => $output, 'code' => $code]);
+
+    return response()->json([
+        'status' => $code === 0 ? 'success' : 'error',
+        'output' => $output,
+    ]);
+});
