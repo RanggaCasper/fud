@@ -18,7 +18,7 @@ class HomeController extends Controller
     public function index()
     {
         $comment = Review::with('restaurant')
-            ->latest()
+            ->latest('id')
             ->take(6)
             ->get();
 
