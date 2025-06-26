@@ -125,15 +125,33 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
     $secret = env('GITHUB_WEBHOOK_SECRET');
 
-    $hash = 'sha256=' . hash_hmac('sha256', $request->getContent(), $secret);
+    $expectedHash = 'sha256=' . hash_hmac('sha256', $request->getContent(), $secret);
 
-    if (!hash_equals($hash, $signature)) {
-        \Illuminate\Support\Facades\Log::warning('Invalid GitHub webhook signature');
-        abort(Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, 'Unauthorized');
+    if (!hash_equals($expectedHash, $signature)) {
+        abort(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, 'Unauthorized');
     }
 
-    $output = [];
-    exec('cd /var/www/fud && git pull', $output);
+    $commands = [
+        'echo $PWD',
+        'whoami',
+        'git pull origin main',
+        'git status',
+        'composer install --no-dev',
+        'php artisan migrate --force',
+        'php artisan config:cache',
+    ];
 
-    return response()->json(['status' => 'ok', 'output' => $output]);
-})->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    $results = [];
+
+    foreach ($commands as $command) {
+        $results[] = [
+            'command' => $command,
+            'output' => trim(shell_exec($command)),
+        ];
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'commands' => $results,
+    ]);
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
