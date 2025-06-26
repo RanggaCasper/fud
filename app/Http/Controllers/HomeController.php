@@ -17,7 +17,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $comment = Review::with('restaurant')->get()->take(6);
+        $comment = Review::with('restaurant')
+            ->latest()
+            ->take(6)
+            ->get();
 
         return view('home', [
             'restaurants' => $this->getRankedRestaurants()->take(6),
