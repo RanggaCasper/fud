@@ -136,4 +136,4 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     exec('cd /var/www/fud && git pull origin main', $output);
 
     return response()->json(['status' => 'ok', 'output' => $output]);
-})->middleware(['csrf.exempt']);
+})->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
