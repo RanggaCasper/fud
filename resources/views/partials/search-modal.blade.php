@@ -132,6 +132,8 @@
                     });
                 });
             });
+
+            sendLocation();
         </script>
     @endpush
 @endonce
