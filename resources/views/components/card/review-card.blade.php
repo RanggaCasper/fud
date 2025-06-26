@@ -110,33 +110,30 @@
         </x-modal>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const gallery = document.getElementById('review-images');
-                const viewer = new Viewer(gallery, {
-                    toolbar: {
-                        zoomIn: 1,
-                        zoomOut: 1,
-                        oneToOne: 1,
-                        reset: 1,
-                        prev: 1,
-                        play: {
-                            show: 0,
-                            size: 'large',
-                        },
-                        next: 1,
-                        rotateLeft: 1,
-                        rotateRight: 1,
-                        flipHorizontal: 1,
-                        flipVertical: 1,
-                    },
-                    navbar: false,
-                    title: false,
-                    tooltip: true,
-                    movable: true,
-                    zoomable: true,
-                    rotatable: true,
-                    scalable: true,
-                    transition: true,
-                });
+                AOS.init();
+
+                setTimeout(function() {
+                    const gallery = document.getElementById('review-images');
+                    if (gallery) {
+                        try {
+                            new Viewer(gallery, {
+                                toolbar: true,
+                                title: false,
+                                navbar: false,
+                                tooltip: true,
+                                movable: true,
+                                zoomable: true,
+                                rotatable: true,
+                                scalable: true,
+                                transition: true,
+                            });
+                        } catch (e) {
+                            console.error('Viewer init failed:', e);
+                        }
+                    } else {
+                        console.error('review-images element not found!');
+                    }
+                }, 600);
             });
         </script>
         <script>
