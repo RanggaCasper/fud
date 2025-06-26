@@ -102,19 +102,20 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
-Route::get('/generate-sitemap', function () {
+Route::get('/sitemap.xml', function () {
     $sitemap = Sitemap::create()
         ->add(Url::create('/'))
         ->add(Url::create(route('list')));
 
-    foreach (\App\Models\Restaurant\Restaurant::all() as $restaurant) {
-        $sitemap->add(
-            Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
-                ->setLastModificationDate($restaurant->updated_at)
-        );
-    }
+    \App\Models\Restaurant\Restaurant::query()
+        ->orderByDesc('updated_at')
+        ->get()
+        ->each(function ($restaurant) use ($sitemap) {
+            $sitemap->add(
+                Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
+                    ->setLastModificationDate($restaurant->updated_at)
+            );
+        });
 
-    $sitemap->writeToFile(public_path('sitemap.xml'));
-
-    return 'Sitemap generated with restaurants!';
+    return $sitemap->toResponse(request());
 });
