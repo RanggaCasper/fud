@@ -30,8 +30,8 @@
             <div class="swiper-wrapper ">
                 @foreach ($commentAttachments as $attachment)
                     <div class="swiper-slide">
-                        <img class="gallery-image w-full h-48 object-cover rounded-lg lazyload"
-                            data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
+                        <img class="gallery-image w-full h-48 object-cover rounded-lg"
+                            src="{{ Storage::url($attachment->source) }}" alt="Review Image">
                     </div>
                 @endforeach
             </div>
@@ -118,7 +118,7 @@
                         });
                     }
                 });
-                
+
                 $('.comment-wrapper').each(function() {
                     const $wrapper = $(this);
                     const $text = $wrapper.find('.comment-text');
