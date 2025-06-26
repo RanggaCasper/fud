@@ -98,20 +98,23 @@
             </form>
         </x-modal>
         <script>
-            $(document).ready(function() {
-                const galleries = document.querySelectorAll('[class^="gallery-"]');
+            const images = document.querySelectorAll('.lazyload');
 
-                galleries.forEach(gallery => {
-                    const images = gallery.querySelectorAll('img.lazyload');
+            const lazyLoad = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.getAttribute('data-src');
 
-                    let allLoaded = 0;
-                    let viewerAttached = false;
+                        img.classList.remove('lazyload');
+                        img.classList.add('loaded');
 
-                    images.forEach(img => {
-                        img.addEventListener('load', function() {
-                            allLoaded++;
+                        img.onload = () => {
+                            img.classList.remove('skeleton');
+                            img.classList.add('loaded');
 
-                            if (allLoaded === images.length && !viewerAttached) {
+                            const gallery = img.closest('[class^="gallery-"]');
+                            if (gallery && !gallery.viewerInstance) {
                                 gallery.viewerInstance = new Viewer(gallery, {
                                     toolbar: true,
                                     navbar: true,
@@ -124,13 +127,23 @@
                                     transition: true,
                                     url: 'data-src'
                                 });
-
-                                viewerAttached = true;
                             }
-                        });
-                    });
-                });
+                        };
 
+                        observer.unobserve(img);
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(lazyLoad, {
+                threshold: 0.1
+            });
+
+            images.forEach(image => {
+                observer.observe(image);
+            });
+
+            $(document).ready(function() {
                 $('.comment-wrapper').each(function() {
                     const $wrapper = $(this);
                     const $text = $wrapper.find('.comment-text');
