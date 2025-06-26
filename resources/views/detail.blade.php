@@ -107,6 +107,8 @@
                         <div class="flex items-center gap-1">
                             @if ($claimed)
                                 <i class="ti ti-circle-dashed-check text-success"></i>
+                            @else
+                                <i class="ti ti-focus-2 text-white"></i>
                             @endif
                             <span data-tooltip-target="{{ $claimed ? 'tooltip-claimed' : 'tooltip-claim' }}"
                                 data-tooltip-placement="bottom" data-tooltip-trigger="click"
@@ -237,7 +239,7 @@
                                         <span class="text-sm line-clamp-2">{{ $restaurant->address }}</span>
                                     </div>
                                     <div class="flex">
-                                        <a href="{{ 'https://www.google.com/maps/place/?q=place_id:' . $restaurant->place_id }}"
+                                        <a href="{{ 'https://www.google.com/maps?cid=' . $restaurant->data_cid }}"
                                             target="_blank" class="btn btn-primary btn-md">
                                             Directions
                                         </a>
@@ -246,10 +248,24 @@
                                 <table class="min-w-full table-auto">
                                     <tbody>
                                         @php
-                                            $today = strtolower(now()->format('l')); // contoh: 'monday'
+                                            $today = strtolower(now()->format('l'));
+                                            $dayOrder = [
+                                                'monday',
+                                                'tuesday',
+                                                'wednesday',
+                                                'thursday',
+                                                'friday',
+                                                'saturday',
+                                                'sunday',
+                                            ];
+                                            $sortedHours = ($restaurant->operatingHours ?? collect())->sortBy(function (
+                                                $hour,
+                                            ) use ($dayOrder) {
+                                                return array_search(strtolower($hour->day), $dayOrder);
+                                            });
                                         @endphp
 
-                                        @forelse ($restaurant->operatingHours ?? [] as $hours)
+                                        @forelse ($sortedHours as $hours)
                                             @if ($hours)
                                                 <tr>
                                                     <td class="text-dark font-semibold py-1">{{ ucfirst($hours->day) }}
