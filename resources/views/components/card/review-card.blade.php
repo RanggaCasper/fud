@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             @if ($userImage)
-                <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}"
+                <img class="w-9 h-9 rounded-full border-2 border-gray-300" src="{{ $userImage }}"
                     alt="profile picture">
             @else
                 <span

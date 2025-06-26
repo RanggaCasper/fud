@@ -22,8 +22,8 @@
     <div class="p-3 relative rounded-lg">
         <div class="mb-2 relative">
             <a href="{{ route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
-                <img data-src="{{ $image }}" loading="lazy"
-                     class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
+                <img src="{{ $image }}"
+                     class="h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                      alt="{{ $title }}">
 
                 <!-- Overlay gradient -->
