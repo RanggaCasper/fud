@@ -84,11 +84,8 @@
 </div>
 
 @once
-    @push('styles')
-        <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
-    @endpush
-
     @push('scripts')
+        <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
         <script type="module">
             import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
 
