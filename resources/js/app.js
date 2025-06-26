@@ -20,7 +20,7 @@ const lazyLoad = (entries, observer) => {
 
             img.onload = () => {
                 img.classList.remove('skeleton');
-                img.classList.add('loaded');
+                img.classList.add('loaded');    
             };
 
             observer.unobserve(img);

@@ -1,8 +1,6 @@
 <div class="mx-auto bg-white rounded-xl shadow overflow-hidden p-6">
-    <!-- Comment Card Content -->
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
-            <!-- Profile Image -->
             @if ($userImage)
                 <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}"
                     alt="profile picture">
@@ -18,7 +16,6 @@
             </div>
         </div>
 
-        <!-- Rating -->
         <div class="flex items-center space-x-1 mb-3">
             <x-star rating="{{ $rating }}" />
         </div>
@@ -26,7 +23,6 @@
 
     <div class="border-t w-full opacity-25 mb-3"></div>
 
-    <!-- Comment Image -->
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
@@ -35,8 +31,7 @@
                 @foreach ($commentAttachments as $attachment)
                     <div class="swiper-slide">
                         <img class="w-full h-48 object-cover rounded-lg lazyload"
-                            data-src="{{ Storage::url($attachment->source) }}"
-                            alt="Review Image">
+                            data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
                     </div>
                 @endforeach
             </div>
@@ -44,7 +39,6 @@
         <div class="swiper-pagination"></div>
     </div>
 
-    <!-- Comment Text -->
     <div class="comment-wrapper">
         <p class="text-sm line-clamp-2 comment-text">
             {{ $commentText }}
@@ -66,8 +60,6 @@
         </div>
     </div>
 </div>
-
-<!-- Dropdown menu for each comment -->
 <div id="dropdownReview{{ $commentId }}"
     class="z-10 hidden bg-secondary-background divide-y divide-gray-100 rounded-lg shadow-sm w-36">
     <ul class="py-2 text-sm text-black" aria-labelledby="dropdownReviewButton">
@@ -83,8 +75,6 @@
 </div>
 
 @once
-    <!-- Modal for reporting comments -->
-
     @push('scripts')
         <x-modal title="Report Comment" id="reportModal" size="md">
             <form action="{{ route('reason.report') }}" method="POST">
@@ -109,18 +99,35 @@
         </x-modal>
         <script>
             $(document).ready(function() {
-                document.querySelectorAll('[class^="gallery-"]').forEach(gallery => {
-                    new Viewer(gallery, {
-                        toolbar: true,
-                        navbar: true,
-                        title: false,
-                        fullscreen: true,
-                        tooltip: false,
-                        movable: true,
-                        rotatable: true,
-                        scalable: true,
-                        transition: true,
-                        url: 'data-src'
+                const galleries = document.querySelectorAll('[class^="gallery-"]');
+
+                galleries.forEach(gallery => {
+                    const images = gallery.querySelectorAll('img.lazyload');
+
+                    let allLoaded = 0;
+                    let viewerAttached = false;
+
+                    images.forEach(img => {
+                        img.addEventListener('load', function() {
+                            allLoaded++;
+
+                            if (allLoaded === images.length && !viewerAttached) {
+                                gallery.viewerInstance = new Viewer(gallery, {
+                                    toolbar: true,
+                                    navbar: true,
+                                    title: false,
+                                    fullscreen: true,
+                                    tooltip: false,
+                                    movable: true,
+                                    rotatable: true,
+                                    scalable: true,
+                                    transition: true,
+                                    url: 'data-src'
+                                });
+
+                                viewerAttached = true;
+                            }
+                        });
                     });
                 });
 
@@ -129,7 +136,6 @@
                     const $text = $wrapper.find('.comment-text');
                     const $toggle = $wrapper.find('.toggle-readmore');
 
-                    // Buat elemen clone untuk ukur tinggi sebenarnya
                     const $clone = $text.clone().css({
                         'visibility': 'hidden',
                         'position': 'absolute',
