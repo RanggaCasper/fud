@@ -13,26 +13,44 @@
 
             <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                 <div>
-                    <h2 class="mb-6 text-sm font-semibold uppercase">Get In Touch</h2>
+                    <h2 class="mb-6 text-sm font-semibold uppercase">Do Business With Us</h2>
                     <ul class="text-muted text-sm space-y-2">
                         <li>
-                            <a href="#" class="hover:underline">{{ config('app.name') }}</a>
+                            <a href="{{ route('home') }}" class="hover:underline">{{ config('app.name') }}</a>
                         </li>
                         <li>
-                            <a href="mailto:support@fudapp.com" class="hover:underline">support@fudapp.com</a>
+                            <a href="#" class="hover:underline">Owners</a>
+                        </li>
+                        <li>
+                            <a href="#" class="hover:underline">Access our Content API</a>
+                        </li>
+                        <li>
+                            <a href="https://casperproject.my.id" class="hover:underline">Casper Project</a>
                         </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h2 class="mb-6 text-sm font-semibold uppercase">Follow Us</h2>
+                    <h2 class="mb-6 text-sm font-semibold uppercase">Sitemap</h2>
                     <ul class="text-muted text-sm space-y-2">
                         <li>
-                            <a href="#" class="hover:underline">GitHub</a>
+                            <a href="{{ route('home') }}" class="hover:underline">Home</a>
                         </li>
                         <li>
-                            <a href="#" class="hover:underline">Instagram</a>
+                            <a href="{{ route('list') }}" class="hover:underline">Restaurants</a>
                         </li>
+                        <li>
+                            <a href="{{ route('reviews') }}" class="hover:underline">Reviews</a>
+                        </li>
+                        @auth
+                            <li>
+                                <a href="{{ route('logout') }}" class="hover:underline">Logout</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ route('auth.login.index') }}" class="hover:underline">Login</a>
+                            </li>
+                        @endauth
                     </ul>
                 </div>
 

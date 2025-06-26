@@ -1,112 +1,80 @@
 @extends('layouts.panel')
 
 @section('content')
-<x-card title="Manage Restaurants">
-    <div id="map" class="h-64 mb-3" style="z-index: 1;"></div>
-    <form action="{{ route('admin.restaurant.fetch') }}" method="POST">
-        @csrf  
-        <div class="mb-3">
-            <x-input
-                label="Latitude"
-                id="lat"
-                name="lat"
-                placeholder="Latitude"
-                type="text"
-                readonly
-            />
-        </div>
-        <div class="mb-3">
-            <x-input
-                label="Longitude"
-                id="lon"
-                name="lon"
-                placeholder="Longitude"
-                type="text"
-                readonly
-            />
-        </div>
-        <x-button type="submit">
-            Fetch
-        </x-button>
-    </form>
-    <table id="datatables" class="display">
-        <thead>
-            <tr>
-                <th>NO</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
-</x-card>
+<div class="flex flex-col space-y-6">
+    <x-card title="Get Restaurant">
+        <div id="map" class="h-64 mb-3" style="z-index: 1;"></div>
+        <form action="{{ route('admin.restaurant.fetch') }}" method="POST">
+            @csrf
+            <div class="mb-3">
+                <x-input label="Latitude" id="lat" name="lat" placeholder="Latitude" type="text" readonly />
+            </div>
+            <div class="mb-3">
+                <x-input label="Longitude" id="lon" name="lon" placeholder="Longitude" type="text" readonly />
+            </div>
+            <x-button type="submit">
+                Fetch
+            </x-button>
+        </form>
+    </x-card>
+    <x-card title="Restaurants Data">
+        <table id="datatables" class="display">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
 
-<x-modal id="updateModal" title="Update restaurant">
-    <form method="POST" id="form_update">
-        @csrf
-        @method('PUT')
-        <div class="mb-3">
-            <x-input 
-                label="Name"
-                id="name_update"
-                name="name" 
-                placeholder="Name" 
-                type="text"
-            />
-        </div>
-        <div class="mb-3">
-            <x-input 
-                label="restaurantname"
-                id="restaurantname_update"
-                name="restaurantname" 
-                placeholder="restaurantname" 
-                type="text"
-            />
-        </div>
-        <div class="mb-3">
-            <x-input 
-                label="Email"
-                id="email_update"
-                name="email" 
-                placeholder="Email" 
-                type="email"
-            />
-        </div>
-        <x-button label="Submit" type="submit" />
-        <x-button label="Reset" type="reset" /> 
-    </form>
-</x-modal>
+            </tbody>
+        </table>
+    </x-card>
+</div>
 @endsection
 
 @push('scripts')
     <script>
-        $('#datatables').DataTable(
-            {
-                processing: true,
-                serverSide: false,
-                scrollX: true,  
-                ajax: "{{ route('admin.restaurant.get') }}",
-                columns: [
-                    { data: 'no', name: 'no' },
-                    { data: 'name', name: 'name' },
-                    { data: 'phone', name: 'phone' },
-                    { data: 'address', name: 'address' },
-                    { data: 'action', name: 'action' }
-                ]
-            }
-        );
+        $('#datatables').DataTable({
+            processing: true,
+            serverSide: false,
+            scrollX: true,
+            ajax: "{{ route('admin.restaurant.get') }}",
+            columns: [{
+                    data: 'no',
+                    name: 'no'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
+                }
+            ]
+        });
 
         $('#datatables').on('click', '[data-update-id]', function() {
             var id = $(this).data('update-id');
             $.ajax({
-                url: '{{ route("admin.restaurant.getById", ["id" => ":id"]) }}'.replace(':id', id),
+                url: '{{ route('admin.restaurant.getById', ['id' => ':id']) }}'.replace(':id', id),
                 type: 'GET',
                 success: function(response) {
-                    $('#form_update').attr('action', '{{ route("admin.restaurant.update", ["id" => ":id"]) }}'.replace(':id', id));
+                    $('#form_update').attr('action',
+                        '{{ route('admin.restaurant.update', ['id' => ':id']) }}'.replace(':id', id)
+                        );
                     $('#name_update').val(response.data.name);
                     $('#restaurantname_update').val(response.data.restaurantname);
                     $('#email_update').val(response.data.email);
@@ -122,7 +90,7 @@
             });
         });
 
-        $("#datatables").on("click", "[data-delete-id]", function () {
+        $("#datatables").on("click", "[data-delete-id]", function() {
             var id = $(this).data("delete-id");
 
             Swal.fire({
@@ -143,16 +111,17 @@
                 confirmButtonText: "Yes, Delete!",
                 buttonsStyling: false,
                 showCloseButton: true,
-            }).then(function (result) {
+            }).then(function(result) {
                 if (result.value) {
                     $.ajax({
-                        url: '{{ route("admin.restaurant.destroy", ["id" => ":id"]) }}'.replace(":id", id),
+                        url: '{{ route('admin.restaurant.destroy', ['id' => ':id']) }}'.replace(
+                            ":id", id),
                         type: "POST",
                         data: {
                             _token: "{{ csrf_token() }}",
                             _method: "DELETE",
                         },
-                        success: function (data) {
+                        success: function(data) {
                             Swal.fire({
                                 html: `
                                     <div class="mt-3">
@@ -174,16 +143,16 @@
                             });
                             $("#datatables").DataTable().ajax.reload();
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             let response = xhr.responseJSON;
-                            let message; 
-                            
+                            let message;
+
                             if (response.errors) {
                                 message = response.errors;
                             } else {
                                 message = response.message;
                             }
-                            
+
                             Swal.fire({
                                 html: `
                                     <div class="mt-3">
@@ -217,7 +186,9 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        var marker = L.marker([-8.409518, 115.188919], {draggable: true}).addTo(map);
+        var marker = L.marker([-8.409518, 115.188919], {
+            draggable: true
+        }).addTo(map);
         marker.bindPopup("<b>Click on the map to move me!</b>").openPopup();
 
         map.on('click', function(e) {
@@ -228,7 +199,8 @@
             document.getElementById("lon").value = latlng.lng.toFixed(5);
 
             // Update popup posisi marker
-            marker.setPopupContent("<b>Moved to this location!</b><br>Lat: " + latlng.lat.toFixed(5) + "<br>Lon: " + latlng.lng.toFixed(5));
+            marker.setPopupContent("<b>Moved to this location!</b><br>Lat: " + latlng.lat.toFixed(5) + "<br>Lon: " +
+                latlng.lng.toFixed(5));
         });
 
         // Menampilkan koordinat awal marker
@@ -236,4 +208,4 @@
         document.getElementById("lat").value = initialLatLng.lat.toFixed(5);
         document.getElementById("lon").value = initialLatLng.lng.toFixed(5);
     </script>
-@endpush    
+@endpush

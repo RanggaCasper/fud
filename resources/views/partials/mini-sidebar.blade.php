@@ -7,6 +7,11 @@
             </x-nav-item>
 
             @if (Auth::user()->hasRole('admin'))
+                <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
+                    <span>Admin Menu</span>
+                    <div class="flex-grow border-b border-muted"></div>
+                </li>
+
                 <x-nav-item href="{{ route('admin.dashboard.index') }}" icon="ti ti-layout-dashboard"
                     active="{{ request()->routeIs('admin.dashboard.index') }}">
                     Dashboard
@@ -28,7 +33,6 @@
                     <span>User Menu</span>
                     <div class="flex-grow border-b border-muted"></div>
                 </li>
-
 
                 <x-nav-item href="{{ route('user.review.index') }}" icon="ti ti-message-2"
                     active="{{ request()->routeIs('user.review.index') }}">

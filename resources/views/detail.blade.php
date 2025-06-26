@@ -208,18 +208,26 @@
                                 <div>
                                     <h5 class="text-lg font-semibold mb-4">Features</h5>
                                     <div class="flex flex-col space-y-3">
-                                        <div class="flex text-secondary text-sm items-start gap-2">
-                                            <i class="ti !text-muted text-xl ti-credit-card"></i>
-                                            <span>{{ implode(', ', $restaurant->payments->pluck('name')->toArray()) }}</span>
-                                        </div>
-                                        <div class="flex text-secondary text-sm items-start gap-2">
-                                            <i class="ti !text-muted text-xl ti-disabled-2"></i>
-                                            <span>{{ implode(', ', $restaurant->accessibilities->pluck('name')->toArray()) }}</span>
-                                        </div>
-                                        <div class="flex text-secondary text-sm items-start gap-2">
-                                            <i class="ti !text-muted text-xl ti-tools-kitchen-2"></i>
-                                            <span>{{ implode(', ', $restaurant->diningOptions->pluck('name')->toArray()) }}</span>
-                                        </div>
+                                        @if ($restaurant->payments->isNotEmpty())
+                                            <div class="flex text-secondary text-sm items-start gap-2">
+                                                <i class="ti !text-muted text-xl ti-credit-card"></i>
+                                                <span>{{ implode(', ', $restaurant->payments->pluck('name')->toArray()) }}</span>
+                                            </div>
+                                        @endif
+
+                                        @if ($restaurant->accessibilities->isNotEmpty())
+                                            <div class="flex text-secondary text-sm items-start gap-2">
+                                                <i class="ti !text-muted text-xl ti-disabled-2"></i>
+                                                <span>{{ implode(', ', $restaurant->accessibilities->pluck('name')->toArray()) }}</span>
+                                            </div>
+                                        @endif
+
+                                        @if ($restaurant->diningOptions->isNotEmpty())
+                                            <div class="flex text-secondary text-sm items-start gap-2">
+                                                <i class="ti !text-muted text-xl ti-tools-kitchen-2"></i>
+                                                <span>{{ implode(', ', $restaurant->diningOptions->pluck('name')->toArray()) }}</span>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -381,7 +389,7 @@
     <x-modal title="{{ $restaurant->name }}" id="reviewModal">
         <form method="POST" action="{{ route('user.review.store', ['slug' => $restaurant->slug]) }}">
             @csrf
-            
+
             <!-- Rating section -->
             <div class="mb-3">
                 <div class="relative">
