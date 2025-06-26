@@ -128,7 +128,7 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
         \Illuminate\Support\Facades\Log::warning('Unauthorized deploy attempt');
         abort(Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, 'Unauthorized');
     }
-
+    
     $output = [];
     $code = 0;
 
