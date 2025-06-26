@@ -117,6 +117,6 @@ Route::middleware([])->get('/sitemap.xml', function () {
             );
         });
 
-    return \Illuminate\Http\Response::make($sitemap->render(), 200)
+    return \Illuminate\Support\Facades\Response::make($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');
 });
