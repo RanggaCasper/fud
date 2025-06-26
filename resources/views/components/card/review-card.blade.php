@@ -3,8 +3,13 @@
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             <!-- Profile Image -->
-            <img class="w-10 h-10 rounded-full border-2 border-gray-300 lazyload" loading="lazy"
-                data-src="{{ $userImage }}" alt="profile picture">
+            @if(Auth::user()->avatar)
+                <img class="size-10 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}" alt="profile picture">
+            @else
+                <span class="size-10 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
+                    {{ strtoupper(substr($userName, 0, 1)) }}
+                </span>
+            @endif
             <div class="space-y-0">
                 <p class="font-semibold text-dark text-md line-clamp-1">{{ $userName }}</p>
                 <p class="text-xs text-secondary">{{ $commentDate }}</p>
