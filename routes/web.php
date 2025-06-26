@@ -102,13 +102,13 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
-Route::get('/sitemap.xml', function () {
+Route::middleware([])->get('/sitemap.xml', function () {
     $sitemap = Sitemap::create()
         ->add(Url::create('/'))
+        ->add(Url::create(route('reviews')))
         ->add(Url::create(route('list')));
 
-    \App\Models\Restaurant\Restaurant::query()
-        ->orderByDesc('updated_at')
+    \App\Models\Restaurant\Restaurant::orderByDesc('updated_at')
         ->get()
         ->each(function ($restaurant) use ($sitemap) {
             $sitemap->add(
