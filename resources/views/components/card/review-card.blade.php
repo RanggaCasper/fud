@@ -30,12 +30,10 @@
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
-        <div class="swiper-wrapper">
+        <div id="review-images" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             @foreach ($commentAttachments as $attachment)
-                <div class="swiper-slide">
-                    <img class="w-full h-48 object-cover rounded-lg lazyload"
-                        data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
-                </div>
+                <img src="{{ Storage::url($attachment->source) }}"
+                    class="object-cover w-full h-40 rounded shadow cursor-zoom-in" alt="Review Image">
             @endforeach
         </div>
         <div class="swiper-pagination"></div>
@@ -80,7 +78,13 @@
 </div>
 
 @once
-    <!-- Modal for reporting comments -->
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.3/dist/viewer.min.css" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.3/dist/viewer.min.js"></script>
+    @endpush
 
     @push('scripts')
         <x-modal title="Report Comment" id="reportModal" size="md">
@@ -104,6 +108,37 @@
                 </div>
             </form>
         </x-modal>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const gallery = document.getElementById('review-images');
+                const viewer = new Viewer(gallery, {
+                    toolbar: {
+                        zoomIn: 1,
+                        zoomOut: 1,
+                        oneToOne: 1,
+                        reset: 1,
+                        prev: 1,
+                        play: {
+                            show: 0,
+                            size: 'large',
+                        },
+                        next: 1,
+                        rotateLeft: 1,
+                        rotateRight: 1,
+                        flipHorizontal: 1,
+                        flipVertical: 1,
+                    },
+                    navbar: false,
+                    title: false,
+                    tooltip: true,
+                    movable: true,
+                    zoomable: true,
+                    rotatable: true,
+                    scalable: true,
+                    transition: true,
+                });
+            });
+        </script>
         <script>
             $(document).ready(function() {
                 $('.comment-wrapper').each(function() {
