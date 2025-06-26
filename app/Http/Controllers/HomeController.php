@@ -129,7 +129,7 @@ class HomeController extends Controller
             "date" => $request->date,
             "time" => $request->time,
             "adults" => $request->adults,
-            "children" => $request->childern,
+            "children" => $request->children,
             "rid" => $request->rid,
         ];
 

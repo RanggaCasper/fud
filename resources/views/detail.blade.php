@@ -640,7 +640,7 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="rid" value="${data.rid}">
                                     ${createSelect('Adults', 'adults', data.party_sizes, 'Select adults')}
-                                    ${createSelect('Childern', 'children', data.child_sizes, 'Select children')}
+                                    ${createSelect('Children', 'children', data.child_sizes, 'Select children')}
                                     ${createSelect('Time', 'time', data.time_slots, 'Select time')}
                                     ${createInput('Reservation Date', 'date', 'date', 'Select date')}
                                     <x-button type="submit">Submit</x-button>
