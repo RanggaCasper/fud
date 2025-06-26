@@ -20,4 +20,9 @@ class Claim extends Model
     {
         return $this->belongsTo(Restaurant::class);
     }
+
+    public function reviewed()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
 }

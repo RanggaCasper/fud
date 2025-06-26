@@ -77,6 +77,14 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::delete('/{id}', [\App\Http\Controllers\Admin\RestaurantController::class, 'destroy'])->name('destroy');
     });
 
+    Route::prefix('owner')->as('owner.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\OwnerController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\OwnerController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'getById'])->name('getById');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'destroy'])->name('destroy');
+    });
+
     Route::prefix('reported-reviews')->as('reported-reviews.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'get'])->name('get');

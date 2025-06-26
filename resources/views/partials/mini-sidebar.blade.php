@@ -24,6 +24,10 @@
                     active="{{ request()->routeIs('admin.restaurant.index') }}">
                     Manage Restaurants
                 </x-nav-item>
+                 <x-nav-item href="{{ route('admin.owner.index') }}" icon="ti ti-trademark"
+                    active="{{ request()->routeIs('admin.owner.index') }}">
+                    Manage Ownership
+                </x-nav-item>
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert"
                     active="{{ request()->routeIs('admin.reported-reviews.index') }}">
                     Reported Reviews
