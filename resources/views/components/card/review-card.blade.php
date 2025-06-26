@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             <!-- Profile Image -->
-            @if(Auth::user()->avatar)
+            @if($userName)
                 <img class="size-10 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}" alt="profile picture">
             @else
                 <span class="size-10 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
