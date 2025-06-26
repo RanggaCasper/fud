@@ -153,7 +153,7 @@
                 <div class="rounded-2xl border-2 border-blue-500 p-6 text-center shadow-md">
                     <img src="https://www.casperproject.my.id/assets/images/logo.jpg" alt="BliEvent" class="h-16 mx-auto mb-4">
                     <h3 class="text-lg font-bold text-muted">Casper Project</h3>
-                    <p class="text-sm text-gray-600 mt-2">A foundation for a next-gen software house, shaping solutions with purpose and precision.</p>
+                    <p class="text-sm text-gray-600 mt-2">Empowering the future of digital transformation with purpose and precision.</p>
                 </div>
     
                 <div class="rounded-2xl border-2 border-green-500 p-6 text-center shadow-md">
