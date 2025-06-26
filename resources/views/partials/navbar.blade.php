@@ -34,7 +34,6 @@
                     </li>
                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.670458" data-lng="115.212629">Denpasar, Bali, Indonesia</a></li>
                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.717911" data-lng="115.168518">Kuta, Bali, Indonesia</a></li>
-                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.690727" data-lng="115.167175">Seminyak, Bali, Indonesia</a></li>
                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.506939" data-lng="115.262476">Ubud, Bali, Indonesia</a></li>
                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.807981" data-lng="115.225939">Nusa Dua, Bali, Indonesia</a></li>
                     <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" data-lat="-8.692945" data-lng="115.261116">Sanur, Bali, Indonesia</a></li>
