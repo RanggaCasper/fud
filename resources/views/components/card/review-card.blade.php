@@ -30,13 +30,17 @@
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
-        <div class="swiper-wrapper gallery-{{ $commentId }}">
-            @foreach ($commentAttachments as $attachment)
-                <div class="swiper-slide">
-                    <img class="w-full h-48 object-cover rounded-lg lazyload"
-                        data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
-                </div>
-            @endforeach
+        <div class="gallery-{{ $commentId }}">
+            <div class="swiper-wrapper">
+                @foreach ($commentAttachments as $attachment)
+                    <div class="swiper-slide">
+                        <img class="w-full h-48 object-cover rounded-lg lazyload"
+                            data-src="{{ Storage::url($attachment->source) }}"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGh5WFH8TOIfRKxUrIgJZoDCs1yvQ4hIcppw&s"
+                            alt="Review Image">
+                    </div>
+                @endforeach
+            </div>
         </div>
         <div class="swiper-pagination"></div>
     </div>
@@ -117,6 +121,7 @@
                         rotatable: true,
                         scalable: true,
                         transition: true,
+                        url: 'data-src'
                     });
                 });
 
