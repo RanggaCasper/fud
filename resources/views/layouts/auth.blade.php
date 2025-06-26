@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }}</title>
+    <title>{{ config('app.name') }} - Authentication Page</title>
     
     <meta name="description" content="{{ config('app.name') }} helps you discover the best restaurants and delivers your favorite food right to your door. Fast, easy, and delicious.">
     <meta name="keywords" content="{{ config('app.name') }}, food delivery, order food online, food courier, nearby restaurants, affordable food">

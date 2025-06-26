@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Claim Your Restaurant - Fudz!')
 
 @section('content')
     <div class="mt-[72px]">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('showNavbot', true)
+@section('title', '6 BEST Restaurant Near You - Fudz!')
 
 @section('content')
     <div class="mt-[72px]">

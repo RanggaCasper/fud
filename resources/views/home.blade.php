@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('showNavbot', true)
+@section('title', 'Fudz! - Find Ur Delicious Zone')
+@section('meta_description', 'Find Ur Delicious Zone. Discover top restaurant recommendations tailored to your taste. Fast, smart, and flavor-packed!')
 
 @section('header')
     <x-section.hero-section :videoSource="asset('assets/video/IMG_44891.mp4')" title="Are you Hungry?"

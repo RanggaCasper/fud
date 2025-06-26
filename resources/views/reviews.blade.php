@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Reviews On Fudz!')
 
 @section('content')
 <div class="mt-[72px]">
@@ -12,25 +13,6 @@
 </div>
 
 <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">
-    {{-- <div id="restaurant-header" class="sticky top-[70px] z-10 bg-transparent">
-        <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-2">
-            <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
-                <x-button class="btn-icon" :outline="true" data-modal-target="filterModal" data-modal-toggle="filterModal">
-                    <i class="ti ti-filter text-lg"></i>
-                    <span>Filter</span>
-                </x-button>
-                <x-button class="btn-icon" :outline="true">
-                    <i class="ti ti-arrows-sort text-lg"></i>
-                    <span>
-                        Rating
-                    </span>
-                </x-button>
-                <x-button class="rounded-full" :outline="true">Like</x-button>
-                <x-button class="rounded-full" :outline="true">By Date</x-button>
-            </div>
-        </div>
-    </div> --}}
-
     <div class="px-4 md:px-2">
         <div class="max-w-screen-xl mx-auto">
             <div class="flex my-3">

@@ -1,24 +1,22 @@
 @php
+    $appName = config('app.name');
+
     $faqs = [
         [
-            'question' => 'What is Fud?',
-            'answer' =>
-                'Fud is a smart food discovery platform that helps users find the best places to eat based on their preferences, location, budget, and more.',
+            'question' => "What is $appName?",
+            'answer' => "$appName is a smart food discovery platform that helps users find the best places to eat based on their preferences, location, budget, and more.",
         ],
         [
-            'question' => 'How does Fud recommend restaurants?',
-            'answer' =>
-                'Fud uses intelligent recommendation technology that analyzes your taste preferences, location, cuisine choices, dining history, and budget to provide personalized restaurant suggestions.',
+            'question' => "How does $appName recommend restaurants?",
+            'answer' => "$appName uses intelligent recommendation technology that analyzes your taste preferences, location, cuisine choices, dining history, and budget to provide personalized restaurant suggestions.",
         ],
         [
             'question' => 'Can I leave reviews or ratings?',
-            'answer' =>
-                'Absolutely! Fud allows users to leave reviews, rate restaurants, and upload photos to help others discover great places to eat.',
+            'answer' => "Absolutely! $appName allows users to leave reviews, rate restaurants, and upload photos to help others discover great places to eat.",
         ],
         [
-            'question' => 'Does Fud work in all cities?',
-            'answer' =>
-                'Fud is currently available in selected cities and continuously expanding. We prioritize areas with rich culinary diversity to ensure a meaningful experience.',
+            'question' => "Does $appName work in all cities?",
+            'answer' => "$appName is currently available in selected cities and continuously expanding. We prioritize areas with rich culinary diversity to ensure a meaningful experience.",
         ],
     ];
 @endphp

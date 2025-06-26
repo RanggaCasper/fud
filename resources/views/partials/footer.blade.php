@@ -1,4 +1,4 @@
-<footer class="bg-secondary-background">
+<footer class="bg-white">
     <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0 max-w-md">
@@ -6,8 +6,7 @@
                     <x-logo class="!h-12" />
                 </a>
                 <p class="mt-4 text-sm text-muted">
-                    {{ config('app.name') }} is your smart companion in discovering the best places to eat, tailored just for you.
-                    Powered by intelligent recommendations, it helps you explore local favorites, hidden gems, and top-rated spots—all based on your taste, location, and budget.
+                    {{ config('app.name') }} - Find Ur Delicious Zone. A smart restaurant recommendation platform that helps you find the most delicious places to eat, effortlessly and accurately. Powered by intelligent tech, built for true food lovers.
                 </p>
             </div>
 
@@ -74,15 +73,9 @@
             <span class="text-sm text-muted sm:text-center block">
                 © {{ date('Y') }} <a href="#" class="hover:underline">{{ config('app.name') }}™</a>. All Rights Reserved.
             </span>
-            <div class="flex mt-4 sm:justify-center sm:mt-0 gap-5">
-                <!-- Replace href with actual links -->
-                @foreach (['facebook', 'discord', 'twitter', 'github', 'dribbble'] as $platform)
-                    <a href="#" class="text-muted hover:text-muted">
-                        <x-icons.{{ $platform }} class="w-4 h-4" />
-                        <span class="sr-only">{{ ucfirst($platform) }} page</span>
-                    </a>
-                @endforeach
-            </div>
+            <span class="text-xs text-muted sm:text-center block">
+                {{ number_format((microtime(true) - LARAVEL_START) * 1000, 2) }} ms
+            </span>
         </div>
     </div>
 </footer>
