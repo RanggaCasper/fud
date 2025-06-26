@@ -27,11 +27,11 @@
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
         <div class="gallery-{{ $commentId }}">
-            <div class="swiper-wrapper">
+            <div class="swiper-wrapper ">
                 @foreach ($commentAttachments as $attachment)
                     <div class="swiper-slide">
-                        <img class="w-full h-48 object-cover rounded-lg lazyload"
-                            src="{{ Storage::url($attachment->source) }}" alt="Review Image">
+                        <img class="gallery-image w-full h-48 object-cover rounded-lg lazyload"
+                            data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
                     </div>
                 @endforeach
             </div>
@@ -98,16 +98,14 @@
             </form>
         </x-modal>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const images = document.querySelectorAll('img');
+            $(document).ready(function() {
+                $('.gallery-image').each(function() {
+                    const $img = $(this);
+                    const $gallery = $img.closest('[class^="gallery-"]');
 
-                Array.from(images).filter(img =>
-                    img.closest('[class^="gallery-"]')
-                ).forEach(img => {
-                    const gallery = img.closest('[class^="gallery-"]');
-
-                    if (img.complete && img.naturalHeight !== 0 && gallery && !gallery.viewerInstance) {
-                        gallery.viewerInstance = new Viewer(gallery, {
+                    if ($img[0].complete && $img[0].naturalHeight !== 0 && $gallery.length && !$gallery[0]
+                        .viewerInstance) {
+                        $gallery[0].viewerInstance = new Viewer($gallery[0], {
                             toolbar: true,
                             navbar: true,
                             title: false,
@@ -121,9 +119,9 @@
                         });
                     }
 
-                    img.addEventListener('load', function() {
-                        if (gallery && !gallery.viewerInstance) {
-                            gallery.viewerInstance = new Viewer(gallery, {
+                    $img.on('load', function() {
+                        if ($gallery.length && !$gallery[0].viewerInstance) {
+                            $gallery[0].viewerInstance = new Viewer($gallery[0], {
                                 toolbar: true,
                                 navbar: true,
                                 title: false,
@@ -138,9 +136,7 @@
                         }
                     });
                 });
-            });
 
-            $(document).ready(function() {
                 $('.comment-wrapper').each(function() {
                     const $wrapper = $(this);
                     const $text = $wrapper.find('.comment-text');
