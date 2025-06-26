@@ -122,22 +122,18 @@ Route::middleware([])->get('/sitemap.xml', function () {
 });
 
 Route::post('/deploy', function (\Illuminate\Http\Request $request) {
-    $token = env('DEPLOY_SECRET', 'secret-token');
+    $signature = $request->header('X-Hub-Signature-256');
+    $secret = env('GITHUB_WEBHOOK_SECRET');
 
-    if ($request->header('X-Deploy-Token') !== $token) {
-        \Illuminate\Support\Facades\Log::warning('Unauthorized deploy attempt');
+    $hash = 'sha256=' . hash_hmac('sha256', $request->getContent(), $secret);
+
+    if (!hash_equals($hash, $signature)) {
+        \Illuminate\Support\Facades\Log::warning('Invalid GitHub webhook signature');
         abort(Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, 'Unauthorized');
     }
-    
+
     $output = [];
-    $code = 0;
+    exec('cd /var/www/fud && git pull origin main', $output);
 
-    exec('cd /var/www/fud && git pull origin main 2>&1', $output, $code);
-
-    \Illuminate\Support\Facades\Log::info('Deploy run', ['output' => $output, 'code' => $code]);
-
-    return response()->json([
-        'status' => $code === 0 ? 'success' : 'error',
-        'output' => $output,
-    ]);
+    return response()->json(['status' => 'ok', 'output' => $output]);
 });
