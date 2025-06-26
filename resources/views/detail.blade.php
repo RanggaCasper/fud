@@ -381,18 +381,20 @@
     <x-modal title="{{ $restaurant->name }}" id="reviewModal">
         <form method="POST" action="{{ route('user.review.store', ['slug' => $restaurant->slug]) }}">
             @csrf
-            <input type="hidden" name="rating" id="rating-input" value="5">
-
+            
             <!-- Rating section -->
             <div class="mb-3">
-                <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="star-rating">
-                    How would you rate this place?
-                </label>
-                <div id="star-rating" class="flex space-x-1 cursor-pointer">
-                    @for ($i = 1; $i <= 5; $i++)
-                        <i class="ti ti-star-filled text-2xl text-warning hover:scale-110 transition-transform"
-                            data-index="{{ $i }}"></i>
-                    @endfor
+                <div class="relative">
+                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="star-rating">
+                        How would you rate this place?
+                    </label>
+                    <input type="hidden" name="rating" id="rating-input">
+                    <div id="star-rating" class="flex space-x-1 cursor-pointer">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="ti ti-star-filled text-2xl text-gray-300 hover:scale-110 transition-transform"
+                                data-index="{{ $i }}"></i>
+                        @endfor
+                    </div>
                 </div>
             </div>
 
@@ -499,17 +501,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
 
     <script>
-        const stars = document.querySelector All('#star-rating i');
+        const stars = document.querySelectorAll('#star-rating i');
         const ratingInput = document.getElementById('rating-input');
 
         stars.forEach((star, index) => {
             star.addEventListener('click', () => {
                 const rating = index + 1;
-
-                // Update hidden input
                 ratingInput.value = rating;
 
-                // Update star styles
                 stars.forEach((s, i) => {
                     if (i < rating) {
                         s.classList.remove('text-gray-300');
