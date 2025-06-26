@@ -87,11 +87,12 @@
                 });
             }
 
-
             $(document).ready(function() {
-                const savedLocation = localStorage.getItem('selectedLocationLabel');
-                if (savedLocation) {
-                    $('#locationDropdown').prev('button').find('span').text(savedLocation);
+                const label = localStorage.getItem('selectedLocationLabel');
+                if (label) {
+                    $('#locationDropdown').prev('button').find('span').text(label);
+                } else {
+                    sendLocation();
                 }
 
                 $(document).on('click', '#locationDropdown a', function(e) {
@@ -99,41 +100,31 @@
 
                     const lat = $(this).data('lat');
                     const lng = $(this).data('lng');
-                    const locationName = $(this).text();
+                    const name = $(this).text();
 
-                    $('#locationDropdown').prev('button').find('span').text(locationName);
-
+                    $('#locationDropdown').prev('button').find('span').text(name);
                     $('#locationDropdown').addClass('hidden');
-
-                    localStorage.setItem('selectedLocationLabel', locationName);
+                    localStorage.setItem('selectedLocationLabel', name);
 
                     if (!lat || !lng) {
                         sendLocation();
                         return;
                     }
 
-                    $.ajax({
-                        url: '{{ route('location.store') }}',
-                        method: 'POST',
-                        data: {
-                            latitude: lat,
-                            longitude: lng,
-                            timezone: 'Asia/Makassar',
-                            value: locationName,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            const formData = $('#filter-form').serialize();
-                            fetchRestaurants(formData || null);
-                        },
-                        error: function(xhr) {
-                            console.error('Error:', xhr.responseText);
-                        }
+                    $.post('{{ route('location.store') }}', {
+                        latitude: lat,
+                        longitude: lng,
+                        timezone: 'Asia/Makassar',
+                        value: name,
+                        _token: '{{ csrf_token() }}'
+                    }).done(function(res) {
+                        const formData = $('#filter-form').serialize();
+                        fetchRestaurants(formData || null);
+                    }).fail(function(xhr) {
+                        console.error('Error:', xhr.responseText);
                     });
                 });
             });
-
-            sendLocation();
         </script>
     @endpush
 @endonce
