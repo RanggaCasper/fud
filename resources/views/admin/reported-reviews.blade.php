@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 
 @section('content')
-<x-card title="Manage Reported Reviews">
+<x-card title="Reported Reviews">
     <table id="datatables" class="display">
         <thead>
             <tr>

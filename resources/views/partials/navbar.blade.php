@@ -127,7 +127,7 @@
                                     <li>
                                         <a href="{{ route('admin.reported-reviews.index') }}" class="px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
                                             <i class="ti ti-file-alert text-lg me-1.5"></i>
-                                            Manage Reported Reviews
+                                            Reported Reviews
                                         </a>
                                     </li>
                                 @elseif (Auth::user()->role->name === 'owner')
