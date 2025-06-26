@@ -21,7 +21,7 @@
                 </x-nav-item>
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert"
                     active="{{ request()->routeIs('admin.reported-reviews.index') }}">
-                    Manage Reported Reviews
+                    Reported Reviews
                 </x-nav-item>
             @elseif (Auth::user()->hasRole('user'))
                 <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
