@@ -30,10 +30,16 @@
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
-        <div id="review-images" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div id="pswp-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-2">
             @foreach ($commentAttachments as $attachment)
-                <img src="{{ Storage::url($attachment->source) }}"
-                    class="object-cover w-full h-40 rounded shadow cursor-zoom-in" alt="Review Image">
+                @php
+                    $imageUrl = Storage::url($attachment->source);
+                @endphp
+                <a href="{{ $imageUrl }}" data-pswp-width="1600" data-pswp-height="1200" target="_blank"
+                    class="block">
+                    <img src="{{ $imageUrl }}" class="object-cover w-full h-40 rounded-lg shadow"
+                        alt="Review Image">
+                </a>
             @endforeach
         </div>
         <div class="swiper-pagination"></div>
@@ -79,11 +85,21 @@
 
 @once
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.3/dist/viewer.min.css" />
+        <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
     @endpush
 
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.3/dist/viewer.min.js"></script>
+        <script type="module">
+            import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
+
+            const lightbox = new PhotoSwipeLightbox({
+                gallery: '#pswp-gallery',
+                children: 'a',
+                pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.min.js'),
+            });
+
+            lightbox.init();
+        </script>
     @endpush
 
     @push('scripts')
@@ -108,34 +124,6 @@
                 </div>
             </form>
         </x-modal>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                AOS.init();
-
-                setTimeout(function() {
-                    const gallery = document.getElementById('review-images');
-                    if (gallery) {
-                        try {
-                            new Viewer(gallery, {
-                                toolbar: true,
-                                title: false,
-                                navbar: false,
-                                tooltip: true,
-                                movable: true,
-                                zoomable: true,
-                                rotatable: true,
-                                scalable: true,
-                                transition: true,
-                            });
-                        } catch (e) {
-                            console.error('Viewer init failed:', e);
-                        }
-                    } else {
-                        console.error('review-images element not found!');
-                    }
-                }, 600);
-            });
-        </script>
         <script>
             $(document).ready(function() {
                 $('.comment-wrapper').each(function() {
