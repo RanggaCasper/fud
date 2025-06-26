@@ -36,7 +36,6 @@
                     <div class="swiper-slide">
                         <img class="w-full h-48 object-cover rounded-lg lazyload"
                             data-src="{{ Storage::url($attachment->source) }}"
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGh5WFH8TOIfRKxUrIgJZoDCs1yvQ4hIcppw&s"
                             alt="Review Image">
                     </div>
                 @endforeach
