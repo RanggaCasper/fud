@@ -98,7 +98,11 @@
             </form>
         </x-modal>
         <script>
-            const images = document.querySelectorAll('.lazyload');
+            const allImages = document.querySelectorAll('.lazyload');
+
+            const images = Array.from(allImages).filter(img =>
+                img.closest('[class^="gallery-"]')
+            );
 
             const lazyLoad = (entries, observer) => {
                 entries.forEach(entry => {
