@@ -99,44 +99,6 @@
         </x-modal>
         <script>
             $(document).ready(function() {
-                $('.gallery-image').each(function() {
-                    const $img = $(this);
-                    const $gallery = $img.closest('[class^="gallery-"]');
-
-                    if ($img[0].complete && $img[0].naturalHeight !== 0 && $gallery.length && !$gallery[0]
-                        .viewerInstance) {
-                        $gallery[0].viewerInstance = new Viewer($gallery[0], {
-                            toolbar: true,
-                            navbar: true,
-                            title: false,
-                            fullscreen: true,
-                            tooltip: false,
-                            movable: true,
-                            rotatable: true,
-                            scalable: true,
-                            transition: true,
-                            url: 'src'
-                        });
-                    }
-
-                    $img.on('load', function() {
-                        if ($gallery.length && !$gallery[0].viewerInstance) {
-                            $gallery[0].viewerInstance = new Viewer($gallery[0], {
-                                toolbar: true,
-                                navbar: true,
-                                title: false,
-                                fullscreen: true,
-                                tooltip: false,
-                                movable: true,
-                                rotatable: true,
-                                scalable: true,
-                                transition: true,
-                                url: 'src'
-                            });
-                        }
-                    });
-                });
-
                 $('.comment-wrapper').each(function() {
                     const $wrapper = $(this);
                     const $text = $wrapper.find('.comment-text');
