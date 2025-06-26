@@ -18,15 +18,18 @@
     $textColor = $isClosed ? 'text-gray-500' : 'text-dark';
 @endphp
 
-<div class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
+<div data-aos="zoom-in-up" class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
     <div class="p-3 relative rounded-lg">
         <div class="mb-2 relative">
             <a href="{{ route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
                 <img data-src="{{ $image }}" loading="lazy"
                      class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                      alt="{{ $title }}">
+
+                <!-- Overlay gradient -->
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-16 rounded-b-lg"></div>
-                
+
+                <!-- Closed Full Overlay -->
                 @if ($isClosed)
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg">
                     </div>

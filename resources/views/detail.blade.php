@@ -505,6 +505,9 @@
 @endsection
 
 @push('scripts')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
+
     <script>
         const stars = document.querySelectorAll('#star-rating i');
         const ratingInput = document.getElementById('rating-input');
