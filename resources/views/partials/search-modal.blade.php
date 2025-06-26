@@ -51,7 +51,7 @@
 
             function sendLocation() {
                 if (!navigator.geolocation) {
-                    alert("Geolocation tidak didukung browser Anda.");
+                    console.error("Geolocation tidak didukung browser Anda.");
                     return;
                 }
 
@@ -83,7 +83,7 @@
                         }
                     });
                 }, function(error) {
-                    alert("Gagal mengambil lokasi: " + error.message);
+                    console.error("Gagal mengambil lokasi: " + error.message);
                 });
             }
 
