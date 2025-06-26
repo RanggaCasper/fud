@@ -3,10 +3,12 @@
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             <!-- Profile Image -->
-            @if($userImage)
-                <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}" alt="profile picture">
+            @if ($userImage)
+                <img class="w-9 h-9 rounded-full border-2 border-gray-300 lazyload" data-src="{{ $userImage }}"
+                    alt="profile picture">
             @else
-                <span class="w-9 h-9 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
+                <span
+                    class="w-9 h-9 flex items-center justify-center bg-primary text-white text-sm font-medium rounded-full">
                     {{ strtoupper(substr($userName, 0, 1)) }}
                 </span>
             @endif
@@ -28,8 +30,8 @@
     <a href="{{ Route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary">{{ $restaurantName }}</a>
     <div class="swiper reviewSwiper rounded-lg mb-3">
-        <div class="swiper-wrapper">
-            @foreach($commentAttachments as $attachment)
+        <div class="swiper-wrapper gallery-{{ $commentId }}">
+            @foreach ($commentAttachments as $attachment)
                 <div class="swiper-slide">
                     <img class="w-full h-48 object-cover rounded-lg lazyload"
                         data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
@@ -104,6 +106,20 @@
         </x-modal>
         <script>
             $(document).ready(function() {
+                document.querySelectorAll('[class^="gallery-"]').forEach(gallery => {
+                    new Viewer(gallery, {
+                        toolbar: true,
+                        navbar: true,
+                        title: false,
+                        fullscreen: true,
+                        tooltip: false,
+                        movable: true,
+                        rotatable: true,
+                        scalable: true,
+                        transition: true,
+                    });
+                });
+
                 $('.comment-wrapper').each(function() {
                     const $wrapper = $(this);
                     const $text = $wrapper.find('.comment-text');
