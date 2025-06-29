@@ -59,7 +59,7 @@ Route::prefix('settings')->as('settings.')->group(function () {
 Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/gsc', [\App\Http\Controllers\Admin\DashboardController::class, 'gscData'])->name('dashboard.gsc');
-    
+
     Route::prefix('user')->as('user.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\UserController::class, 'get'])->name('get');
@@ -144,11 +144,14 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     $commands = [
         'echo $PWD',
         'whoami',
+        'git reset --hard HEAD',
         'git pull origin main',
         'git status',
         'composer install --no-dev',
         'php artisan migrate --force',
         'php artisan config:cache',
+        'npm ci',
+        'npm run build',
     ];
 
     $results = [];
