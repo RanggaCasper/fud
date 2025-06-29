@@ -2,8 +2,9 @@
 
 @section('content')
     <x-card.card title="Manage Restaurant">
-        <form method="POST">
+        <form method="POST" data-reset="false">
             @csrf
+            @method('PUT')
             <div class="mb-3">
                 <x-input label="Name" id="name" name="name" value="{{ Auth::user()->owned->restaurant->name }}"
                     type="name" />

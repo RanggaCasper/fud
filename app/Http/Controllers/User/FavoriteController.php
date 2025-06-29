@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Models\Restaurant\Favorite;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class FavoriteController extends Controller
 {
@@ -22,6 +24,11 @@ class FavoriteController extends Controller
 
     public function store(Request $request)
     {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            flash()->error('Only users can submit reviews.');
+            return ResponseFormatter::redirected('Only users can submit reviews.', url()->previous(), Response::HTTP_FORBIDDEN);
+        }
+        
         $request->validate([
             'restaurant_id' => 'required|exists:restaurants,id',
         ]);

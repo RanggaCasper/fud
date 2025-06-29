@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -28,6 +29,10 @@ class ReviewController extends Controller
     
     public function store(Request $request, $slug)
     {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            return ResponseFormatter::error('Only users can submit reviews.', code: Response::HTTP_FORBIDDEN);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',

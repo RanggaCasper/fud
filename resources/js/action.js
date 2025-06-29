@@ -41,20 +41,18 @@ $(document).on('submit', 'form', function(e) {
                 });
             }
 
-           if (!$(e.target).attr('id')?.endsWith('_update')) {
-                if ($(e.target).data('reset') !== false) {
-                    $(e.target).trigger('reset');
-                }
-
-                if ($(e.target).data('reload')) {
-                    location.reload();
-                }
-
-                if ($.fn.select2) {
-                    $('.select2').each(function () {
-                        $(this).val(null).trigger('change');
-                    });
-                }
+            if ($(e.target).data('reset') !== false) {
+                $(e.target).trigger('reset');
+            }
+    
+            if ($(e.target).data('reload')) {
+                location.reload();
+            }
+    
+            if ($.fn.select2) {
+                $('.select2').each(function () {
+                    $(this).val(null).trigger('change');
+                });
             }
             
             $.each($(e.target).data(), function(key, value) {

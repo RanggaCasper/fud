@@ -98,6 +98,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
 Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'index'])->name('manage.index');
+    Route::put('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'update'])->name('manage.update');
 });
 
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
