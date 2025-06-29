@@ -149,7 +149,11 @@ class HomeController extends Controller
 
     private function getRankedRestaurants()
     {
-        $restaurants = Restaurant::with(['offerings', 'reviews'])->get();
+        $restaurants = Restaurant::with(['offerings', 'operatingHours'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->get();
+
         $userLat = session('latitude');
         $userLng = session('longitude');
 
@@ -163,8 +167,8 @@ class HomeController extends Controller
             $googleRating = $processed['rating'] ?? 0;
             $googleReviews = $processed['reviews'] ?? 0;
 
-            $fudReviews = $restaurant->reviews()->count();
-            $fudRating = $restaurant->reviews()->avg('rating') ?? 0;
+            $fudReviews = $restaurant->reviews_count;
+            $fudRating = $restaurant->reviews_avg_rating ?? 0;
 
             $totalReviews = $googleReviews + $fudReviews;
             $combinedRating = $totalReviews > 0
@@ -184,9 +188,9 @@ class HomeController extends Controller
         ];
 
         $criteriaTypes = [
-            'rating'    => 'benefit', // Semakin tinggi rating, semakin baik
-            'reviews'   => 'benefit', // Semakin banyak ulasan, semakin baik
-            'distance'  => 'cost', // Jika jarak semakin kecil, semakin baik
+            'rating'    => 'benefit',
+            'reviews'   => 'benefit',
+            'distance'  => 'cost',
         ];
 
         $sawService = new SAWService();
@@ -195,15 +199,17 @@ class HomeController extends Controller
         return $ranked;
     }
 
+
     private function processRestaurantData($restaurant, $userLat, $userLng)
     {
         $distance = $this->haversineDistance($userLat, $userLng, $restaurant->latitude, $restaurant->longitude);
         $restaurant->distance = round($distance, 2);
         $restaurant->is_halal = $restaurant->is_halal ? 1 : 0;
-        $restaurant->is_closed = $restaurant->isClosed() ? 1 : 0;
+        $restaurant->is_closed = $restaurant->getIsClosedCached();
 
         return $restaurant;
     }
+
 
     public function search(Request $request)
     {

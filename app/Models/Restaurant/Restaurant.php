@@ -125,4 +125,11 @@ class Restaurant extends Model
 
         return true; // tidak berada di jam buka mana pun
     }
+
+    public function getIsClosedCached()
+    {
+        return cache()->remember("restaurant_{$this->id}_is_closed", now()->addMinutes(10), function () {
+            return $this->isClosed();
+        });
+    }   
 }
