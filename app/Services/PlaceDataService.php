@@ -7,7 +7,7 @@ use App\Models\Restaurant\Restaurant;
 
 class PlaceDataService
 {
-    protected string $baseUrl = 'http://147.139.243.226';
+    protected string $baseUrl = 'http://flask.fudz.my.id';
 
     public function fetchImages(string $placeId): array
     {
