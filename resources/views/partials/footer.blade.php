@@ -26,6 +26,9 @@
                         <li>
                             <a href="https://casperproject.my.id" class="hover:underline">Casper Project</a>
                         </li>
+                        <li>
+                            <a href="https://stats.uptimerobot.com/lsccdRbvah" target="_blank" class="hover:underline">Status</a>
+                        </li>
                     </ul>
                 </div>
 
