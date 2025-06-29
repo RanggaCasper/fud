@@ -61,7 +61,7 @@ class Restaurant extends Model
         $timezone = session('timezone', 'Asia/Jakarta');
         $today = \Carbon\Carbon::now($timezone)->format('l');
 
-        $hours = $this->operatingHours()->where('day', $today)->first();
+        $hours = $this->operatingHours->firstWhere('day', $today);
 
         return $hours ? $hours->operating_hours : 'Not Available';
     }
@@ -72,7 +72,7 @@ class Restaurant extends Model
         $today = Carbon::now($timezone)->format('l');
         $now = Carbon::now($timezone);
 
-        $todayHours = $this->operatingHours()->where('day', $today)->first();
+        $todayHours = $this->operatingHours->firstWhere('day', $today);
 
         if (!$todayHours || !$todayHours->operating_hours) {
             return true;
