@@ -58,6 +58,8 @@ Route::prefix('settings')->as('settings.')->group(function () {
 
 Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/gsc', [\App\Http\Controllers\Admin\DashboardController::class, 'gscData'])->name('dashboard.gsc');
+    
     Route::prefix('user')->as('user.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\UserController::class, 'get'])->name('get');
