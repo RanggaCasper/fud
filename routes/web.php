@@ -105,6 +105,8 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
     Route::put('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'update'])->name('operatingHours.update');
     Route::get('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'index'])->name('offering.index');
     Route::put('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'update'])->name('offering.update');
+    Route::get('/features', [\App\Http\Controllers\Owner\FeatureController::class, 'index'])->name('features.index');
+    Route::put('/features/{type}', [\App\Http\Controllers\Owner\FeatureController::class, 'update'])->name('features.update');
 });
 
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {

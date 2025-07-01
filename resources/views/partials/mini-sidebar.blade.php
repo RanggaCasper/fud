@@ -74,9 +74,13 @@
                         active="{{ request()->routeIs('owner.operatingHours.index') }}">
                         Manage Operating Hours
                     </x-nav-item>
-                    <x-nav-item href="{{ route('owner.offering.index') }}" icon="ti ti-coffee"
+                    <x-nav-item href="{{ route('owner.offering.index') }}" icon="ti ti-bell"
                         active="{{ request()->routeIs('owner.offering.index') }}">
                         Manage Offerings
+                    </x-nav-item>
+                    <x-nav-item href="{{ route('owner.features.index') }}" icon="ti ti-tools-kitchen-2"
+                        active="{{ request()->routeIs('owner.features.index') }}">
+                        Manage Features
                     </x-nav-item>
                 @endif
             @endif
