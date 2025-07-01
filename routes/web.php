@@ -1,7 +1,5 @@
 <?php
 
-use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\Tags\Url;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -115,41 +113,59 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
-Route::middleware([])->get('/sitemap.xml', function () {
+Route::get('/sitemap.xml', function () {
+    return response(
+        \Spatie\Sitemap\SitemapIndex::create()
+            ->add(url('/sitemap-pages.xml'))
+            ->add(url('/sitemap-restaurants.xml'))
+            ->render(),
+        200
+    )->header('Content-Type', 'application/xml');
+})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
+
+Route::get('/sitemap-restaurants.xml', function () {
     $today = \Carbon\Carbon::now();
 
-    $sitemap = Sitemap::create()
-        ->add(
-            Url::create('/')
-                ->setLastModificationDate($today)
-                ->setPriority(1.0)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-        )
-        ->add(
-            Url::create(route('reviews'))
-                ->setLastModificationDate($today)
-                ->setPriority(0.8)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-        )
-        ->add(
-            Url::create(route('list'))
-                ->setLastModificationDate($today)
-                ->setPriority(0.8)
-                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-        );
+    $sitemap = \Spatie\Sitemap\Sitemap::create();
 
-    \App\Models\Restaurant\Restaurant::orderByDesc('created_at')
-        ->get()
+    \App\Models\Restaurant\Restaurant::orderByDesc('created_at')->get()
         ->each(function ($restaurant) use ($sitemap, $today) {
             $sitemap->add(
-                Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
+                \Spatie\Sitemap\Tags\Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
                     ->setLastModificationDate($today)
                     ->setPriority(0.8)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                    ->setChangeFrequency('monthly')
             );
         });
 
-    return \Illuminate\Support\Facades\Response::make($sitemap->render(), \Symfony\Component\HttpFoundation\Response::HTTP_OK)
+    return response($sitemap->render(), 200)
+        ->header('Content-Type', 'application/xml');
+})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
+
+Route::get('/sitemap-pages.xml', function () {
+    $today = \Carbon\Carbon::now();
+
+    $sitemap = \Spatie\Sitemap\Sitemap::create()
+        ->add(
+            \Spatie\Sitemap\Tags\Url::create('/')
+                ->setLastModificationDate($today)
+                ->setPriority(1.0)
+                ->setChangeFrequency('daily')
+        )
+        ->add(
+            \Spatie\Sitemap\Tags\Url::create(route('reviews'))
+                ->setLastModificationDate($today)
+                ->setPriority(0.8)
+                ->setChangeFrequency('daily')
+        )
+        ->add(
+            \Spatie\Sitemap\Tags\Url::create(route('list'))
+                ->setLastModificationDate($today)
+                ->setPriority(0.8)
+                ->setChangeFrequency('daily')
+        );
+
+    return response($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');
 })->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
 
