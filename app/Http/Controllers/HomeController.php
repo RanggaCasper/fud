@@ -199,7 +199,6 @@ class HomeController extends Controller
         return $ranked;
     }
 
-
     private function processRestaurantData($restaurant, $userLat, $userLng)
     {
         $distance = $this->haversineDistance($userLat, $userLng, $restaurant->latitude, $restaurant->longitude);
@@ -209,7 +208,6 @@ class HomeController extends Controller
 
         return $restaurant;
     }
-
 
     public function search(Request $request)
     {
@@ -221,8 +219,11 @@ class HomeController extends Controller
             $rankedRestaurants = $this->getRankedRestaurants();
 
             $filtered = $rankedRestaurants->filter(function ($restaurant) use ($query) {
-                return stripos($restaurant->name, $query) !== false ||
-                    stripos($restaurant->description, $query) !== false;
+                $q = strtolower($query);
+
+                return str_contains(strtolower($restaurant->name), $q) ||
+                    str_contains(strtolower($restaurant->description), $q) ||
+                    str_contains(strtolower($restaurant->address), $q);
             });
         }
 

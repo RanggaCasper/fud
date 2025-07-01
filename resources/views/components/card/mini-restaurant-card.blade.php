@@ -3,7 +3,7 @@
     'title' => null,
     'slug' => null,
     'rating' => null,
-    'distance' => null,
+    'address' => null,
     'isClosed' => false,
     'isHalal' => true,
 ])
@@ -39,10 +39,10 @@
             @endif
         </div>
         <div class="text-xs text-gray-500 flex justify-between">
-            @if ($distance)
+            @if ($address)
                 <div class="flex items-center gap-1">
                     <i class="ti ti-location"></i>
-                    <span>{{ $distance }}</span>
+                    <span class="line-clamp-1">{{ $address }}</span>
                 </div>
             @endif
         </div>

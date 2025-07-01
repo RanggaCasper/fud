@@ -17,7 +17,21 @@ class RestaurantController extends Controller
 {
     public function index(Request $request, $slug)
     {
-        $restaurant = Restaurant::with('offerings', 'payments', 'diningOptions', 'accessibilities', 'operatingHours', 'reviews')->where('slug', $slug)->firstOrFail();
+        $restaurant = Restaurant::with([
+            'offerings',
+            'payments',
+            'diningOptions',
+            'accessibilities',
+            'operatingHours',
+            'reviews'
+        ])->where('slug', $slug)->firstOrFail();
+
+        $viewed = session()->get('recently_viewed', []);
+        $viewed = array_filter($viewed, fn($id) => $id != $restaurant->id);
+        array_unshift($viewed, $restaurant->id);
+        $viewed = array_slice($viewed, 0, 10);
+        session(['recently_viewed' => $viewed]);
+
         return view('detail', compact('restaurant'));
     }
 

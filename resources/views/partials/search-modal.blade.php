@@ -16,9 +16,18 @@
             </div>
 
             <!-- Result -->
-            <div class="p-4 md:p-5 space-y-4" id="search-results">
-                <div class="text-muted text-sm">
-                    <p>Type to search for restaurants...</p>
+            <div class="p-4 md:p-5 space-y-4">
+                <div id="search-results">
+                    <div class="text-muted text-sm">
+                        <p>Type to search for restaurants...</p>
+                    </div>
+                </div>
+
+                <div id="recently-viewed-template" class="hidden">
+                    <div class="text-muted text-sm">
+                        <p>Type to search for restaurants...</p>
+                    </div>
+                    {!! view('partials.search-recently-viewed')->render() !!}
                 </div>
             </div>
         </div>
@@ -28,22 +37,32 @@
 @once
     @push('scripts')
         <script>
+            $('#search-results').html($('#recently-viewed-template').html())
+
             let searchTimeout;
             $('#simple-search').on('input', function() {
                 clearTimeout(searchTimeout);
 
                 searchTimeout = setTimeout(function() {
+                    const query = $('#simple-search').val().trim();
+
+
+                    if (query === '') {
+                        $('#search-results').html($('#recently-viewed-template').html());
+                        return;
+                    }
+
                     $.ajax({
                         url: '{{ route('search') }}',
                         method: 'GET',
                         data: {
-                            search: $('#simple-search').val()
+                            search: query
                         },
                         success: function(response) {
                             $('#search-results').html(response);
                         },
                         error: function(xhr) {
-                            console.error('Error sending location:', xhr.responseText);
+                            console.error('Search error:', xhr.responseText);
                         }
                     });
                 }, 500);
