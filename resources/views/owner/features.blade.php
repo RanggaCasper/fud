@@ -61,7 +61,8 @@
                     @endforeach
                 </div>
 
-                <x-button type="submit">Save</x-button>
+                <x-button type="submit">Submit</x-button>
+                <x-button type="reset">Reset</x-button>
             </form>
         </x-card.card>
     @endforeach
