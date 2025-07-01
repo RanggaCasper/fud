@@ -151,7 +151,7 @@ Route::middleware([])->get('/sitemap.xml', function () {
 
     return \Illuminate\Support\Facades\Response::make($sitemap->render(), \Symfony\Component\HttpFoundation\Response::HTTP_OK)
         ->header('Content-Type', 'application/xml');
-});
+})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
 
 Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
