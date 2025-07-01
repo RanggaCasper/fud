@@ -41,16 +41,14 @@
         class="font-semibold mb-3 hover:text-primary block">{{ $restaurantName }}</a>
 
     @if ($commentAttachments->isNotEmpty())
-        <div class="swiper reviewSwiper rounded-lg mb-3">
-            <div class="swiper-wrapper">
-                @foreach ($commentAttachments as $attachment)
-                    <div class="swiper-slide">
-                        <img class="w-full h-48 object-cover rounded-lg lazyload"
-                            data-src="{{ Storage::url($attachment->source) }}" alt="Review Image">
-                    </div>
-                @endforeach
-            </div>
-            <div class="swiper-pagination"></div>
+        <div class="viewer-gallery grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-3">
+            @foreach ($commentAttachments as $attachment)
+                <div>
+                    <img class="w-full aspect-square object-cover rounded-lg lazyload"
+                        data-src="https://fudz.my.id/storage/{{ $attachment->source }}"
+                        src="https://fudz.my.id/storage/{{ $attachment->source }}" alt="Review Image">
+                </div>
+            @endforeach
         </div>
     @endif
 
@@ -111,6 +109,28 @@
             </form>
         </x-modal>
 
+        <!-- Lightbox CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
+
+        <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const galleries = document.querySelectorAll('.viewer-gallery');
+                galleries.forEach(function(gallery) {
+                    new Viewer(gallery, {
+                        toolbar: true,
+                        navbar: false,
+                        title: false,
+                        tooltip: true,
+                        movable: true,
+                        transition: true,
+                    });
+                });
+            });
+        </script>
+
+
+
         <script>
             $(document).ready(function() {
                 $(document).on('click', '.like-button', function() {
@@ -119,7 +139,8 @@
                     const icon = button.find('i');
 
                     $.ajax({
-                        url: '{{ route('user.review.like', ['id' => ':id']) }}'.replace(':id', commentId),
+                        url: '{{ route('user.review.like', ['id' => ':id']) }}'.replace(':id',
+                            commentId),
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
