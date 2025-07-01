@@ -123,11 +123,24 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
+Route::get('/get/photos', function () {
+    $photos = \Illuminate\Support\Facades\DB::table('restaurant_photos')
+        ->select('restaurant_id', 'source')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return \App\Helpers\ResponseFormatter::success(
+        'Photos retrieved successfully',
+        $photos
+    );
+});
+
 Route::get('/sitemap.xml', function () {
     return response(
         \Spatie\Sitemap\SitemapIndex::create()
             ->add(url('/sitemap-pages.xml'))
             ->add(url('/sitemap-restaurants.xml'))
+            ->add(url('/sitemap-regions.xml'))
             ->render(),
         200
     )->header('Content-Type', 'application/xml');
