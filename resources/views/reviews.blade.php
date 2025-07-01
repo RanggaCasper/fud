@@ -97,6 +97,33 @@
 
                     initViewer();
 
+                    $('#comment-container .comment-wrapper').each(function() {
+                        const $wrapper = $(this);
+                        const $text = $wrapper.find('.comment-text');
+                        const $toggle = $wrapper.find('.toggle-readmore');
+
+                        const fullText = $text.text().trim();
+                        const maxChars = 100;
+
+                        if (fullText.length > maxChars) {
+                            $toggle.removeClass('hidden');
+                        } else {
+                            $toggle.addClass('hidden');
+                        }
+
+                        $toggle.off('click').on('click', function() {
+                            const isExpanded = !$text.hasClass('line-clamp-2');
+
+                            if (isExpanded) {
+                                $text.addClass('line-clamp-2');
+                                $toggle.text('Read More');
+                            } else {
+                                $text.removeClass('line-clamp-2');
+                                $toggle.text('Read Less');
+                            }
+                        });
+                    });
+
                     $('#comment-container [data-dropdown-toggle]').each(function() {
                         const $triggerEl = $(this);
                         const targetId = $triggerEl.attr('data-dropdown-toggle');

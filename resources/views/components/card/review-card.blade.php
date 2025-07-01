@@ -139,6 +139,33 @@
         </script>
 
         <script>
+            $('.comment-wrapper').each(function() {
+                const $wrapper = $(this);
+                const $text = $wrapper.find('.comment-text');
+                const $toggle = $wrapper.find('.toggle-readmore');
+
+                const fullText = $text.text().trim();
+                const maxChars = 100;
+
+                if (fullText.length > maxChars) {
+                    $toggle.removeClass('hidden');
+                } else {
+                    $toggle.addClass('hidden');
+                }
+
+                $toggle.on('click', function() {
+                    const isExpanded = !$text.hasClass('line-clamp-2');
+
+                    if (isExpanded) {
+                        $text.addClass('line-clamp-2');
+                        $toggle.text('Read More');
+                    } else {
+                        $text.removeClass('line-clamp-2');
+                        $toggle.text('Read Less');
+                    }
+                });
+            });
+
             $(document).ready(function() {
                 initViewer();
                 $(document).on('click', '.like-button', function() {
@@ -167,42 +194,6 @@
                         error: function(xhr) {
                             let msg = xhr.responseJSON?.message || 'Something went wrong.';
                             window.location.href = xhr.responseJSON.redirect_url;
-                        }
-                    });
-                });
-
-                $('.comment-wrapper').each(function() {
-                    const $wrapper = $(this);
-                    const $text = $wrapper.find('.comment-text');
-                    const $toggle = $wrapper.find('.toggle-readmore');
-
-                    const $clone = $text.clone().css({
-                        'visibility': 'hidden',
-                        'position': 'absolute',
-                        'height': 'auto',
-                        'max-height': 'none',
-                        'overflow': 'visible'
-                    }).removeClass('line-clamp-2').appendTo('body');
-
-                    const actualHeight = $clone.height();
-                    const lineHeight = parseFloat($text.css('line-height'));
-                    const maxLines = 1;
-
-                    $clone.remove();
-
-                    if (actualHeight > lineHeight * maxLines) {
-                        $toggle.removeClass('hidden');
-                    }
-
-                    $toggle.on('click', function() {
-                        const isExpanded = !$text.hasClass('line-clamp-2');
-
-                        if (isExpanded) {
-                            $text.addClass('line-clamp-2');
-                            $toggle.text('Read More');
-                        } else {
-                            $text.removeClass('line-clamp-2');
-                            $toggle.text('Read Less');
                         }
                     });
                 });
