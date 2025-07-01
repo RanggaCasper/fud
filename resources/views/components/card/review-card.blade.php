@@ -119,8 +119,7 @@
                     const icon = button.find('i');
 
                     $.ajax({
-                        url: '{{ route('user.review.like', ['id' => 'id']) }}'.replace('id',
-                            commentId),
+                        url: '{{ route("admin.user.destroy", ["id" => ":id"]) }}'.replace(":id", commentId),
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
