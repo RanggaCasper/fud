@@ -74,6 +74,10 @@
                         active="{{ request()->routeIs('owner.operatingHours.index') }}">
                         Manage Operating Hours
                     </x-nav-item>
+                    <x-nav-item href="{{ route('owner.offering.index') }}" icon="ti ti-coffee"
+                        active="{{ request()->routeIs('owner.offering.index') }}">
+                        Manage Offerings
+                    </x-nav-item>
                 @endif
             @endif
 

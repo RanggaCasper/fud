@@ -103,6 +103,8 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
     Route::put('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'update'])->name('manage.update');
     Route::get('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'index'])->name('operatingHours.index');
     Route::put('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'update'])->name('operatingHours.update');
+    Route::get('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'index'])->name('offering.index');
+    Route::put('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'update'])->name('offering.update');
 });
 
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
@@ -156,10 +158,8 @@ Route::get('/sitemap-regions.xml', function () {
         })
         ->map(fn($part) => trim($part))
         ->filter(function ($part) {
-            // Hindari "jl", "no", dan angka
             if (\Illuminate\Support\Str::contains($part, ['jl', 'no']) || preg_match('/\d/', $part)) return false;
 
-            // Maksimal 2 kata, tiap kata minimal 4 karakter
             $words = explode(' ', $part);
             if (count($words) > 2) return false;
 
