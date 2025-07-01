@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Str;
 use App\Services\SAWService;
 use Illuminate\Http\Request;
 use App\Models\Restaurant\Review;
+use App\Helpers\ResponseFormatter;
 use App\Services\PlaceDataService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -217,14 +218,31 @@ class HomeController extends Controller
             $filtered = collect();
         } else {
             $rankedRestaurants = $this->getRankedRestaurants();
+            $q = strtolower($query);
 
-            $filtered = $rankedRestaurants->filter(function ($restaurant) use ($query) {
-                $q = strtolower($query);
+            $filtered = $rankedRestaurants->map(function ($restaurant) use ($q) {
+                $name = strtolower($restaurant->name ?? '');
+                $desc = strtolower($restaurant->description ?? '');
+                $addr = strtolower($restaurant->address ?? '');
 
-                return str_contains(strtolower($restaurant->name), $q) ||
-                    str_contains(strtolower($restaurant->description), $q) ||
-                    str_contains(strtolower($restaurant->address), $q);
-            })->take(10);
+                similar_text($q, $name, $nameScore);
+                similar_text($q, $desc, $descScore);
+                similar_text($q, $addr, $addrScore);
+
+                $boost = 0;
+                if (str_contains($name, $q) || str_contains($q, $name)) {
+                    $boost += 0.4;
+                } elseif (Str::of($q)->explode(' ')->contains(fn($word) => str_contains($name, $word))) {
+                    $boost += 0.2;
+                }
+
+                $restaurant->search_score = ($nameScore * 0.5 + $descScore * 0.3 + $addrScore * 0.2) / 100 + $boost;
+
+                return $restaurant;
+            })
+                ->sortByDesc('search_score')
+                ->filter(fn($r) => $r->search_score >= 0.15)
+                ->take(10);
         }
 
         if ($request->ajax()) {
