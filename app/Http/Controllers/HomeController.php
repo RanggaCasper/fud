@@ -224,7 +224,7 @@ class HomeController extends Controller
                 return str_contains(strtolower($restaurant->name), $q) ||
                     str_contains(strtolower($restaurant->description), $q) ||
                     str_contains(strtolower($restaurant->address), $q);
-            });
+            })->take(10);
         }
 
         if ($request->ajax()) {
