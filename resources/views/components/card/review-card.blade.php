@@ -5,7 +5,7 @@
     $user = $comment->user;
     $userName = $user->name ?? 'User';
     $userImage = $user->avatar ?? null;
-    $commentDate = $comment->created_at->diffForHumans();
+    $commentDate = $comment->created_at->locale('en')->diffForHumans();
     $rating = $comment->rating;
     $commentText = $comment->comment;
     $restaurantName = $comment->restaurant->name ?? 'Restaurant';
@@ -13,7 +13,8 @@
     $hasLiked = $comment->likes->contains('user_id', auth()->id());
 @endphp
 
-<div class="mx-auto bg-white rounded-xl shadow overflow-hidden p-6">
+<div class="mx-auto bg-white rounded-xl shadow overflow-hidden p-6 h-full flex flex-col">
+    {{-- Header --}}
     <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
             @if ($userImage)
@@ -27,24 +28,33 @@
             @endif
             <div>
                 <p class="font-semibold text-dark text-md line-clamp-1">{{ $userName }}</p>
-                <p class="text-xs text-secondary">{{ $commentDate }}</p>
+                <p class="text-xs text-secondary">{{ $user->reviews()->count() }} Reviews</p>
             </div>
-        </div>
-        <div class="flex items-center space-x-1 mb-3">
-            <x-star rating="{{ $rating }}" />
         </div>
     </div>
 
     <div class="border-t w-full opacity-25 mb-3"></div>
 
+    <div class="mb-1">
+        <x-star rating="{{ $rating }}" />
+    </div>
+
+    {{-- Restaurant --}}
     <a href="{{ route('restaurant.index', ['slug' => Str::slug($restaurantName)]) }}"
         class="font-semibold mb-3 hover:text-primary block">{{ $restaurantName }}</a>
 
+    {{-- Comment --}}
+    <div class="comment-wrapper mb-3 flex-grow">
+        <p class="text-sm line-clamp-2 comment-text">{{ $commentText }}</p>
+        <span class="toggle-readmore hover:underline text-sm text-primary cursor-pointer hidden">Read More</span>
+    </div>
+
+    {{-- Attachments --}}
     @if ($commentAttachments->isNotEmpty())
-        <div class="viewer-gallery grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-3">
+        <div class="viewer-gallery grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
             @foreach ($commentAttachments as $attachment)
                 <div>
-                    <img class="w-full aspect-square object-cover rounded-lg lazyload"
+                    <img class="w-full cursor-zoom-in aspect-square object-cover rounded-lg lazyload"
                         data-src="https://fudz.my.id/storage/{{ $attachment->source }}"
                         src="https://fudz.my.id/storage/{{ $attachment->source }}" alt="Review Image">
                 </div>
@@ -52,12 +62,10 @@
         </div>
     @endif
 
-    <div class="comment-wrapper mb-3">
-        <p class="text-sm line-clamp-2 comment-text">{{ $commentText }}</p>
-        <span class="toggle-readmore hover:underline text-sm text-primary cursor-pointer hidden">Read More</span>
-    </div>
+    <p class="text-xs mb-3 text-secondary">Posted {{ $commentDate }}</p>
 
-    <div class="flex items-center justify-between gap-2">
+    {{-- Footer --}}
+    <div class="flex items-center justify-between gap-2 mt-auto pt-2 border-t border-gray-100">
         <div class="flex items-center space-x-1">
             <button data-like-id="{{ $commentId }}"
                 class="like-button hover:rounded-full hover:bg-gray-200 hover:text-primary py-0.5 px-1.5">

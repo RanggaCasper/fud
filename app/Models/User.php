@@ -5,7 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Restaurant\Claim;
+use App\Models\Restaurant\Review;
 use App\Models\Restaurant\Favorite;
+use App\Models\Restaurant\Review\Like;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -81,12 +83,17 @@ class User extends Authenticatable
 
     public function likes()
     {
-        return $this->hasMany(Restaurant\Review\Like::class, 'user_id');
+        return $this->hasMany(Like::class, 'user_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function likedReviews()
     {
-        return $this->belongsToMany(Restaurant\Review\Like::class, 'restaurant_review_likes', 'user_id', 'review_id');
+        return $this->belongsToMany(Like::class, 'restaurant_review_likes', 'user_id', 'review_id');
     }
 
     public function socialAccounts()
