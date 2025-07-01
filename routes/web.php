@@ -119,9 +119,24 @@ Route::middleware([])->get('/sitemap.xml', function () {
     $today = \Carbon\Carbon::now();
 
     $sitemap = Sitemap::create()
-        ->add(Url::create('/')->setLastModificationDate($today))
-        ->add(Url::create(route('reviews'))->setLastModificationDate($today))
-        ->add(Url::create(route('list'))->setLastModificationDate($today));
+        ->add(
+            Url::create('/')
+                ->setLastModificationDate($today)
+                ->setPriority(1.0)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        )
+        ->add(
+            Url::create(route('reviews'))
+                ->setLastModificationDate($today)
+                ->setPriority(0.8)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        )
+        ->add(
+            Url::create(route('list'))
+                ->setLastModificationDate($today)
+                ->setPriority(0.8)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        );
 
     \App\Models\Restaurant\Restaurant::orderByDesc('created_at')
         ->get()
@@ -129,10 +144,12 @@ Route::middleware([])->get('/sitemap.xml', function () {
             $sitemap->add(
                 Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
                     ->setLastModificationDate($today)
+                    ->setPriority(0.8)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
             );
         });
 
-    return \Illuminate\Support\Facades\Response::make($sitemap->render(), 200)
+    return \Illuminate\Support\Facades\Response::make($sitemap->render(), \Symfony\Component\HttpFoundation\Response::HTTP_OK)
         ->header('Content-Type', 'application/xml');
 });
 
