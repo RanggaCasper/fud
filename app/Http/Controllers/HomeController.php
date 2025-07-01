@@ -159,7 +159,9 @@ class HomeController extends Controller
         $userLng = session('longitude');
 
         if (!$userLat || !$userLng) {
-            return $restaurants;
+            return $restaurants->filter(function ($restaurant) use ($region) {
+                return str_contains(strtolower($restaurant->address), $region);
+            });
         }
 
         // Optional filter by region (contoh: denpasar)
