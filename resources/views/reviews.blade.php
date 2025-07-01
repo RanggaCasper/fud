@@ -63,6 +63,17 @@
                 observer.observe(document.querySelector('#scroll-loader'));
             }
 
+            function initDropdowns(container = document) {
+                container.querySelectorAll('[data-dropdown-toggle]').forEach((triggerEl) => {
+                    const targetId = triggerEl.getAttribute('data-dropdown-toggle');
+                    const targetEl = document.getElementById(targetId);
+
+                    if (targetEl) {
+                        new window.Dropdown(targetEl, triggerEl);
+                    }
+                });
+            }
+
             function loadMoreComments() {
                 const $loader = $('#scroll-loader');
                 const nextPage = $loader.data('next-page');
@@ -77,13 +88,28 @@
                     const $newItems = $html.find('.break-inside-avoid.mb-6');
                     const $newLoader = $html.find('#scroll-loader');
 
-                    $newItems.find('img[data-src]').each(function() {
+                    $newItems.find('img[alt="profile picture"][data-src]').each(function() {
                         const src = $(this).attr('data-src');
-                        $(this).attr('src', src).removeAttr('data-src');
+                        $(this).attr('src', src).removeAttr('data-src').removeClass('lazyload');
                     });
 
-
                     $container.append($newItems);
+
+                    initViewer();
+
+                    $('#comment-container [data-dropdown-toggle]').each(function() {
+                        const $triggerEl = $(this);
+                        const targetId = $triggerEl.attr('data-dropdown-toggle');
+                        const $targetEl = $('#' + targetId);
+
+                        if ($targetEl.length) {
+                            new window.Dropdown($targetEl[0], $triggerEl[0], {
+                                placement: 'bottom-end',
+                                offsetSkidding: 0,
+                                offsetDistance: 8
+                            });
+                        }
+                    });
 
                     if ($newLoader.length) {
                         observer.unobserve($loader[0]);
@@ -99,12 +125,7 @@
                     isLoading = false;
                 });
             }
-        });
-    </script>
 
-
-    <script>
-        $(document).ready(function() {
             $("#owl-carousel").owlCarousel({
                 items: 1,
                 loop: true,

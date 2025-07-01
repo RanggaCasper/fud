@@ -24,7 +24,7 @@
                     active="{{ request()->routeIs('admin.restaurant.index') }}">
                     Manage Restaurants
                 </x-nav-item>
-                 <x-nav-item href="{{ route('admin.owner.index') }}" icon="ti ti-trademark"
+                 <x-nav-item href="{{ route('admin.owner.index') }}" icon="ti ti-rosette-discount-check"
                     active="{{ request()->routeIs('admin.owner.index') }}">
                     Manage Ownership
                 </x-nav-item>

@@ -117,30 +117,30 @@
             </form>
         </x-modal>
 
-        <!-- Lightbox CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
-
         <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            function initViewer() {
                 const galleries = document.querySelectorAll('.viewer-gallery');
+
                 galleries.forEach(function(gallery) {
-                    new Viewer(gallery, {
-                        toolbar: true,
-                        navbar: false,
-                        title: false,
-                        tooltip: true,
-                        movable: true,
-                        transition: true,
-                    });
+                    if (!gallery._viewer) {
+                        gallery._viewer = new Viewer(gallery, {
+                            toolbar: true,
+                            navbar: false,
+                            title: false,
+                            tooltip: true,
+                            movable: true,
+                            transition: true,
+                        });
+                    }
                 });
-            });
+            }
         </script>
-
-
 
         <script>
             $(document).ready(function() {
+                initViewer();
                 $(document).on('click', '.like-button', function() {
                     const button = $(this);
                     const commentId = button.data('like-id');

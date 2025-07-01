@@ -8,7 +8,7 @@
                     <th>NO</th>
                     <th>Applicant</th>
                     <th>Restaurant</th>
-                    <th>Ownership Proff</th>
+                    <th>Ownership Proof</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
