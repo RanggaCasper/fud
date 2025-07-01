@@ -44,22 +44,22 @@ class SeoController extends Controller
             $restaurant = Auth::user()->owned->restaurant;
 
             $prompt = <<<PROMPT
-Tolong buatkan metadata SEO berdasarkan informasi restoran berikut:
+Please generate SEO metadata based on the restaurant information below:
 
-1. Meta description (maksimal 160 karakter)
-2. Daftar keyword SEO yang relevan (minimal 5), dalam array
-3. Meta title yang menarik dan padat (maksimal 60 karakter)
+1. A meta description (maximum 160 characters)
+2. A list of at least 5 relevant SEO keywords (as an array)
+3. A compelling and concise meta title (maximum 60 characters)
 
-Informasi restoran:
-- Nama: {$restaurant->name}
-- Lokasi: {$restaurant->address}
-- Penawaran: {$restaurant->offerings}
-- Jam buka: {$restaurant->operatingHours}
-- Opsi makan di tempat: {$restaurant->diningOptions}
-- Fasilitas aksesibilitas: {$restaurant->accessibilities}
-- Metode pembayaran: {$restaurant->payments}
+Restaurant information:
+- Name: {$restaurant->name}
+- Location: {$restaurant->address}
+- Offerings: {$restaurant->offerings}
+- Opening hours: {$restaurant->operatingHours}
+- Dining options: {$restaurant->diningOptions}
+- Accessibility features: {$restaurant->accessibilities}
+- Payment methods: {$restaurant->payments}
 
-Jawaban hanya dalam format JSON seperti berikut:
+Respond only in JSON format as shown:
 {
   "meta_title": "...",
   "meta_description": "...",
