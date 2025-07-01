@@ -12,6 +12,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Restaurant\Restaurant;
+use App\Models\Restaurant\Review\Like;
 use RahulHaque\Filepond\Facades\Filepond;
 use App\Models\Restaurant\Review\Attachment;
 
@@ -26,7 +27,7 @@ class ReviewController extends Controller
 
         return view('user.review', compact('comments'));
     }
-    
+
     public function store(Request $request, $slug)
     {
         if (!User::find(Auth::id())->hasRole('user')) {
@@ -44,11 +45,11 @@ class ReviewController extends Controller
 
         try {
             $restaurant = Restaurant::where('slug', $slug)->firstOrFail();
-            
+
             $existingReview = Review::where('restaurant_id', $restaurant->id)
-            ->where('user_id', Auth::id())
-            ->first();
-            
+                ->where('user_id', Auth::id())
+                ->first();
+
             if ($existingReview) {
                 return ResponseFormatter::error('You have already reviewed this restaurant.', code: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -73,6 +74,44 @@ class ReviewController extends Controller
             }
 
             return ResponseFormatter::redirected('Review created successfully.', route('restaurant.index', ['slug' => $restaurant->slug]));
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function like(Request $request, $reviewId)
+    {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            return ResponseFormatter::error('Only users can like reviews.', code: Response::HTTP_FORBIDDEN);
+        }
+        
+        try {
+            $review = \App\Models\Restaurant\Review::findOrFail($reviewId);
+
+            $existingLike = Like::where('restaurant_review_id', $review->id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if ($existingLike) {
+                $existingLike->delete();
+
+                $likesCount = Like::where('restaurant_review_id', $review->id)->count();
+
+                return ResponseFormatter::success('Review liked successfully.', [
+                    'likes' => (int) $likesCount, 'liked' => false
+                ]);
+            }
+
+            Like::create([
+                'restaurant_review_id' => $review->id,
+                'user_id' => Auth::id()
+            ]);
+
+            $likesCount = Like::where('restaurant_review_id', $review->id)->count();
+
+            return ResponseFormatter::success('Review liked successfully.', [
+                'likes' => (int) $likesCount, 'liked' => true
+            ]);
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

@@ -34,16 +34,7 @@
                     @foreach($comments as $comment)
                         <div class="col-span-12 lg:col-span-4">
                             <div class="mb-3">
-                                <x-card.review-card 
-                                    :userName="$comment->user->name" 
-                                    :commentDate="$comment->created_at->format('d M Y')" 
-                                    :userImage="$comment->user->avatar" 
-                                    :rating="$comment->rating" 
-                                    :restaurantName="$comment->restaurant->name"
-                                    :commentAttachments="$comment->attachments" 
-                                    :commentText="$comment->comment" 
-                                    :commentId="$comment->id"
-                                />
+                                <x-card.review-card :comment="$comment" />
                             </div>
                         </div>
                     @endforeach

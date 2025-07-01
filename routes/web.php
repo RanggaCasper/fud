@@ -85,7 +85,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::put('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'destroy'])->name('destroy');
     });
-
+    
     Route::prefix('reported-reviews')->as('reported-reviews.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'get'])->name('get');
@@ -112,8 +112,10 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('review')->as('review.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ReviewController::class, 'index'])->name('index');
-        Route::post('/{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
+        Route::post('{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
+        Route::put('like/{id}', [\App\Http\Controllers\User\ReviewController::class, 'like'])->name('like');
     });
+
     Route::prefix('favorite')->as('favorite.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\FavoriteController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\User\FavoriteController::class, 'store'])->name('store');

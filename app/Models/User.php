@@ -79,6 +79,16 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Restaurant\Review\Like::class, 'user_id');
+    }
+
+    public function likedReviews()
+    {
+        return $this->belongsToMany(Restaurant\Review\Like::class, 'restaurant_review_likes', 'user_id', 'review_id');
+    }
+
     public function socialAccounts()
     {
         return $this->hasMany(SocialAccount::class);

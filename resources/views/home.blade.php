@@ -62,8 +62,7 @@
                 <div class="swiper-wrapper py-3">
                     @foreach ($comments as $comment)
                         <div class="swiper-slide">
-                            <x-card.review-card :userName="$comment->user->name" :commentDate="$comment->created_at->format('d M Y')" :userImage="$comment->user->avatar" :rating="$comment->rating"
-                                :restaurantName="$comment->restaurant->name" :commentAttachments="$comment->attachments" :commentText="$comment->comment" :commentId="$comment->id" />
+                            <x-card.review-card :comment="$comment" />
                         </div>
                     @endforeach
                 </div>
