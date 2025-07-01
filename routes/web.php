@@ -116,17 +116,19 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
 });
 
 Route::middleware([])->get('/sitemap.xml', function () {
-    $sitemap = Sitemap::create()
-        ->add(Url::create('/'))
-        ->add(Url::create(route('reviews')))
-        ->add(Url::create(route('list')));
+    $today = \Carbon\Carbon::now();
 
-    \App\Models\Restaurant\Restaurant::orderByDesc('updated_at')
+    $sitemap = Sitemap::create()
+        ->add(Url::create('/')->setLastModificationDate($today))
+        ->add(Url::create(route('reviews'))->setLastModificationDate($today))
+        ->add(Url::create(route('list'))->setLastModificationDate($today));
+
+    \App\Models\Restaurant\Restaurant::orderByDesc('created_at')
         ->get()
-        ->each(function ($restaurant) use ($sitemap) {
+        ->each(function ($restaurant) use ($sitemap, $today) {
             $sitemap->add(
                 Url::create(route('restaurant.index', ['slug' => $restaurant->slug]))
-                    ->setLastModificationDate($restaurant->updated_at)
+                    ->setLastModificationDate($today)
             );
         });
 
