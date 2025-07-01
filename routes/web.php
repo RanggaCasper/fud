@@ -95,6 +95,9 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
 
 Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/seo', [\App\Http\Controllers\Owner\SeoController::class, 'index'])->name('seo.index');
+    Route::put('/seo', [\App\Http\Controllers\Owner\SeoController::class, 'update'])->name('seo.update');
+    Route::post('/seo/generate', [\App\Http\Controllers\Owner\SeoController::class, 'generate'])->name('seo.generate');
     Route::get('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'index'])->name('manage.index');
     Route::put('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'update'])->name('manage.update');
     Route::get('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'index'])->name('operatingHours.index');

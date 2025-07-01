@@ -66,6 +66,10 @@
                         active="{{ request()->routeIs('owner.manage.index') }}">
                         Manage Restaurant
                     </x-nav-item>
+                    <x-nav-item href="{{ route('owner.seo.index') }}" icon="ti ti-settings-search"
+                        active="{{ request()->routeIs('owner.seo.index') }}">
+                        Manage SEO
+                    </x-nav-item>
                     <x-nav-item href="{{ route('owner.operatingHours.index') }}" icon="ti ti-clock-24"
                         active="{{ request()->routeIs('owner.operatingHours.index') }}">
                         Manage Operating Hours

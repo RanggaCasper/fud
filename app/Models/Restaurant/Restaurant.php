@@ -3,6 +3,7 @@
 namespace App\Models\Restaurant;
 
 use Carbon\Carbon;
+use App\Models\MetaTag;
 use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
@@ -55,6 +56,12 @@ class Restaurant extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function metaTag()
+    {
+        return $this->morphOne(MetaTag::class, 'metaable');
+    }
+
 
     public function getTodayOperatingHours()
     {

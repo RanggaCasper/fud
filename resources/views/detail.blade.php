@@ -1,12 +1,13 @@
 @extends('layouts.app')
 
-@section('title', $restaurant->name . ' - ' . config('app.name'))
+@section('title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
 
-@section('meta_description', Str::limit($restaurant->description ?? $restaurant->name, 150))
-@section('meta_keywords', $restaurant->name . ', food delivery, nearby restaurants, kuliner, review makanan')
+@section('meta_title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
+@section('meta_description', optional($restaurant->metaTag)->meta_description ?? 'Discover delicious food near you.')
+@section('meta_keywords', implode(',', optional($restaurant->metaTag)->meta_keywords ?? [$restaurant->name]))
 
-@section('meta_og_title', $restaurant->name . ' - ' . config('app.name'))
-@section('meta_og_description', Str::limit($restaurant->description ?? 'Discover delicious food near you.', 150))
+@section('meta_og_title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
+@section('meta_og_description', optional($restaurant->metaTag)->meta_description ?? 'Discover delicious food near you.')
 @section('meta_og_image', $restaurant->thumbnail)
 @section('meta_og_url', route('restaurant.index', ['slug' => $restaurant->slug]))
 @section('meta_og_type', 'restaurant')
