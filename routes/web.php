@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/restaurants', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
+Route::get('/restaurants/{region?}', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
 Route::get('/reviews', [\App\Http\Controllers\HomeController::class, 'reviews'])->name('reviews');
 Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
 Route::get('/fetch-image/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchImage'])->name('fetch.image');
@@ -140,6 +141,50 @@ Route::get('/sitemap-restaurants.xml', function () {
                     ->setChangeFrequency('monthly')
             );
         });
+
+    return response($sitemap->render(), 200)
+        ->header('Content-Type', 'application/xml');
+});
+
+Route::get('/sitemap-regions.xml', function () {
+    $today = now();
+    $sitemap = \Spatie\Sitemap\Sitemap::create();
+
+    $regions = \App\Models\Restaurant\Restaurant::pluck('address')
+        ->flatMap(function ($address) {
+            return collect(explode(',', strtolower($address)));
+        })
+        ->map(fn($part) => trim($part))
+        ->filter(function ($part) {
+            // Hindari "jl", "no", dan angka
+            if (\Illuminate\Support\Str::contains($part, ['jl', 'no']) || preg_match('/\d/', $part)) return false;
+
+            // Maksimal 2 kata, tiap kata minimal 4 karakter
+            $words = explode(' ', $part);
+            if (count($words) > 2) return false;
+
+            foreach ($words as $word) {
+                if (strlen($word) < 4) return false;
+            }
+
+            return true;
+        })
+        ->countBy()
+        ->filter(fn($count) => $count >= 3)
+        ->keys()
+        ->map(fn($region) => \Illuminate\Support\Str::title($region))
+        ->unique();
+
+    foreach ($regions as $region) {
+        $slug = \Illuminate\Support\Str::slug($region);
+
+        $sitemap->add(
+            \Spatie\Sitemap\Tags\Url::create(route('list', ['region' => $slug]))
+                ->setLastModificationDate($today)
+                ->setChangeFrequency('weekly')
+                ->setPriority(0.6)
+        );
+    }
 
     return response($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');

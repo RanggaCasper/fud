@@ -1,5 +1,36 @@
 @extends('layouts.app')
-@section('title', '6 BEST Restaurant Near You - Fudz!')
+
+@php
+    use Illuminate\Support\Str;
+
+    $rawRegion = request()->route('region');
+    $regionTitle = $rawRegion
+        ? Str::of($rawRegion)->replace('-', ' ')->title()
+        : null;
+
+    $pageTitle = $regionTitle
+        ? Str::limit("6 Best Restaurants in $regionTitle", 40, '')
+        : '6 Best Restaurants Near You';
+
+    $description = $regionTitle
+        ? "Discover 6 must-try places to eat in $regionTitle. Curated by Fudz."
+        : "Explore 6 nearby food spots you'll love. Powered by Fudz.";
+
+    $keywords = $regionTitle
+        ? [
+            "$regionTitle food",
+            "$regionTitle restaurants",
+            "halal $regionTitle",
+            "top eats in $regionTitle",
+            "best $regionTitle places",
+        ]
+        : ['restaurants', 'halal food', 'top rated', 'near me', 'kuliner'];
+@endphp
+
+@section('title', $pageTitle)
+@section('meta_title', $pageTitle)
+@section('meta_description', $description)
+@section('meta_keywords', implode(',', $keywords))
 
 @section('content')
     <div class="mt-[72px]">
@@ -55,10 +86,16 @@
                         <lord-icon src="https://cdn.lordicon.com/tqvrfslk.json" trigger="loop" class="size-12">
                         </lord-icon>
                         <div class="flex flex-col">
+                            @php
+                                $region = $regionTitle;
+                            @endphp
+
                             <h5 class="flex text-lg font-bold">
-                                Dine Around You
+                                {{ $region ? 'Restaurants in ' . ucfirst($region) : 'Dine Around You' }}
                             </h5>
-                            <span class="text-xs">Popular picks, tasty bites, near you. All ready to explore!</span>
+                            <span class="text-xs">
+                                {{ $region ? 'Explore popular picks and tasty bites around ' . ucfirst($region) . '.' : 'Popular picks, tasty bites, near you. All ready to explore!' }}
+                            </span>
                         </div>
                     </div>
                     <div id="restaurant-list" class="grid grid-cols-1 lg:grid-cols-3 gap-4">

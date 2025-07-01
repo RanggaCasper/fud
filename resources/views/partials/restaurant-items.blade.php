@@ -20,7 +20,9 @@
         <script>
             const $restaurantList = $('#restaurant-list');
             const $loadMoreBtn = $('#load-more-resto');
-            const listRoute = '{{ route('list') }}';
+            const rawRegion = '{{ request()->route('region') }}';
+            const formattedRegion = encodeURIComponent(rawRegion.replace(/-/g, ' '));
+            const listRoute = `/restaurants/${formattedRegion}`;
 
             function updateImageLazyLoad() {
                 $restaurantList.find('img[data-src]').each(function() {

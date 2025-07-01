@@ -29,14 +29,14 @@ class HomeController extends Controller
         ]);
     }
 
-    public function list(Request $request)
+    public function list(Request $request, $region = null)
     {
-        $allRestaurants = $this->getRankedRestaurants();
+        $region = $region ? urldecode(str_replace('-', ' ', $region)) : null;
+        $allRestaurants = $this->getRankedRestaurants($region);
 
         // Apply filters
         if ($request->filled('sort_by')) {
             $sortBy = $request->input('sort_by');
-
             if ($sortBy == 'rating_desc') {
                 $allRestaurants = $allRestaurants->sortByDesc('rating');
             } elseif ($sortBy == 'rating_asc') {
@@ -148,7 +148,7 @@ class HomeController extends Controller
         }
     }
 
-    private function getRankedRestaurants()
+    private function getRankedRestaurants($region = null)
     {
         $restaurants = Restaurant::with(['offerings', 'operatingHours'])
             ->withCount('reviews')
@@ -162,6 +162,15 @@ class HomeController extends Controller
             return $restaurants;
         }
 
+        // Optional filter by region (contoh: denpasar)
+        if ($region) {
+            $region = strtolower($region);
+            $restaurants = $restaurants->filter(function ($restaurant) use ($region) {
+                return str_contains(strtolower($restaurant->address), $region);
+            });
+        }
+
+        // Proses rating + SAW
         $restaurantData = $restaurants->map(function ($restaurant) use ($userLat, $userLng) {
             $processed = $this->processRestaurantData($restaurant, $userLat, $userLng);
 
@@ -213,12 +222,32 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         $query = trim($request->input('search'));
+        $regionSuggestion = collect();
+        $filtered = collect();
 
-        if (empty($query)) {
-            $filtered = collect();
-        } else {
-            $rankedRestaurants = $this->getRankedRestaurants();
+        if (!empty($query)) {
             $q = strtolower($query);
+
+            $regionSuggestion = \App\Models\Restaurant\Restaurant::pluck('address')
+                ->flatMap(fn($address) => collect(explode(',', strtolower($address))))
+                ->map(fn($part) => trim($part))
+                ->filter(function ($part) {
+                    if (Str::contains($part, ['jl', 'no']) || preg_match('/\d/', $part)) return false;
+                    $words = explode(' ', $part);
+                    if (count($words) > 2) return false;
+                    foreach ($words as $word) {
+                        if (strlen($word) < 4) return false;
+                    }
+                    return true;
+                })
+                ->filter(fn($part) => Str::contains($part, $q))
+                ->countBy()
+                ->filter(fn($count) => $count >= 3)
+                ->keys()
+                ->map(fn($region) => Str::title($region))
+                ->values();
+
+            $rankedRestaurants = $this->getRankedRestaurants();
 
             $filtered = $rankedRestaurants->map(function ($restaurant) use ($q) {
                 $name = strtolower($restaurant->name ?? '');
@@ -237,20 +266,23 @@ class HomeController extends Controller
                 }
 
                 $restaurant->search_score = ($nameScore * 0.5 + $descScore * 0.3 + $addrScore * 0.2) / 100 + $boost;
-
                 return $restaurant;
             })
                 ->sortByDesc('search_score')
-                ->filter(fn($r) => $r->search_score >= 0.15)
+                ->filter(fn($r) => $r->search_score >= 0.3)
                 ->take(10);
         }
 
         if ($request->ajax()) {
-            return view('partials.search-items', ['restaurants' => $filtered])->render();
+            return view('partials.search-items', [
+                'restaurants' => $filtered,
+                'regionSuggestion' => $regionSuggestion,
+            ])->render();
         }
 
         return view('search', [
             'restaurants' => $filtered,
+            'regionSuggestion' => $regionSuggestion,
             'query' => $query,
         ]);
     }
