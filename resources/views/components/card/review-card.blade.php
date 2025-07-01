@@ -137,7 +137,7 @@
                         },
                         error: function(xhr) {
                             let msg = xhr.responseJSON?.message || 'Something went wrong.';
-                            console.log(xhr.responseJSON);
+                            window.location.href = xhr.responseJSON.redirect_url;
                         }
                     });
                 });
