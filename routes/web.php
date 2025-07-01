@@ -121,7 +121,7 @@ Route::get('/sitemap.xml', function () {
             ->render(),
         200
     )->header('Content-Type', 'application/xml');
-})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
+});
 
 Route::get('/sitemap-restaurants.xml', function () {
     $today = \Carbon\Carbon::now();
@@ -140,7 +140,7 @@ Route::get('/sitemap-restaurants.xml', function () {
 
     return response($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');
-})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
+});
 
 Route::get('/sitemap-pages.xml', function () {
     $today = \Carbon\Carbon::now();
@@ -167,7 +167,7 @@ Route::get('/sitemap-pages.xml', function () {
 
     return response($sitemap->render(), 200)
         ->header('Content-Type', 'application/xml');
-})->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class]);
+});
 
 Route::post('/deploy', function (\Illuminate\Http\Request $request) {
     $signature = $request->header('X-Hub-Signature-256');
