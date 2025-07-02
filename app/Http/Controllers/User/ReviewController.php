@@ -132,22 +132,23 @@ class ReviewController extends Controller
         ]);
 
         try {
+            $review = Review::find($request->comment_id);
+
+            if ($review && $review->user_id == Auth::id()) {
+                return ResponseFormatter::error('You cannot report your own comment.', code: Response::HTTP_FORBIDDEN);
+            }
+
             $report = Report::where('restaurant_review_id', $request->comment_id)
                 ->where('user_id', Auth::id())
                 ->first();
 
-            if ($report->user_id == Auth::id()) {
-                return ResponseFormatter::error('You cannot report your own comment.', code: Response::HTTP_FORBIDDEN);
-            }
-
-                
             if ($report) {
                 return ResponseFormatter::error('You have already reported this comment.', code: Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             Report::create([
                 'restaurant_review_id' => $request->comment_id,
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::id(),
                 'reason' => $request->radio_group,
             ]);
 
