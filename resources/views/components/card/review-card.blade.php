@@ -86,11 +86,11 @@
     class="z-10 hidden bg-secondary-background divide-y divide-gray-100 rounded-lg shadow-sm w-36">
     <ul class="py-2 text-sm text-black" aria-labelledby="dropdownReviewButton">
         <li>
-            <a href="#" data-modal-target="reportModal" data-modal-toggle="reportModal"
+            <button data-modal-target="reportModal" data-modal-toggle="reportModal"
                 data-comment-id="{{ $commentId }}"
-                class="reporting px-4 py-2 hover:!text-white hover:bg-danger flex items-center">
+                class="reporting w-full px-4 py-2 hover:!text-white hover:bg-danger flex items-center">
                 <i class="ti ti-alert-circle text-lg me-1.5"></i> Report
-            </a>
+            </button>
         </li>
     </ul>
 </div>
