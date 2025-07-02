@@ -142,6 +142,15 @@
                     }
                 });
             }
+
+            function initReporting(){
+                $('.reporting').on('click', function() {
+                    const commentId = $(this).data('comment-id');
+                    const $modal = $('#reportModal');
+                    const $input = $modal.find('input[name="comment_id"]');
+                    $input.val(commentId);
+                });
+            }
         </script>
 
         <script>
@@ -174,6 +183,7 @@
 
             $(document).ready(function() {
                 initViewer();
+                initReporting();
                 $(document).on('click', '.like-button', function() {
                     const button = $(this);
                     const commentId = button.data('like-id');
@@ -202,13 +212,6 @@
                             window.location.href = xhr.responseJSON.redirect_url;
                         }
                     });
-                });
-
-                $('.reporting').on('click', function() {
-                    const commentId = $(this).data('comment-id');
-                    const $modal = $('#reportModal');
-                    const $input = $modal.find('input[name="comment_id"]');
-                    $input.val(commentId);
                 });
             });
         </script>

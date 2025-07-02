@@ -7,7 +7,7 @@
                 <img data-src="{{ asset('assets/image/bot.png') }}" alt="Avatar Bot" class="size-10 rounded-full object-cover lazyload aspect-square" />
                 <div class="text-sm">
                     <div class="text-white font-light text-sm">Chat With</div>
-                    <div class="font-semibold text-xs">FudzAI Assistant!</div>
+                    <div class="font-semibold text-xs">GulAI Assistant!</div>
                 </div>
             </div>
             <button id="chatbot-close-btn" class="hover:text-gray-200">

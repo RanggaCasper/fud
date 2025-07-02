@@ -94,7 +94,8 @@
                     });
 
                     $container.append($newItems);
-
+                    
+                    initReporting();
                     initViewer();
 
                     $('#comment-container .comment-wrapper').each(function() {
