@@ -26,7 +26,7 @@ class RestaurantController extends Controller
             'reviews'
         ])->where('slug', $slug)->firstOrFail();
 
-        $viewed = session()->get('recently_viewed', []);
+        $viewed = (array) session()->get('recently_viewed', []);
         $viewed = array_filter($viewed, fn($id) => $id != $restaurant->id);
         array_unshift($viewed, $restaurant->id);
         $viewed = array_slice($viewed, 0, 10);
@@ -65,7 +65,7 @@ class RestaurantController extends Controller
             $path = Filepond::field($request->ownership_proof)
                 ->moveTo('images/ownership/' . Str::uuid());
 
-            $claim = Claim::create([
+            Claim::create([
                 'user_id'         => $user->id,
                 'restaurant_id'   => $restaurant->id,
                 'message'         => 'Request to claim ownership',
