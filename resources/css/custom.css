@@ -19,7 +19,7 @@ html {
     scroll-behavior: smooth;
 }
 
-a {
+#chatbot-messages a {
     @apply cursor-pointer text-primary hover:underline;
 }
 
