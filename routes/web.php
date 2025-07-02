@@ -123,6 +123,9 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     });
 });
 
+Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'store'])->name('chatbot.store');
+Route::post('/chatbot/history', [\App\Http\Controllers\ChatbotController::class, 'history'])->name('chatbot.history');
+
 Route::get('/get/photos', function () {
     $photos = \Illuminate\Support\Facades\DB::table('restaurant_photos')
         ->select('restaurant_id', 'source')

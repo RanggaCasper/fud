@@ -19,6 +19,10 @@ html {
     scroll-behavior: smooth;
 }
 
+a {
+    @apply cursor-pointer text-primary hover:underline;
+}
+
 /* Button */
 .btn {
     @apply text-white font-semibold rounded-lg text-center transition-all duration-100;
