@@ -183,3 +183,14 @@ Table saw_criteria_weights {
     criteria_id int [ref: > saw_criteria.id] // Foreign Key tabel saw_criteria
     weight float // Bobot kriteria dalam pengambilan keputusan
 }
+
+Table restaurant_click_logs {
+  id int [pk, increment]
+  user_id int [ref: > users.id, null] // nullable jika guest
+  guest_id varchar [note: 'Session ID or random UUID for guest'] // boleh kosong jika user login
+
+  restaurant_id int [ref: > restaurants.id]
+  source varchar
+  clicked_at timestamp
+  created_at timestamp
+}

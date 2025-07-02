@@ -55,6 +55,27 @@ class ChatbotController extends Controller
             ->where('user', $user)
             ->values();
 
+        if ($history->isEmpty()) {
+            $response = 'Hello! How can I help you today? I can assist you with finding restaurants, providing recommendations, or sharing details about specific places. Just let me know what you\'re looking for!';
+            $time = now()->format('Y-m-d H:i:s');
+
+            $entry = [
+                'user' => $user,
+                'message' => null,
+                'response' => $response,
+                'time' => $time,
+            ];
+
+            $chatHistory = session('chat_history', []);
+            $chatHistory[] = $entry;
+            session(['chat_history' => $chatHistory]);
+
+            return response()->json([
+                'status' => 'ok',
+                'data' => [$entry]
+            ]);
+        }
+
         return response()->json([
             'status' => 'ok',
             'data' => $history

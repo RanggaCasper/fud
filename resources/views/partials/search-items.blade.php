@@ -35,7 +35,7 @@
 @endif
 
 @forelse ($restaurants as $restaurant)
-    <div class="col-span-1">
+    <div class="col-span-1 mb-0.5">
         <x-card.mini-restaurant-card :image="$restaurant->thumbnail"
             :title="$restaurant->name"
             :slug="Str::slug($restaurant->name)"

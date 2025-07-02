@@ -4,7 +4,8 @@
 
         <div class="bg-primary text-white px-4 py-3 font-semibold flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <img data-src="{{ asset('assets/image/bot.png') }}" alt="Avatar Bot" class="size-10 rounded-full object-cover lazyload aspect-square" />
+                <img data-src="{{ asset('assets/image/bot.png') }}" alt="Avatar Bot"
+                    class="size-10 rounded-full object-cover lazyload aspect-square" />
                 <div class="text-sm">
                     <div class="text-white font-light text-sm">Chat With</div>
                     <div class="font-semibold text-xs">GulAI Assistant!</div>
@@ -29,11 +30,23 @@
         </div>
     </div>
 
-    <button id="chatbot-toggle-btn"
-        class="size-14 flex items-center justify-center text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-xl rounded-full"
-        title="Chatbot">
-        <i class="ti ti-message-chatbot-filled text-2xl"></i>
-    </button>
+    <div class="relative inline-block">
+        <!-- Sapaan di atas tombol -->
+        <div id="chatbot-toggle-greeting"
+            class="absolute bottom-full mb-2 right-0 px-4 py-2 bg-primary text-white text-sm rounded-xl shadow hidden z-10 whitespace-nowrap">
+            👋 Hi there! Need help?
+        </div>
+
+        <!-- Tombol ikon -->
+        <button id="chatbot-toggle-btn"
+            class="flex items-center justify-center p-3 text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-xl rounded-full"
+            title="Chatbot" style="border-radius: 50% 50% 50% 0;">
+            <i class="ti ti-message-chatbot-filled text-xl"></i>
+            <span class="sr-only">Chatbot</span>
+        </button>
+    </div>
+
+
 </div>
 
 @push('scripts')
@@ -47,11 +60,42 @@
             const $messages = $('#chatbot-messages');
             const $close = $('#chatbot-close-btn');
             let historyLoaded = false;
+            let textLoaded = false;
+            const TEXT_KEY = 'chatbot_text_hidden_at';
+            const EXPIRY_DURATION = 1000 * 60 * 5; // 5 minutes
+            const el = $('#chatbot-toggle-greeting');
+
+            const now = Date.now();
+            const lastHidden = localStorage.getItem(TEXT_KEY);
+
+            if (!lastHidden || now - parseInt(lastHidden) > EXPIRY_DURATION) {
+                if (el) {
+                    $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '0 50% 50% 50%' :
+                            '50% 50% 50% 0');
+                    el.removeClass('hidden');
+                }
+
+                setTimeout(() => {
+                    if (el) {
+                        textLoaded = true;
+
+                        $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '50% 50% 50% 0' :
+                            '0 50% 50% 50%');
+
+                        el.addClass('hidden');
+
+                        localStorage.setItem(TEXT_KEY, Date.now().toString());
+                    }
+                }, 5000);
+            }
 
             $btn.on('click', function() {
                 $chatbotBox.toggleClass('hidden');
-                $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '50% 50% 50% 0' :
-                    '0 50% 50% 50%');
+                el.addClass('hidden');
+                if (textLoaded) {
+                    $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '50% 50% 50% 0' :
+                        '0 50% 50% 50%');
+                }
                 if (!$chatbotBox.hasClass('hidden') && !historyLoaded) {
                     $.ajax({
                         url: '{{ route('chatbot.history') }}',
@@ -125,6 +169,7 @@
             });
 
             function appendMessage(sender, text) {
+                if (!text) return;
                 const messageHtml = `
                 <div class="${sender === 'user' ? 'text-right' : 'text-left'} ${text === 'Typing...' ? 'typing' : ''}">
                     <div class="inline-block px-3 py-2 rounded-lg ${sender === 'user' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}">

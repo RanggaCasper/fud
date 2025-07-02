@@ -25,11 +25,8 @@
                 <img data-src="{{ $image }}" loading="lazy"
                      class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                      alt="{{ $title }}">
-
-                <!-- Overlay gradient -->
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-16 rounded-b-lg"></div>
-
-                <!-- Closed Full Overlay -->
+                
                 @if ($isClosed)
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg">
                     </div>

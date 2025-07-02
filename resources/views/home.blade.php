@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Fudz! - Find Ur Delicious Zone')
-@section('meta_description', 'Find Ur Delicious Zone. Discover top restaurant recommendations tailored to your taste. Fast, smart, and flavor-packed!')
+@section('meta_description',
+    'Find Ur Delicious Zone. Discover top restaurant recommendations tailored to your taste.
+    Fast, smart, and flavor-packed!')
 
 @section('header')
     <x-section.hero-section :videoSource="asset('assets/video/IMG_44891.mp4')" title="Are you Hungry?"
@@ -23,6 +25,35 @@
     <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">
         <div class="px-4 md:px-2">
             <div class="max-w-screen-xl mx-auto">
+                @php
+                    $recentIds = session('recently_viewed', []);
+                    $recentlyViewedRestaurants = collect();
+
+                    if (!empty($recentIds)) {
+                        $recentlyViewedRestaurants = \App\Models\Restaurant\Restaurant::with(['offerings'])
+                            ->whereIn('id', $recentIds)
+                            ->orderByRaw('FIELD(id, ' . implode(',', $recentIds) . ')')
+                            ->take(3)
+                            ->get();
+                    }
+                @endphp
+
+                @if ($recentlyViewedRestaurants->count())
+                    <div class="flex mb-3">
+                        <lord-icon src="https://cdn.lordicon.com/ueabarxn.json" trigger="loop" class="size-12">
+                        </lord-icon>
+                        <div class="flex flex-col">
+                            <h5 class="flex text-lg font-bold">
+                                Recently Viewed
+                            </h5>
+                            <span class="text-xs">Restaurants you have viewed recently</span>
+                        </div>
+                    </div>
+                    <div id="recently-restaurant-list" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                        @include('partials.restaurant-recently-viewed', ['restaurants' => $recentlyViewedRestaurants])
+                    </div>
+                @endif
+
                 <div class="flex mb-3">
                     <lord-icon src="https://cdn.lordicon.com/tqvrfslk.json" trigger="loop" class="size-12">
                     </lord-icon>
@@ -151,17 +182,20 @@
             <h5 class="text-center font-bold text-2xl">Discover Our Featured Product</h5>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-6 py-8 max-w-screen-xl mx-auto">
                 <div class="rounded-2xl border-2 border-blue-500 p-6 text-center shadow-md">
-                    <img src="https://www.casperproject.my.id/assets/images/logo.jpg" alt="BliEvent" class="h-16 mx-auto mb-4">
+                    <img src="https://www.casperproject.my.id/assets/images/logo.jpg" alt="BliEvent"
+                        class="h-16 mx-auto mb-4">
                     <h3 class="text-lg font-bold text-muted">Casper Project</h3>
-                    <p class="text-sm text-gray-600 mt-2">Empowering the future of digital transformation with purpose and precision.</p>
+                    <p class="text-sm text-gray-600 mt-2">Empowering the future of digital transformation with purpose and
+                        precision.</p>
                 </div>
-    
+
                 <div class="rounded-2xl border-2 border-green-500 p-6 text-center shadow-md">
                     <img src="{{ asset('assets/image/fotoin.png') }}" alt="SkyETS" class="h-16 mx-auto mb-4">
                     <h3 class="text-lg font-bold text-muted">Fotoin</h3>
-                    <p class="text-sm text-gray-600 mt-2">A freelance platform for photographers to connect, showcase, and get hired.</p>
+                    <p class="text-sm text-gray-600 mt-2">A freelance platform for photographers to connect, showcase, and
+                        get hired.</p>
                 </div>
-    
+
                 <!-- Card 3 - SkripTI -->
                 <div class="rounded-2xl border-2 border-orange-500 p-6 text-center shadow-md">
                     <img src="{{ asset('assets/image/skripti.png') }}" alt="SkripTI" class="h-16 mx-auto mb-4">
@@ -173,7 +207,8 @@
                 <div class="rounded-2xl border-2 border-purple-500 p-6 text-center shadow-md">
                     <img src="{{ asset('assets/image/skyets.png') }}" alt="SkyETS!" class="h-16 mx-auto mb-4">
                     <h3 class="text-lg font-bold text-muted">SkyETS</h3>
-                    <p class="text-sm text-gray-600 mt-2">Say no to dualism! power up your TOEIC. Practice, learn, and ace perfect score!
+                    <p class="text-sm text-gray-600 mt-2">Say no to dualism! power up your TOEIC. Practice, learn, and ace
+                        perfect score!
                     </p>
                 </div>
             </div>
