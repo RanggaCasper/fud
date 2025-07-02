@@ -31,13 +31,11 @@
     </div>
 
     <div class="relative inline-block">
-        <!-- Sapaan di atas tombol -->
         <div id="chatbot-toggle-greeting"
             class="absolute bottom-full mb-2 right-0 px-4 py-2 bg-primary text-white text-sm rounded-xl shadow hidden z-10 whitespace-nowrap">
             👋 Hi there! Need help?
         </div>
 
-        <!-- Tombol ikon -->
         <button id="chatbot-toggle-btn"
             class="flex items-center justify-center p-3 text-white bg-primary hover:bg-primary/90 transition-all duration-300 shadow-xl rounded-full"
             title="Chatbot" style="border-radius: 50% 50% 50% 0;">
@@ -45,8 +43,6 @@
             <span class="sr-only">Chatbot</span>
         </button>
     </div>
-
-
 </div>
 
 @push('scripts')
@@ -92,10 +88,8 @@
             $btn.on('click', function() {
                 $chatbotBox.toggleClass('hidden');
                 el.addClass('hidden');
-                if (textLoaded) {
-                    $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '50% 50% 50% 0' :
-                        '0 50% 50% 50%');
-                }
+                $btn.css('border-radius', $chatbotBox.hasClass('hidden') ? '50% 50% 50% 0' :
+                            '0 50% 50% 50%');
                 if (!$chatbotBox.hasClass('hidden') && !historyLoaded) {
                     $.ajax({
                         url: '{{ route('chatbot.history') }}',

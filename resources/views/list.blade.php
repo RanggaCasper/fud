@@ -32,6 +32,10 @@
 @section('meta_description', $description)
 @section('meta_keywords', implode(',', $keywords))
 
+@section('meta_og_title', $pageTitle)
+@section('meta_og_description', $description)
+@section('meta_og_url', request()->url())
+
 @section('content')
     <div class="mt-[72px]">
         @php
