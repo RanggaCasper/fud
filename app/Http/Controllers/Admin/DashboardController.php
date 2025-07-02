@@ -15,13 +15,13 @@ class DashboardController extends Controller
                 $query->where('name', '!=', 'admin');
             })->count(),
             'restaurantCount' => \App\Models\Restaurant\Restaurant::count(),
+            'reviewCount' => \App\Models\Restaurant\Review::count(),
             'highestRatedRestaurants' => \App\Models\Restaurant\Restaurant::withAvg('reviews', 'rating')
-                ->orderByDesc('reviews_avg_rating')
-                ->take(5)
+                ->orderByDesc('rating')
+                ->limit(5)
                 ->get(),
-            'mostReviewedRestaurants' => \App\Models\Restaurant\Restaurant::withCount('reviews')
-                ->orderByDesc('reviews_count')
-                ->take(5)
+            'mostReviewedRestaurants' => \App\Models\Restaurant\Restaurant::orderByRaw('CAST(reviews AS UNSIGNED) DESC')
+                ->limit(5)
                 ->get(),
         ]);
     }

@@ -32,6 +32,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-span-1">
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="flex items-center justify-between p-3 gap-3 border-b border-gray-200">
+                    <div class="bg-primary/10 p-3 rounded-lg inline-flex items-center justify-center">
+                        <div class="bg-primary p-2 rounded-lg inline-flex items-center justify-center">
+                            <i class="ti ti-message text-white text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <h5 class="text-xl font-semibold">{{ $reviewCount }}</h5>
+                        <p class="text-sm text-gray-500">Total Reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div>
         <h5 class="text-lg font-semibold mb-3">{{ config('app.name') }} Insights</h5>
@@ -63,7 +78,7 @@
                                     class="w-12 h-12 rounded-lg mr-3">
                                 <div>
                                     <h6 class="font-semibold">{{ $restaurant->name }}</h6>
-                                    <p class="text-sm text-gray-500">Rating: {{ $restaurant->rating }}</p>
+                                    <p class="text-sm text-gray-500">Review: {{ $restaurant->reviews }}</p>
                                 </div>
                             </div>
                         </div>

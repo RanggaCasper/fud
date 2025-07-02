@@ -24,13 +24,13 @@ class GSCService
     }
 
     // Query per kata kunci
-    public function getTopQueries($days = 7, $limit = 20)
+    public function getTopQueries($days = 7, $limit = 5)
     {
         return $this->fetchDimensionData(['query'], $days, $limit);
     }
 
     // Query per halaman
-    public function getTopPages($days = 7, $limit = 20)
+    public function getTopPages($days = 7, $limit = 5)
     {
         return $this->fetchDimensionData(['page'], $days, $limit);
     }
