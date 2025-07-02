@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Restaurant\Restaurant;
 use App\Models\Restaurant\Review\Like;
+use App\Models\Restaurant\Review\Report;
 use RahulHaque\Filepond\Facades\Filepond;
 use App\Models\Restaurant\Review\Attachment;
 
@@ -84,9 +85,9 @@ class ReviewController extends Controller
         if (!User::find(Auth::id())->hasRole('user')) {
             return ResponseFormatter::error('Only users can like reviews.', code: Response::HTTP_FORBIDDEN);
         }
-        
+
         try {
-            $review = \App\Models\Restaurant\Review::findOrFail($reviewId);
+            $review = Review::findOrFail($reviewId);
 
             $existingLike = Like::where('restaurant_review_id', $review->id)
                 ->where('user_id', Auth::id())
@@ -98,7 +99,8 @@ class ReviewController extends Controller
                 $likesCount = Like::where('restaurant_review_id', $review->id)->count();
 
                 return ResponseFormatter::success('Review liked successfully.', [
-                    'likes' => (int) $likesCount, 'liked' => false
+                    'likes' => (int) $likesCount,
+                    'liked' => false
                 ]);
             }
 
@@ -110,10 +112,48 @@ class ReviewController extends Controller
             $likesCount = Like::where('restaurant_review_id', $review->id)->count();
 
             return ResponseFormatter::success('Review liked successfully.', [
-                'likes' => (int) $likesCount, 'liked' => true
+                'likes' => (int) $likesCount,
+                'liked' => true
             ]);
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function report(Request $request)
+    {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            return ResponseFormatter::error('Only users can report comments.', code: Response::HTTP_FORBIDDEN);
+        }
+
+        $request->validate([
+            'comment_id' => 'required|integer|exists:restaurant_reviews,id',
+            'radio_group' => 'required|string|max:255',
+        ]);
+
+        try {
+            $report = Report::where('restaurant_review_id', $request->comment_id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if ($report->user_id == Auth::id()) {
+                return ResponseFormatter::error('You cannot report your own comment.', code: Response::HTTP_FORBIDDEN);
+            }
+
+                
+            if ($report) {
+                return ResponseFormatter::error('You have already reported this comment.', code: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            Report::create([
+                'restaurant_review_id' => $request->comment_id,
+                'user_id' => Auth::user()->id,
+                'reason' => $request->radio_group,
+            ]);
+
+            return ResponseFormatter::created('Thanks for reporting the comment. We will review it shortly.');
+        } catch (\Exception $e) {
+            return ResponseFormatter::error($e);
         }
     }
 }

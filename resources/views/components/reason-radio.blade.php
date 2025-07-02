@@ -1,6 +1,6 @@
 @props([
     'id' => 'radio-' . uniqid(),
-    'name' => 'radio-group',
+    'name' => 'radio_group',
     'value' => '',
     'label' => '',
     'helperText' => ''

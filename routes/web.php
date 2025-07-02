@@ -25,8 +25,6 @@ Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::cl
 Route::get('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'claim'])->name('restaurant.claim');
 Route::post('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'store'])->name('restaurant.claim.store');
 
-Route::post('/reason/report', \App\Http\Controllers\ReasonController::class)->name('reason.report');
-
 Route::get('/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('logout');
 
 Route::prefix('auth')->as('auth.')->group(function () {
@@ -89,7 +87,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
     Route::prefix('reported-reviews')->as('reported-reviews.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'get'])->name('get');
-        Route::post('/{id}/resolve', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'resolve'])->name('resolve');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'getById'])->name('getById');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'destroy'])->name('destroy');
     });
 });
@@ -112,8 +110,9 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('review')->as('review.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ReviewController::class, 'index'])->name('index');
-        Route::post('{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
+        Route::post('reporting', [\App\Http\Controllers\User\ReviewController::class, 'report'])->name('report');
         Route::put('like/{id}', [\App\Http\Controllers\User\ReviewController::class, 'like'])->name('like');
+        Route::post('{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
     });
 
     Route::prefix('favorite')->as('favorite.')->group(function () {

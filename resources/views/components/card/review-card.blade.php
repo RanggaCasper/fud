@@ -97,18 +97,24 @@
 
 @once
     @push('scripts')
-        <x-modal title="Report Comment" id="reportModal" size="md">
-            <form action="{{ route('reason.report') }}" method="POST">
+        <x-modal title="Report a Problem" id="reportModal" size="md">
+            <form action="{{ route('user.review.report') }}" method="POST">
                 @csrf
-                <input type="hidden" name="comment_id" value="">
+                <input type="hidden" name="comment_id">
 
                 <ul class="space-y-1 text-sm text-gray-700">
                     <x-reason-radio id="reason-1" value="spam" label="Spam"
                         helperText="The content is misleading or unwanted." />
                     <x-reason-radio id="reason-2" value="abuse" label="Abuse"
                         helperText="The content contains abusive language or behavior." />
-                    <x-reason-radio id="reason-3" value="other" label="Other"
-                        helperText="Some other reason not listed above." />
+                    <x-reason-radio id="reason-3" value="hate-speech" label="Hate Speech"
+                        helperText="The content promotes violence or hatred against individuals or groups." />
+                    <x-reason-radio id="reason-4" value="harassment" label="Harassment"
+                        helperText="The content is targeting someone in a threatening or bullying manner." />
+                    <x-reason-radio id="reason-5" value="false-information" label="False Information"
+                        helperText="The content contains inaccurate or misleading claims." />
+                    <x-reason-radio id="reason-6" value="off-topic" label="Off-topic"
+                        helperText="The content is irrelevant or not related to the discussion." />
                 </ul>
 
                 <div class="flex justify-end mt-4">

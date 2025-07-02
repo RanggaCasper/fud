@@ -28,7 +28,7 @@ class Review extends Model
     
     public function reports()
     {
-        return $this->hasMany(Review\Report::class, 'review_id');
+        return $this->hasMany(Review\Report::class, 'restaurant_review_id');
     }
 
     public function attachments()
