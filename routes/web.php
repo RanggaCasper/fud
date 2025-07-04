@@ -11,6 +11,8 @@ Route::get('/fetch-image/{place_id}', [\App\Http\Controllers\HomeController::cla
 Route::get('/fetch-reservation/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchReservation'])->name('fetch.reservation');
 Route::post('/reservation', [\App\Http\Controllers\HomeController::class, 'storeReservation'])->name('reservation.store');
 
+Route::get('page/{slug}', [\App\Http\Controllers\PageController::class, 'index'])->name('page.index');
+
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
 Route::get('/business', function () {
@@ -57,7 +59,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/gsc', [\App\Http\Controllers\Admin\DashboardController::class, 'gscData'])->name('dashboard.gsc');
 
-    Route::prefix('user')->as('user.')->group(function () {
+    Route::prefix('users')->as('user.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\UserController::class, 'get'])->name('get');
         Route::get('/{id}', [\App\Http\Controllers\Admin\UserController::class, 'getById'])->name('getById');
@@ -66,7 +68,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::delete('/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('restaurant')->as('restaurant.')->group(function () {
+    Route::prefix('restaurants')->as('restaurant.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\RestaurantController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\RestaurantController::class, 'get'])->name('get');
         Route::post('/fetch', [\App\Http\Controllers\Admin\RestaurantController::class, 'fetch'])->name('fetch');
@@ -76,7 +78,7 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::delete('/{id}', [\App\Http\Controllers\Admin\RestaurantController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('owner')->as('owner.')->group(function () {
+    Route::prefix('owners')->as('owner.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\OwnerController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\OwnerController::class, 'get'])->name('get');
         Route::get('/{id}', [\App\Http\Controllers\Admin\OwnerController::class, 'getById'])->name('getById');
@@ -91,13 +93,22 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::delete('/{id}', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('point')->as('point.')->group(function () {
+    Route::prefix('points')->as('point.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\PointController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\Admin\PointController::class, 'get'])->name('get');
         Route::get('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'getById'])->name('getById');
         Route::post('/', [\App\Http\Controllers\Admin\PointController::class, 'store'])->name('store');
         Route::put('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('pages')->as('page.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\PageController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\PageController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\PageController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\PageController::class, 'destroy'])->name('destroy');
     });
 });
 

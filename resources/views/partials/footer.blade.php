@@ -1,5 +1,5 @@
 <footer class="bg-white">
-    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+    <div class="mx-auto w-full max-w-screen-xl px-4 md:px-2 py-6 lg:py-8">
         <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0 max-w-md">
                 <a href="#" class="flex items-center gap-2">
@@ -60,10 +60,10 @@
                     <h2 class="mb-6 text-sm font-semibold uppercase">Legal</h2>
                     <ul class="text-muted text-sm space-y-2">
                         <li>
-                            <a href="#" class="hover:underline">Privacy Policy</a>
+                            <a href="{{ route('page.index', ['slug' => 'privacy-policy']) }}" class="hover:underline">Privacy Policy</a>
                         </li>
                         <li>
-                            <a href="#" class="hover:underline">Terms & Conditions</a>
+                            <a href="{{ route('page.index', ['slug' => 'terms-and-conditions']) }}" class="hover:underline">Terms & Conditions</a>
                         </li>
                     </ul>
                 </div>

@@ -115,9 +115,9 @@
                             />
                         </div>
                     </div>
-                    <div class="flex items-center mb-3">
-                        <input id="link-checkbox" type="checkbox" value="" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-sm focus:ring-primary focus:ring-2">
-                        <label for="link-checkbox" class="ms-2 text-sm font-medium text-gray-900">I agree with the <a href="#" class="text-primary hover:underline">terms and conditions</a>.</label>
+                    <div class="flex items-center mb-3 relative">
+                        <input id="link-checkbox" type="checkbox" value="" name="terms" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-sm focus:ring-primary focus:ring-2">
+                        <label for="link-checkbox" class="ms-2 text-sm font-medium text-gray-900">I agree with the <a href="{{ route('page.index', ['slug' => 'terms-and-conditions']) }}" class="text-primary hover:underline">terms and conditions</a>.</label>
                     </div>
     
                     <!-- Modal footer -->

@@ -177,3 +177,20 @@ html.dark .pagelink {
 .swiper-pagination-bullet-active {
     @apply !bg-primary;
 }
+
+/* Page */
+.prose p, .prose li, .prose blockquote{
+    @apply text-sm text-gray-700;
+}
+
+.prose li > strong {
+    @apply font-medium text-dark;
+}
+
+.prose ol {
+    @apply list-disc pl-6 marker:ml-3;
+}
+
+.prose a {
+    @apply text-primary hover:underline;
+}

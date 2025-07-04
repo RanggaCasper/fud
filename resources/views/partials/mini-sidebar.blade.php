@@ -28,13 +28,17 @@
                     active="{{ request()->routeIs('admin.restaurant.index') }}">
                     Manage Restaurants
                 </x-nav-item>
-                 <x-nav-item href="{{ route('admin.owner.index') }}" icon="ti ti-rosette-discount-check"
+                <x-nav-item href="{{ route('admin.owner.index') }}" icon="ti ti-rosette-discount-check"
                     active="{{ request()->routeIs('admin.owner.index') }}">
                     Manage Ownership
                 </x-nav-item>
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert"
                     active="{{ request()->routeIs('admin.reported-reviews.index') }}">
                     Reported Reviews
+                </x-nav-item>
+                <x-nav-item href="{{ route('admin.page.index') }}" icon="ti ti-app-window"
+                    active="{{ request()->routeIs('admin.page.index') }}">
+                    Manage Pages
                 </x-nav-item>
             @elseif (Auth::user()->hasRole('user'))
                 <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
