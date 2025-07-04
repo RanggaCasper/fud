@@ -85,43 +85,108 @@
 <div id="dropdownReview{{ $commentId }}"
     class="z-10 hidden bg-secondary-background divide-y divide-gray-100 rounded-lg shadow-sm w-36">
     <ul class="py-2 text-sm text-black" aria-labelledby="dropdownReviewButton">
-        <li>
-            <button data-modal-target="reportModal" data-modal-toggle="reportModal"
-                data-comment-id="{{ $commentId }}"
-                class="reporting w-full px-4 py-2 hover:!text-white hover:bg-danger flex items-center">
-                <i class="ti ti-alert-circle text-lg me-1.5"></i> Report
-            </button>
-        </li>
+        @if ($comment->user_id === Auth::id())
+            <li>
+                <button id="btnReviewUpdate" data-modal-target="reviewUpdateModal" data-modal-toggle="reviewUpdateModal"
+                    data-edit-comment="{{ $commentId }}"
+                    class="edit-comment w-full px-4 py-2 hover:!text-white hover:bg-primary flex items-center">
+                    <i class="ti ti-edit text-lg me-1.5"></i> Edit
+                </button>
+            </li>
+            <li>
+                <form action="{{ route('user.review.destroy', $commentId) }}" method="POST" class="w-full">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="delete-comment w-full px-4 py-2 hover:!text-white hover:bg-danger flex items-center">
+                        <i class="ti ti-trash text-lg me-1.5"></i> Delete
+                    </button>
+                </form>
+            </li>
+        @else
+            <li>
+                <button data-modal-target="reportModal" data-modal-toggle="reportModal"
+                    data-comment-id="{{ $commentId }}"
+                    class="reporting w-full px-4 py-2 hover:!text-white hover:bg-danger flex items-center">
+                    <i class="ti ti-alert-circle text-lg me-1.5"></i> Report
+                </button>
+            </li>
+        @endif
     </ul>
 </div>
 
 @once
-    @push('scripts')
-        <x-modal title="Report a Problem" id="reportModal" size="md">
-            <form action="{{ route('user.review.report') }}" method="POST">
-                @csrf
-                <input type="hidden" name="comment_id">
+    <x-modal title="Update Your Review" id="reviewUpdateModal">
+        <form method="POST" id="formReviewUpdate" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
 
-                <ul class="space-y-1 text-sm text-gray-700">
-                    <x-reason-radio id="reason-1" value="spam" label="Spam"
-                        helperText="The content is misleading or unwanted." />
-                    <x-reason-radio id="reason-2" value="abuse" label="Abuse"
-                        helperText="The content contains abusive language or behavior." />
-                    <x-reason-radio id="reason-3" value="hate-speech" label="Hate Speech"
-                        helperText="The content promotes violence or hatred against individuals or groups." />
-                    <x-reason-radio id="reason-4" value="harassment" label="Harassment"
-                        helperText="The content is targeting someone in a threatening or bullying manner." />
-                    <x-reason-radio id="reason-5" value="false-information" label="False Information"
-                        helperText="The content contains inaccurate or misleading claims." />
-                    <x-reason-radio id="reason-6" value="off-topic" label="Off-topic"
-                        helperText="The content is irrelevant or not related to the discussion." />
-                </ul>
-
-                <div class="flex justify-end mt-4">
-                    <x-button type="submit">Submit Report</x-button>
+            <div class="mb-3">
+                <div class="relative">
+                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="starRating_update">
+                        Update your rating <span class="!text-danger">*</span>
+                    </label>
+                    <input type="hidden" name="rating" id="ratingInput_update" value="{{ $comment->rating }}">
+                    <div id="starRating_update" class="flex space-x-1 cursor-pointer">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="ti ti-star-filled text-2xl transition-transform cursor-pointer 
+                        {{ $i <= $comment->rating ? 'text-warning' : 'text-gray-300' }}"
+                                data-index="{{ $i }}"></i>
+                        @endfor
+                    </div>
                 </div>
-            </form>
-        </x-modal>
+            </div>
+
+            <div class="mb-3">
+                <div class="relative">
+                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="comment_update">
+                        Update your review <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="comment"
+                        id="comment_update"
+                        class="w-full h-32 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary px-3 py-2"
+                        placeholder="Any changes or updates?" required></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="imageReview_update"
+                    multiple :required="false" />
+                <span class="text-xs text-secondary">This will replace your attachments</span>
+            </div>
+
+            <x-button type="submit" class="w-full">
+                Update Review
+            </x-button>
+        </form>
+    </x-modal>
+
+    <x-modal title="Report a Problem" id="reportModal" size="md">
+        <form action="{{ route('user.review.report') }}" method="POST">
+            @csrf
+            <input type="hidden" name="comment_id">
+
+            <ul class="space-y-1 text-sm text-gray-700">
+                <x-reason-radio id="reason-1" value="spam" label="Spam"
+                    helperText="The content is misleading or unwanted." />
+                <x-reason-radio id="reason-2" value="abuse" label="Abuse"
+                    helperText="The content contains abusive language or behavior." />
+                <x-reason-radio id="reason-3" value="hate-speech" label="Hate Speech"
+                    helperText="The content promotes violence or hatred against individuals or groups." />
+                <x-reason-radio id="reason-4" value="harassment" label="Harassment"
+                    helperText="The content is targeting someone in a threatening or bullying manner." />
+                <x-reason-radio id="reason-5" value="false-information" label="False Information"
+                    helperText="The content contains inaccurate or misleading claims." />
+                <x-reason-radio id="reason-6" value="off-topic" label="Off-topic"
+                    helperText="The content is irrelevant or not related to the discussion." />
+            </ul>
+
+            <div class="flex justify-end mt-4">
+                <x-button type="submit">Submit Report</x-button>
+            </div>
+        </form>
+    </x-modal>
+    @push('scripts')
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
@@ -143,7 +208,7 @@
                 });
             }
 
-            function initReporting(){
+            function initReporting() {
                 $('.reporting').on('click', function() {
                     const commentId = $(this).data('comment-id');
                     const $modal = $('#reportModal');
@@ -154,6 +219,57 @@
         </script>
 
         <script>
+            const starsUpdate = document.querySelectorAll('#starRating_update i');
+            const ratingInputUpdate = document.getElementById('ratingInput_update');
+
+            starsUpdate.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    ratingInputUpdate.value = rating;
+
+                    starsUpdate.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.remove('text-gray-300');
+                            s.classList.add('text-warning');
+                        } else {
+                            s.classList.remove('text-warning');
+                            s.classList.add('text-gray-300');
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $('.edit-comment').on('click', function() {
+                var id = $(this).data('edit-comment');
+                $.ajax({
+                    url: '{{ route('user.review.getById', ['id' => ':id']) }}'.replace(':id', id),
+                    type: 'GET',
+                    success: function(response) {
+                        $('#formReviewUpdate').attr('action',
+                            '{{ route('user.review.update', ['id' => ':id']) }}'.replace(':id', id));
+                        $('#ratingInput_update').val(response.data.rating);
+                        $('#comment_update').val(response.data.comment);
+                        $('#starRating_update').find('i').each(function(index) {
+                            if (index < response.data.rating) {
+                                $(this).removeClass('text-gray-300').addClass('text-warning');
+                            } else {
+                                $(this).removeClass('text-warning').addClass('text-gray-300');
+                            }
+                        });
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        Swal.fire(
+                            'Error!',
+                            'Terjadi kesalahan saat mengambil data kategori.',
+                            'error'
+                        );
+                    }
+                });
+            });
+
             $('.comment-wrapper').each(function() {
                 const $wrapper = $(this);
                 const $text = $wrapper.find('.comment-text');

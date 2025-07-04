@@ -393,7 +393,7 @@
             <div class="mb-3">
                 <div class="relative">
                     <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="star-rating">
-                        How would you rate this place?
+                        How would you rate this place? <span class="text-red-500">*</span>
                     </label>
                     <input type="hidden" name="rating" id="rating-input">
                     <div id="star-rating" class="flex space-x-1 cursor-pointer">

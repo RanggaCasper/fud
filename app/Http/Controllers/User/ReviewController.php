@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use App\Models\Restaurant\Review;
+use Illuminate\Http\JsonResponse;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Restaurant\Restaurant;
 use App\Models\Restaurant\Review\Like;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Restaurant\Review\Report;
 use RahulHaque\Filepond\Facades\Filepond;
 use App\Models\Restaurant\Review\Attachment;
@@ -29,7 +31,7 @@ class ReviewController extends Controller
         return view('user.review', compact('comments'));
     }
 
-    public function store(Request $request, $slug)
+    public function store(Request $request, $slug): JsonResponse
     {
         if (!User::find(Auth::id())->hasRole('user')) {
             return ResponseFormatter::error('Only users can submit reviews.', code: Response::HTTP_FORBIDDEN);
@@ -80,7 +82,95 @@ class ReviewController extends Controller
         }
     }
 
-    public function like(Request $request, $reviewId)
+    public function getById($id): JsonResponse
+    {
+        try {
+            $review = Review::with(['restaurant', 'user', 'attachments'])
+                ->findOrFail($id);
+
+            return ResponseFormatter::success('Review retrieved successfully.', $review);
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function update(Request $request, $reviewId): JsonResponse
+    {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            return ResponseFormatter::error('Only users can update reviews.', code: Response::HTTP_FORBIDDEN);
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+            'attachments' => Rule::filepond([
+                'nullable',
+                'max:2000'
+            ]),
+        ]);
+
+        try {
+            $review = Review::findOrFail($reviewId);
+
+            if ($review->user_id !== Auth::id()) {
+                return ResponseFormatter::error('You can only update your own reviews.', code: Response::HTTP_FORBIDDEN);
+            }
+
+            $review->update([
+                'rating' => $request->rating,
+                'comment' => $request->comment,
+            ]);
+
+            if ($request->has('attachments') && is_array($request->attachments)) {
+                $oldAttachments = Attachment::where('restaurant_review_id', $review->id)->get();
+                foreach ($oldAttachments as $attachment) {
+                    if (Storage::exists($attachment->source)) {
+                        Storage::delete($attachment->source);
+                    }
+                    $attachment->delete();
+                }
+
+                foreach ($request->attachments as $file) {
+                    $path = Filepond::field($file)->moveTo('images/attachments/' . Str::uuid());
+
+                    Attachment::create([
+                        'source' => $path['location'],
+                        'type' => 'image',
+                        'restaurant_review_id' => $review->id,
+                    ]);
+                }
+            }
+
+            $review->restaurant;
+
+            return ResponseFormatter::redirected('Review updated successfully.', url()->previous());
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function destroy($reviewId): JsonResponse
+    {
+        if (!User::find(Auth::id())->hasRole('user')) {
+            return ResponseFormatter::error('Only users can delete reviews.', code: Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $review = Review::findOrFail($reviewId);
+
+            if ($review->user_id !== Auth::id()) {
+                return ResponseFormatter::error('You can only delete your own reviews.', code: Response::HTTP_FORBIDDEN);
+            }
+
+            $review->delete();
+
+            return ResponseFormatter::redirected('Review deleted successfully.', url()->previous());
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function like($reviewId): JsonResponse
     {
         if (!User::find(Auth::id())->hasRole('user')) {
             return ResponseFormatter::error('Only users can like reviews.', code: Response::HTTP_FORBIDDEN);
@@ -120,7 +210,7 @@ class ReviewController extends Controller
         }
     }
 
-    public function report(Request $request)
+    public function report(Request $request): JsonResponse
     {
         if (!User::find(Auth::id())->hasRole('user')) {
             return ResponseFormatter::error('Only users can report comments.', code: Response::HTTP_FORBIDDEN);

@@ -110,7 +110,10 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('review')->as('review.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ReviewController::class, 'index'])->name('index');
+        Route::get('get/{id}', [\App\Http\Controllers\User\ReviewController::class, 'getById'])->name('getById');
         Route::post('reporting', [\App\Http\Controllers\User\ReviewController::class, 'report'])->name('report');
+        Route::delete('delete/{id}', [\App\Http\Controllers\User\ReviewController::class, 'destroy'])->name('destroy');
+        Route::patch('update/{id}', [\App\Http\Controllers\User\ReviewController::class, 'update'])->name('update');
         Route::put('like/{id}', [\App\Http\Controllers\User\ReviewController::class, 'like'])->name('like');
         Route::post('{slug}', [\App\Http\Controllers\User\ReviewController::class, 'store'])->name('store');
     });
