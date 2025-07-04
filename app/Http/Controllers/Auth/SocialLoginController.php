@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Helpers\Point;
 use Illuminate\Support\Str;
 use App\Models\SocialAccount;
 use App\Http\Controllers\Controller;
@@ -78,6 +79,9 @@ class SocialLoginController extends Controller
                 ]);
 
                 Auth::login($user);
+
+                Point::give(User::find(Auth::id()), 'register');
+                
                 flash()->success('Account created and logged in with ' . ucfirst($provider));
                 return redirect()->route('home');
             }

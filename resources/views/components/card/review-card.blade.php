@@ -28,7 +28,10 @@
             @endif
             <div>
                 <p class="font-semibold text-dark text-md line-clamp-1">{{ $userName }}</p>
-                <p class="text-xs text-secondary">{{ $user->reviews()->count() }} Reviews</p>
+                @php
+                    $level = \App\Helpers\Point::getLevel($user);
+                @endphp
+                <p class="text-xs text-secondary">{{ $level->name ?? 'Level 0' }}</p>
             </div>
         </div>
     </div>

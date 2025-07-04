@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
+use App\Helpers\Point;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -63,6 +64,10 @@ class ReviewController extends Controller
                 'rating' => $request->rating,
                 'comment' => $request->comment,
             ]);
+
+            if ($review) {
+                Point::give(User::find(Auth::id()), 'review');
+            }
 
             if ($request->has('attachments') && is_array($request->attachments)) {
                 foreach ($request->attachments as $file) {

@@ -20,6 +20,10 @@
                     active="{{ request()->routeIs('admin.user.index') }}">
                     Manage Users
                 </x-nav-item>
+                <x-nav-item href="{{ route('admin.point.index') }}" icon="ti ti-clover"
+                    active="{{ request()->routeIs('admin.point.index') }}">
+                    Manage Point Levels
+                </x-nav-item>
                 <x-nav-item href="{{ route('admin.restaurant.index') }}" icon="ti ti-chef-hat"
                     active="{{ request()->routeIs('admin.restaurant.index') }}">
                     Manage Restaurants
@@ -45,6 +49,10 @@
                 <x-nav-item href="{{ route('user.favorite.index') }}" icon="ti ti-heart"
                     active="{{ request()->routeIs('user.favorite.index') }}">
                     My Favorite
+                </x-nav-item>
+                <x-nav-item href="{{ route('user.point.index') }}" icon="ti ti-clover"
+                    active="{{ request()->routeIs('user.point.index') }}">
+                    My Points
                 </x-nav-item>
                 @if (!Auth::user()->owned)
                     <x-nav-item href="{{ route('business.index') }}" icon="ti ti-briefcase-2"

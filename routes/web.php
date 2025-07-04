@@ -90,6 +90,15 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::get('/{id}', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'getById'])->name('getById');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\ReportedReviewController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('point')->as('point.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PointController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\PointController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\PointController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\PointController::class, 'destroy'])->name('destroy');
+    });
 });
 
 Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function () {
@@ -122,6 +131,11 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\FavoriteController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\User\FavoriteController::class, 'store'])->name('store');
         Route::delete('/', [\App\Http\Controllers\User\FavoriteController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('point')->as('point.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\PointController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\User\PointController::class, 'get'])->name('get');
     });
 });
 

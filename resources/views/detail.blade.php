@@ -314,7 +314,10 @@
                                     @endif
                                     <div class="flex flex-col">
                                         <h5 class="font-semibold text-base">{{ Auth::user()->name }}</h5>
-                                        <p class="text-sm text-secondary">Local Explorer Level 6</p>
+                                        @php
+                                            $level = \App\Helpers\Point::getLevel(Auth::user());
+                                        @endphp
+                                        <p class="text-xs text-secondary">{{ $level->name ?? 'Level 0' }}</p>
                                     </div>
                                 </div>
                                 <div class="sm:self-start">

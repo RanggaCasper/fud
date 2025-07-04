@@ -2,7 +2,9 @@
 
 @section('content')
 <x-card title="My Favorite">
+    @include('partials.point')
     <div class="mb-3">
+        <h5 class="text-lg font-semibold">Latest Favorites</h5>
         <div class="grid grid-cols-12 gap-6">
                 @forelse ($favorites as $favorite)
                     <div class="col-span-12 md:col-span-6">

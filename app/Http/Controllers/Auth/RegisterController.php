@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Helpers\Point;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -32,6 +33,9 @@ class RegisterController extends Controller
             ]);
 
             Auth::login($data);
+
+            Point::give(User::find(Auth::id()), 'register');
+            
             $request->session()->regenerate();
             
             return ResponseFormatter::redirected('Registration successful! You are now logged in.', route("home"));

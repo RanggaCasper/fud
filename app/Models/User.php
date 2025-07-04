@@ -115,4 +115,19 @@ class User extends Authenticatable
     {
         return $this->role && $this->role->name === $role;
     }
+
+    public function pointLogs()
+    {
+        return $this->hasMany(PointLog::class);
+    }
+
+    public function getTotalPoints()
+    {
+        return $this->pointLogs()->sum('points');
+    }
+
+    public function getCurrentLevel()
+    {
+        return PointLevel::getLevel($this->total_points);
+    }
 }
