@@ -21,13 +21,18 @@ class ChatbotController extends Controller
     {
         $user = Auth::check() ? Auth::user()->name : 'guest-' . substr(md5(request()->ip()), 0, 8);
 
-        $result = $this->dify->send($request->message, $user, [
+        $lat = session('latitude') ?? null;
+        $long = session('longitude') ?? null;
+
+        $metadata = [
             [
-                'type'            => 'image',
+                'type' => 'image',
                 'transfer_method' => 'remote_url',
-                'url'             => 'https://cloud.dify.ai/logo/logo-site.png'
+                'url' => 'https://cloud.dify.ai/logo/logo-site.png',
             ]
-        ]);
+        ];
+
+        $result = $this->dify->send("\n\nUser: " . $user . "\nLocation: " . json_encode(['lat' => $lat, 'long' => $long]) . "\nMessage: " . $request->message, $user, $metadata);
 
         $chatHistory = session('chat_history', []);
 
@@ -47,6 +52,7 @@ class ChatbotController extends Controller
             ]
         );
     }
+
 
     public function history(Request $request)
     {
