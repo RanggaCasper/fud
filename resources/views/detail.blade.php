@@ -568,7 +568,7 @@
 
         function fetchImages() {
             $.ajax({
-                url: '{{ route('fetch.image', ['place_id' => $restaurant->place_id]) }}',
+                url: '{{ route('reservation.image', ['place_id' => $restaurant->place_id]) }}',
                 method: 'GET',
                 success: function(res) {
                     $('#gallery').empty();
@@ -592,7 +592,7 @@
 
         function fetchReservation() {
             $.ajax({
-                url: '{{ route('fetch.reservation', ['place_id' => $restaurant->place_id]) }}',
+                url: '{{ route('reservation.fetch', ['place_id' => $restaurant->place_id]) }}',
                 method: 'GET',
                 success: function(res) {
                     const data = res.data;

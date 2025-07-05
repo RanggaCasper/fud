@@ -40,6 +40,10 @@
                     active="{{ request()->routeIs('admin.page.index') }}">
                     Manage Pages
                 </x-nav-item>
+                <x-nav-item href="{{ route('admin.criteria.index') }}" icon="ti ti-list"
+                    active="{{ request()->routeIs('admin.criteria.index') }}">
+                    Manage Criteria
+                </x-nav-item>
             @elseif (Auth::user()->hasRole('user'))
                 <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
                     <span>User Menu</span>

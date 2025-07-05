@@ -13,15 +13,9 @@ return new class extends Migration
     {
         Schema::create('saw_criteria', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->enum('type', ['benefit', 'cost']);
-            $table->timestamps();
-        });
-
-        Schema::create('saw_weights', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('saw_criteria_id')->constrained('saw_criteria')->onDelete('cascade');
+            $table->string('name');
             $table->float('weight');
+            $table->enum('type', ['benefit', 'cost']);
             $table->timestamps();
         });
     }
@@ -31,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('saw_weights');
         Schema::dropIfExists('saw_criteria');
     }
 };

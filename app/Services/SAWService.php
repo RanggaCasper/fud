@@ -4,53 +4,48 @@ namespace App\Services;
 
 class SAWService
 {
-    public function calculate($restaurants, array $weights, array $criteriaTypes)
+    public function calculate($items, array $weights, array $criteriaTypes)
     {
         $processed = [];
 
-        // Konversi data ke array sederhana
-        foreach ($restaurants as $restaurant) {
-            $processed[] = [
-                'model' => $restaurant, // Simpan model asli
-                'rating' => (float) $restaurant->rating,
-                'reviews' => (int) $restaurant->reviews,
-                'distance' => (float) $restaurant->distance,
-            ];
+        foreach ($items as $item) {
+            $entry = ['model' => $item];
+            foreach ($weights as $key => $weight) {
+                $entry[$key] = isset($item->$key) ? (float) $item->$key : 0;
+            }
+            $processed[] = $entry;
         }
 
-        // Normalisasi
         $normalized = [];
         foreach ($processed as $index => $data) {
+            $normEntry = ['model' => $data['model']];
             foreach ($weights as $key => $weight) {
+                $values = array_column($processed, $key);
+                $val = $data[$key];
+
                 if ($criteriaTypes[$key] === 'benefit') {
-                    $max = max(array_column($processed, $key));
-                    $normalized[$index][$key] = $max > 0 ? $data[$key] / $max : 0;
+                    $max = max($values);
+                    $normEntry[$key] = $max > 0 ? $val / $max : 0;
                 } elseif ($criteriaTypes[$key] === 'cost') {
-                    $min = min(array_column($processed, $key));
-                    $normalized[$index][$key] = $data[$key] > 0 ? $min / $data[$key] : 0;
+                    $min = min($values);
+                    $normEntry[$key] = $val > 0 ? $min / $val : 0;
                 }
             }
-            $normalized[$index]['model'] = $data['model'];
+            $normalized[] = $normEntry;
         }
 
-        // Hitung skor akhir dan masukkan ke dalam model
         $results = [];
-        foreach ($normalized as $data) {
+        foreach ($normalized as $entry) {
             $score = 0;
             foreach ($weights as $key => $weight) {
-                $score += $data[$key] * $weight;
+                $score += $entry[$key] * $weight;
             }
 
-            // Tambahkan skor ke model
-            $model = $data['model'];
+            $model = $entry['model'];
             $model->score = round($score, 4);
-
             $results[] = $model;
         }
 
-        // Urutkan dari skor tertinggi ke terendah
-        $sorted = collect($results)->sortByDesc('score')->values();
-
-        return $sorted;
+        return collect($results)->sortByDesc('score')->values();
     }
 }

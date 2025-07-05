@@ -5,11 +5,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/restaurants', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
 Route::get('/restaurants/{region?}', [\App\Http\Controllers\HomeController::class, 'list'])->name('list');
-Route::get('/reviews', [\App\Http\Controllers\HomeController::class, 'reviews'])->name('reviews');
-Route::get('/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
-Route::get('/fetch-image/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchImage'])->name('fetch.image');
-Route::get('/fetch-reservation/{place_id}', [\App\Http\Controllers\HomeController::class, 'fetchReservation'])->name('fetch.reservation');
-Route::post('/reservation', [\App\Http\Controllers\HomeController::class, 'storeReservation'])->name('reservation.store');
+
+Route::get('/search', \App\Http\Controllers\SearchController::class)->name('search');
+Route::get('/reviews', \App\Http\Controllers\ReviewController::class)->name('reviews');
+
+Route::prefix('reservation')->as('reservation.')->controller(\App\Http\Controllers\ReservationController::class)->group(function () {
+    Route::get('/image/{place_id}', 'getImage')->name('image');
+    Route::get('/{place_id}', 'getReservation')->name('fetch');
+    Route::post('/', 'store')->name('store');
+});
 
 Route::get('page/{slug}', [\App\Http\Controllers\PageController::class, 'index'])->name('page.index');
 
@@ -109,6 +113,17 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
         Route::post('/', [\App\Http\Controllers\Admin\PageController::class, 'store'])->name('store');
         Route::put('/{id}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('update');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\PageController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('criteria')->as('criteria.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SAWController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\SAWController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\SAWController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\SAWController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\SAWController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\SAWController::class, 'destroy'])->name('destroy');
+
+        Route::get('/simulate/get', \App\Http\Controllers\Admin\SimulateController::class)->name('simulate.get');
     });
 });
 
