@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', $page->title)
+
 @section('content')
 <div class="mt-[72px]">
     <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">

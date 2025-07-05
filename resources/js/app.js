@@ -1,26 +1,26 @@
-import './bootstrap';
-import './action.js';
-import './swiper.init.js';
-import './datatable.js';
-import './AOS.js';
-import './waypoints.js';
-import 'flowbite';
+import "./bootstrap";
+import "./action.js";
+import "./swiper.init.js";
+import "./datatable.js";
+import "./AOS.js";
+import "./waypoints.js";
+import "flowbite";
 
 // Lazy Loading
-const images = document.querySelectorAll('.lazyload');
+const images = document.querySelectorAll(".lazyload");
 
 const lazyLoad = (entries, observer) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
         if (entry.isIntersecting) {
             const img = entry.target;
-            img.src = img.getAttribute('data-src');
+            img.src = img.getAttribute("data-src");
 
-            img.classList.remove('lazyload');
-            img.classList.add('loaded');
+            img.classList.remove("lazyload");
+            img.classList.add("loaded");
 
             img.onload = () => {
-                img.classList.remove('skeleton');
-                img.classList.add('loaded');    
+                img.classList.remove("skeleton");
+                img.classList.add("loaded");
             };
 
             observer.unobserve(img);
@@ -30,65 +30,143 @@ const lazyLoad = (entries, observer) => {
 
 const observer = new IntersectionObserver(lazyLoad, { threshold: 0.1 });
 
-images.forEach(image => {
+images.forEach((image) => {
     observer.observe(image);
-}); 
+});
 // End Lazy Loading
 
 // Sidebar Menu
-document.addEventListener('DOMContentLoaded', () => {
-    const navbarMenu = document.getElementById('navbarMenu');
-    const sidebarMenu = document.getElementById('sidebarMenu');
-    sidebarMenu.innerHTML = navbarMenu.innerHTML;
+document.addEventListener("DOMContentLoaded", () => {
+    const navbarMenu = document.getElementById("navbarMenu");
+    const sidebarMenu = document.getElementById("sidebarMenu");
+    const panelSidebar = document.getElementById("panelSidebar");
 
-    const sidebarUl = sidebarMenu.querySelector('ul');
+    if (navbarMenu && sidebarMenu) {
+        sidebarMenu.innerHTML = panelSidebar
+            ? navbarMenu.innerHTML + panelSidebar.innerHTML
+            : navbarMenu.innerHTML;
+    }
+
+    const sidebarUl = sidebarMenu?.querySelector("ul");
     if (sidebarUl) {
-        sidebarUl.classList.add('flex-col', 'space-y-2');
+        sidebarUl.classList.add("flex-col", "space-y-2");
     }
 
-    const sidebarLi = sidebarMenu.querySelector('li');
-    if (sidebarLi) {
-        sidebarMenu.querySelectorAll('li').forEach(item => {
-            item.classList.add('flex-col');
-        });
-    }
+    sidebarMenu?.querySelectorAll("li").forEach((item) => {
+        const text = item.textContent?.trim().toLowerCase();
+        if (text === 'settings' || text.includes('settings')) {
+            item.remove();
+        }
 
-    const sidebarMultiMenu = sidebarMenu.querySelector('button');
+        if (!item.classList.contains("uppercase")) {
+            item.classList.add("flex-col");
+        }
+    });
+
+    sidebarMenu?.querySelectorAll("a").forEach((item) => {
+        const text = item.textContent?.trim().toLowerCase();
+
+        if (text === 'logout' || text.includes('logout')) {
+            item.remove();
+        } 
+    });
+
+    sidebarMenu?.querySelectorAll("a, button").forEach((el) => {
+        el.className = "";
+        el.classList.add(
+            "flex",
+            "items-center",
+            "font-semibold",
+            "text-sm",
+            "px-4",
+            "py-2.5",
+            "rounded-lg",
+            "border-s-4",
+            "border-transparent",
+            "hover:border-primary",
+            "hover:bg-dark/10",
+            "focus:!text-primary",
+            "focus:border-primary",
+            "focus:bg-dark/10",
+            "hover:!text-primary",
+            "gap-2"
+        );
+
+        const href = el.getAttribute("href");
+        if (href && window.location.pathname === new URL(href, window.location.origin).pathname) {
+            el.classList.add("!border-primary", "bg-primary/10", "!text-primary");
+        }
+    });
+
+    const sidebarMultiMenu = sidebarMenu?.querySelector("button");
     if (sidebarMultiMenu) {
-        sidebarMultiMenu.removeAttribute('data-dropdown-placement');
-        sidebarMultiMenu.removeAttribute('data-dropdown-toggle');
-
-        sidebarMultiMenu.setAttribute('aria-controls', 'dropdown-example');
-        sidebarMultiMenu.setAttribute('data-collapse-toggle', 'dropdown-example');
-        sidebarMultiMenu.classList.add('w-full')
+        sidebarMultiMenu.removeAttribute("data-dropdown-placement");
+        sidebarMultiMenu.removeAttribute("data-dropdown-toggle");
+        sidebarMultiMenu.setAttribute("aria-controls", "dropdown-example");
+        sidebarMultiMenu.setAttribute(
+            "data-collapse-toggle",
+            "dropdown-example"
+        );
+        sidebarMultiMenu.classList.add("w-full");
     }
 
-    const dropdown = sidebarMenu.querySelector('#dropdown');
+    const dropdown = sidebarMenu?.querySelector("#dropdown");
     if (dropdown) {
-        dropdown.id = 'dropdown-example'; 
-        dropdown.classList.remove('z-10', 'bg-white', 'divide-y', 'divide-gray-100', 'rounded-lg', 'shadow-sm', 'w-44', 'dark:bg-gray-700');
-        
-        dropdown.querySelectorAll('a').forEach(item => {
-            item.classList.remove('block', 'px-4', 'py-2', 'hover:bg-gray-100', 'dark:hover:bg-gray-600', 'dark:hover:text-white');
-            item.classList.add('flex', 'items-center', 'p-2', 'text-dark', 'w-full', 'transition', 'duration-75', 'rounded-lg', 'pl-8.5', 'group', 'hover:text-primary', 'dark:text-white', 'hover:bg-primary/10', 'font-medium');
+        dropdown.id = "dropdown-example";
+        dropdown.classList.remove(
+            "z-10",
+            "bg-white",
+            "divide-y",
+            "divide-gray-100",
+            "rounded-lg",
+            "shadow-sm",
+            "w-44",
+            "dark:bg-gray-700"
+        );
+        dropdown.querySelectorAll("a").forEach((item) => {
+            item.classList.remove(
+                "block",
+                "px-4",
+                "py-2",
+                "hover:bg-gray-100",
+                "dark:hover:bg-gray-600",
+                "dark:hover:text-white"
+            );
+            item.classList.add(
+                "flex",
+                "items-center",
+                "p-2",
+                "text-dark",
+                "w-full",
+                "transition",
+                "duration-75",
+                "rounded-lg",
+                "pl-8.5",
+                "group",
+                "hover:text-primary",
+                "dark:text-white",
+                "hover:bg-primary/10",
+                "font-medium"
+            );
         });
     }
 });
 // End Sidebar Menu
 
 // Password Toggle
-const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+const togglePasswordButtons = document.querySelectorAll(".toggle-password");
 
 if (togglePasswordButtons.length > 0) {
-    togglePasswordButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const passwordField = this.closest('div').querySelector('.password-field');
-            const eyeIcon = this.querySelector('.eye-icon');
-            
-            const isPasswordVisible = passwordField.type === 'password';
-            console.log(isPasswordVisible)
+    togglePasswordButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const passwordField =
+                this.closest("div").querySelector(".password-field");
+            const eyeIcon = this.querySelector(".eye-icon");
 
-            passwordField.type = isPasswordVisible ? 'text' : 'password';
+            const isPasswordVisible = passwordField.type === "password";
+            console.log(isPasswordVisible);
+
+            passwordField.type = isPasswordVisible ? "text" : "password";
 
             if (isPasswordVisible) {
                 eyeIcon.innerHTML = `
@@ -106,12 +184,12 @@ if (togglePasswordButtons.length > 0) {
 // End Password Toggle
 
 // Modal
-document.addEventListener('click', function(event) {
-    const modalTargetEl = event.target.closest('[data-modal-target]');
-    const modalHideEl = event.target.closest('[data-modal-hide]');
+document.addEventListener("click", function (event) {
+    const modalTargetEl = event.target.closest("[data-modal-target]");
+    const modalHideEl = event.target.closest("[data-modal-hide]");
 
     if (modalTargetEl) {
-        const modalId = modalTargetEl.getAttribute('data-modal-target');
+        const modalId = modalTargetEl.getAttribute("data-modal-target");
         const modalElement = document.getElementById(modalId);
         if (modalElement) {
             new Modal(modalElement).show();
@@ -119,7 +197,7 @@ document.addEventListener('click', function(event) {
     }
 
     if (modalHideEl) {
-        const modalId = modalHideEl.getAttribute('data-modal-hide');
+        const modalId = modalHideEl.getAttribute("data-modal-hide");
         const modalElement = document.getElementById(modalId);
         if (modalElement) {
             new Modal(modalElement).hide();
@@ -128,15 +206,15 @@ document.addEventListener('click', function(event) {
 });
 
 // Search Modal
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && event.key === "k") {
         event.preventDefault();
 
-        const searchModal = document.getElementById('searchModal');
+        const searchModal = document.getElementById("searchModal");
         const modal = new Modal(searchModal);
 
         // Check if the modal is currently visible
-        if (searchModal.classList.contains('hidden')) {
+        if (searchModal.classList.contains("hidden")) {
             modal.show();
             const searchInput = document.getElementById("simple-search");
             searchInput.focus();
@@ -145,4 +223,3 @@ document.addEventListener("keydown", function(event) {
         }
     }
 });
-

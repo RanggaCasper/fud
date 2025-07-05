@@ -117,7 +117,8 @@
 
             datatableSimulate = $('#simulateDatatables').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
+                scrollX: true,
                 ajax: {
                     url: '{{ route('admin.criteria.simulate.get') }}',
                     type: 'GET',

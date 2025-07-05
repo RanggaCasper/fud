@@ -16,7 +16,7 @@
             </div>
 
             <!-- Result -->
-            <div class="p-4 md:p-5 space-y-4">
+            <div class="p-4 md:p-5">
                 <div id="search-results">
                     <div class="text-muted text-sm">
                         <p>Type to search for restaurants...</p>
@@ -27,7 +27,7 @@
                     <div class="text-muted text-sm">
                         <p>Type to search for restaurants...</p>
                     </div>
-                    {!! view('partials.search-recently-viewed')->render() !!}
+                    @include('partials.search-recently-viewed')
                 </div>
             </div>
         </div>
@@ -57,6 +57,9 @@
                         method: 'GET',
                         data: {
                             search: query
+                        },
+                        beforeSend: function() {
+                            $('#search-results').html('<div class="text-muted text-sm">Searching...</div>');
                         },
                         success: function(response) {
                             $('#search-results').html(response);
@@ -110,6 +113,9 @@
                 const label = localStorage.getItem('selectedLocationLabel');
                 if (label) {
                     $('#locationDropdown').prev('button').find('span').text(label);
+                    if (label.trim().toLowerCase() === 'current location') {
+                        sendLocation();
+                    }
                 } else {
                     sendLocation();
                 }

@@ -1,15 +1,16 @@
-<div class="hidden col-span-3 lg:block">
-    <div class="w-full h-full py-4 overflow-y-auto bg-transparent">
-        <ul class="space-y-2 font-medium">
+@auth
+    <div class="hidden col-span-3 lg:block">
+    <div class="w-full h-full py-4 overflow-y-auto bg-transparent" id="panelSidebar">
+        <ul class="flex flex-col space-y-2">
             <x-nav-item href="{{ route('settings.index') }}" icon="ti ti-settings"
                 active="{{ request()->is('settings*') }}">
                 Settings
             </x-nav-item>
 
             @if (Auth::user()->hasRole('admin'))
-                <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
+                <li class="flex items-center gap-2 pt-4 ps-5 text-sm font-semibold text-muted uppercase">
                     <span>Admin Menu</span>
-                    <div class="flex-grow border-b border-muted"></div>
+                    <div class="flex-grow border-b border-secondary"></div>
                 </li>
 
                 <x-nav-item href="{{ route('admin.dashboard.index') }}" icon="ti ti-layout-dashboard"
@@ -45,7 +46,7 @@
                     Manage Criteria
                 </x-nav-item>
             @elseif (Auth::user()->hasRole('user'))
-                <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
+                <li class="flex items-center gap-2 pt-4 ps-5 text-sm font-semibold text-muted uppercase">
                     <span>User Menu</span>
                     <div class="flex-grow border-b border-muted"></div>
                 </li>
@@ -62,6 +63,7 @@
                     active="{{ request()->routeIs('user.point.index') }}">
                     My Points
                 </x-nav-item>
+
                 @if (!Auth::user()->owned)
                     <x-nav-item href="{{ route('business.index') }}" icon="ti ti-briefcase-2"
                         active="{{ request()->routeIs('business.index') }}">
@@ -70,7 +72,7 @@
                 @endif
 
                 @if (Auth::user()->owned)
-                    <li class="flex items-center gap-2 px-4 text-xs font-semibold text-muted uppercase">
+                    <li class="flex items-center gap-2 pt-4 ps-5 text-sm font-semibold text-muted uppercase">
                         <span>Owner Menu</span>
                         <div class="flex-grow border-b border-muted"></div>
                     </li>
@@ -103,7 +105,7 @@
 
             {{-- Logout --}}
             <a href="{{ route('logout') }}"
-                class="flex items-center font-semibold text-sm px-4 py-2.5 rounded-lg border-s-4 border-transparent hover:border-danger hover:bg-danger/10 focus:border-danger focus:bg-danger/10 !text-danger gap-2">
+                class="flex items-center font-semibold text-sm ps-5 py-2.5 rounded-lg border-s-4 border-transparent hover:border-danger hover:bg-danger/10 focus:border-danger focus:bg-danger/10 !text-danger gap-2">
                 <i class="ti ti-logout text-xl"></i>
                 Logout
             </a>
@@ -111,3 +113,4 @@
 
     </div>
 </div>
+@endauth

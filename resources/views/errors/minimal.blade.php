@@ -44,6 +44,10 @@
     @include('partials.navbar')
     @include('partials.sidebar')
 
+    <div class="hidden">
+        @include('partials.mini-sidebar')
+    </div>
+
     <div class="mt-[72px]">
         <div class="max-w-screen-xl mx-auto px-4 md:px-0 py-6">
             <div class="flex flex-col items-center justify-center gap-6">

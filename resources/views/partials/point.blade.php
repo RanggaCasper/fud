@@ -1,6 +1,13 @@
 <div class="mb-3">
     <div class="flex items-center gap-6">
-        <img class="size-24 rounded-full" src="{{ Auth::user()->avatar }}" alt="Image description">
+        @if (Auth::user()->avatar)
+            <img class="size-24 rounded-full object-cover" src="{{ Auth::user()->avatar }}" alt="user photo">
+        @else
+            <span
+                class="size-24 flex items-center justify-center bg-primary text-white text-xl font-medium rounded-full">
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+            </span>
+        @endif
         <div class="flex flex-col w-full">
             <h5 class="text-lg font-semibold">{{ Auth::user()->name }}</h5>
             @php
@@ -14,7 +21,8 @@
 
             <div class="w-full">
                 <div class="text-right text-xs text-gray-700 mt-1">
-                    <a class="hover:text-primary hover:underline" href="{{ route('user.point.index') }}">{{ $progress['current_points'] }} Points &gt;</a>
+                    <a class="hover:text-primary hover:underline"
+                        href="{{ route('user.point.index') }}">{{ $progress['current_points'] }} Points &gt;</a>
                 </div>
 
                 <div class="relative w-full h-2 bg-gray-300 rounded">

@@ -49,6 +49,10 @@
 
     @yield('content')
 
+    <div class="hidden">
+        @include('partials.mini-sidebar')
+    </div>
+
     @include('partials.search-modal')
 
     @include('partials.chatbot')

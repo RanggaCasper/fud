@@ -38,6 +38,12 @@ class RestaurantController extends Controller
     public function claim(Request $request, $slug)
     {
         $restaurant = Restaurant::with('offerings', 'payments', 'diningOptions', 'accessibilities', 'operatingHours', 'reviews')->where('slug', $slug)->firstOrFail();
+        
+        if ($restaurant->claim) {
+            flash()->error('This restaurant has already been claimed and approved.');
+            return redirect()->back();
+        }
+
         return view('claim', compact('restaurant'));
     }
 

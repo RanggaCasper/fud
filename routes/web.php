@@ -28,8 +28,8 @@ Route::get('/dashboard', function () {
 })->name('dashboard.index');
 
 Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant.index');
-Route::get('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'claim'])->name('restaurant.claim');
-Route::post('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'store'])->name('restaurant.claim.store');
+Route::get('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'claim'])->middleware('auth')->name('restaurant.claim');
+Route::post('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'store'])->middleware('auth')->name('restaurant.claim.store');
 
 Route::get('/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('logout');
 

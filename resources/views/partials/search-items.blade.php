@@ -46,7 +46,9 @@
         />
     </div>
 @empty
-    <div class="text-muted text-sm">
-        <p>No restaurants found.</p>
+    <div class="text-muted text-sm text-center">
+        <img src="{{ asset('assets/svg/undraw_empty_4zx0.svg') }}" alt="Empty Search"
+            class="w-32 h-32 mx-auto mb-4">
+        <p class="font-semibold">No restaurants found.</p>
     </div>
 @endforelse
