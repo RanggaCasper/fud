@@ -14,7 +14,7 @@
             <span class="sr-only">Close menu</span>
         </button>
     </div>
-    <div id="sidebarMenu" class="px-3 py-6 overflow-y-auto h-screen no-scrollbar">
+    <div id="sidebarMenu" class="px-3 py-6 overflow-y-auto h-[90vh] no-scrollbar">
     </div>
 </aside>
 <!-- End Sidebar -->
