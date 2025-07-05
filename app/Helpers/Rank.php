@@ -11,6 +11,9 @@ class Rank
 {
     public static function getRankedRestaurants(?string $region = null, ?float $latitude = null, ?float $longitude = null): Collection
     {
+        $latitude = $latitude ?? session('latitude');
+        $longitude = $longitude ?? session('longitude');
+        
         $criteriaData = SAWCriteria::all();
 
         $criteria = $criteriaData->pluck('name')->toArray();
