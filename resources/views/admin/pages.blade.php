@@ -40,7 +40,7 @@
                 <x-input label="Title" id="title_update" name="title" placeholder="Title" type="text" />
             </div>
             <div class="mb-3">
-                <x-quill id="content_update" name="content_update" label="Content" />
+                <x-quill id="content_update" name="content" label="Content" />
             </div>
             <x-button label="Submit" type="submit" />
             <x-button label="Reset" type="reset" />
