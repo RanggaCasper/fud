@@ -38,17 +38,33 @@ class PlaceDataService
                         $restaurant->reviews = $data['data']['review_count'] ?? $restaurant->reviews;
                         $restaurant->save();
 
+                        $existingSources = $restaurant->photos->pluck('source')->toArray();
+
+                        $duplicates = $restaurant->photos
+                            ->groupBy('source')
+                            ->filter(fn($group) => $group->count() > 1);
+
+                        foreach ($duplicates as $group) {
+                            $group->slice(1)->each->delete();
+                        }
+
                         foreach ($data['data']['images'] ?? [] as $imgUrl) {
-                            $restaurant->photos()->updateOrCreate(
-                                ['source' => $imgUrl],
-                                ['updated_at' => now()]
-                            );
+                            if (!in_array($imgUrl, $existingSources)) {
+                                $restaurant->photos()->create([
+                                    'source' => $imgUrl,
+                                    'updated_at' => now(),
+                                ]);
+                            } else {
+                                $restaurant->photos()->where('source', $imgUrl)->update([
+                                    'updated_at' => now()
+                                ]);
+                            }
                         }
 
                         return [
                             'success' => true,
-                            'images' => $data['data']['images'],
-                            'count' => $data['data']['count'],
+                            'images' => $restaurant->photos()->pluck('source')->toArray(),
+                            'count' => $restaurant->photos()->count(),
                             'reservation_link' => $data['data']['reservation_link'] ?? null,
                             'rating' => $data['data']['rating'] ?? null,
                             'review_count' => $data['data']['review_count'] ?? null,
