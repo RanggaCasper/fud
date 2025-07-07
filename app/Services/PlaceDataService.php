@@ -38,8 +38,7 @@ class PlaceDataService
                         $restaurant->reviews = $data['data']['review_count'] ?? $restaurant->reviews;
                         $restaurant->save();
 
-                        $existingSources = $restaurant->photos->pluck('source')->toArray();
-
+                        // Hapus data duplikat (sisakan 1 saja per source)
                         $duplicates = $restaurant->photos
                             ->groupBy('source')
                             ->filter(fn($group) => $group->count() > 1);
@@ -48,17 +47,12 @@ class PlaceDataService
                             $group->slice(1)->each->delete();
                         }
 
+                        // Tambah atau update foto
                         foreach ($data['data']['images'] ?? [] as $imgUrl) {
-                            if (!in_array($imgUrl, $existingSources)) {
-                                $restaurant->photos()->create([
-                                    'source' => $imgUrl,
-                                    'updated_at' => now(),
-                                ]);
-                            } else {
-                                $restaurant->photos()->where('source', $imgUrl)->update([
-                                    'updated_at' => now()
-                                ]);
-                            }
+                            $restaurant->photos()->updateOrCreate(
+                                ['source' => $imgUrl],
+                                ['updated_at' => now()]
+                            );
                         }
 
                         return [
