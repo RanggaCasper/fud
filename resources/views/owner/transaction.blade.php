@@ -45,7 +45,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <h5 class="text-sm font-semibold">PAID AT</h5>
-                                <span>{{ $transaction->paid_at ?? 'Not Paid' }}</span>
+                                <span class="text-sm">{{ $transaction->paid_at ?? 'Not Paid' }}</span>
                             </div>
                         </div>
                         <div>
