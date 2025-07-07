@@ -46,7 +46,7 @@
         }
         gtag('js', new Date());
 
-        gtag('config', env('GOOGLE_ANALYTICS_ID'));
+        gtag('config', '{{ env('GOOGLE_ANALYTICS_ID') }}');
     </script>
     @stack('styles')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
