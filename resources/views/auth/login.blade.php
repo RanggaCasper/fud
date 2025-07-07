@@ -274,7 +274,7 @@
     <script>
         const cooldownKey = 'forgotTokenCooldownUntil';
         const button = $('#btnToken');
-        const buttonText = 'Get Token';
+        const buttonText = 'Send';
 
         function startCooldown(button, originalText, cooldownUntil) {
             const interval = setInterval(() => {
@@ -302,7 +302,7 @@
 
         $('#btnToken').click(function() {
             let button = $(this);
-            let buttonText = button.text();
+            let originalText = buttonText;
 
             button.prop('disabled', true);
             $('.alert').remove();
@@ -326,11 +326,16 @@
                         $('#forgotPasswordForm').before(`
                         <div class="alert flex items-center p-4 mb-4 text-sm bg-green-50 dark:!text-white dark:bg-success text-success border-success border rounded-lg" role="alert">
                             <i class="ti ti-info-circle text-lg me-1"></i>
-                            <div>
-                                ${response.message}
-                            </div>
+                            <div>${response.message}</div>
                         </div>
                     `);
+
+                        const cooldownUntil = Date.now() + 60 * 1000;
+                        localStorage.setItem(cooldownKey, cooldownUntil);
+                        startCooldown(button, originalText, cooldownUntil);
+                    } else {
+                        button.prop('disabled', false);
+                        button.html(originalText);
                     }
                 },
                 error: function(xhr) {
@@ -356,11 +361,11 @@
                         </div>
                     `);
                     }
+
+                    button.prop('disabled', false);
+                    button.html(originalText);
                 },
                 complete: function() {
-                    const cooldownUntil = Date.now() + 60 * 1000;
-                    localStorage.setItem(cooldownKey, cooldownUntil);
-                    startCooldown(button, buttonText, cooldownUntil);
                 }
             });
         });
