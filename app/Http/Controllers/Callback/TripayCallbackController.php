@@ -49,6 +49,7 @@ class TripayCallbackController extends Controller
                             $endDate = $startDate->copy()->addDays($invoice->restaurantAd->run_length);
 
                             $invoice->restaurantAd->update([
+                                'is_active' => true,
                                 'start_date' => $startDate,
                                 'end_date' => $endDate,
                             ]);
