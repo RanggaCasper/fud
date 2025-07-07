@@ -35,18 +35,25 @@ class TripayCallbackController extends Controller
         $status = strtoupper((string) $data->status);
 
         if ($data->is_closed_payment === 1) {
-            $invoice = Transaction::where('transaction_id', $invoiceId)
+            $invoice = Transaction::with('restaurantAd')->where('transaction_id', $invoiceId)
                 ->where('reference', $tripayReference)
-                ->where('paid_at', null)
                 ->first();
-
-            if (! $invoice) {
-                return ResponseFormatter::error('No invoice found or already paid: ' . $invoiceId, Response::HTTP_NOT_FOUND);
-            }
 
             switch ($status) {
                 case 'PAID':
                     $invoice->update(['paid_at' => now()]);
+
+                    if ($invoice->restaurantAd) {
+                        if (!$invoice->restaurantAd->start_date || !$invoice->restaurantAd->end_date) {
+                            $startDate = now();
+                            $endDate = $startDate->copy()->addDays($invoice->restaurantAd->run_length);
+
+                            $invoice->restaurantAd->update([
+                                'start_date' => $startDate,
+                                'end_date' => $endDate,
+                            ]);
+                        }
+                    }
                     break;
 
                 default:

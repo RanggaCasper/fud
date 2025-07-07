@@ -23,8 +23,7 @@
             @csrf
             @method('PUT')
             <div class="mb-3">
-                <x-input label="Price" id="price" name="base_price" placeholder="Price" type="number"
-                    step="10000" />
+                <x-input label="Price" id="price" name="base_price" placeholder="Price" type="number" />
             </div>
             <x-button label="Submit" type="submit" />
             <x-button label="Reset" type="reset" />

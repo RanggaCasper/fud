@@ -45,7 +45,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <h5 class="text-sm font-semibold">PAID AT</h5>
-                                <span id="trx-paid" class="text-sm"></span>
+                                <span>{{ $transaction->paid_at ?? 'Not Paid' }}</span>
                             </div>
                         </div>
                         <div>
@@ -109,10 +109,6 @@
             url: "{{ route('owner.transaction.get', ['reference' => $transaction->reference]) }}",
             method: "GET",
             success: function(response) {
-                $('#trx-paid').html(response.data.paid_at ?
-                    response.data.paid_at :
-                    '<span class="text-red-600 font-semibold">Waiting</span>');
-
                 let orderHtml = '';
                 response.data.order_items.forEach(item => {
                     orderHtml += `
