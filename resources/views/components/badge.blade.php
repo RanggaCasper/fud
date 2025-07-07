@@ -1,6 +1,14 @@
-<span class="inline-block px-2 py-1 text-xxs font-semibold rounded-lg 
-    {{ $color === 'success' ? 'bg-success text-white' : 
-        ($color === 'danger' ? 'bg-danger text-white' : 
-        ($color === 'ingfo' ? 'bg-info text-white' : 'bg-warning text-white')) }}">
+@props(['color' => 'primary'])
+
+@php
+    $classes = match ($color) {
+        'warning' => 'bg-warning text-white',
+        'success' => 'bg-success text-white',
+        'danger'  => 'bg-danger text-white',
+        default   => 'bg-gray-100 text-gray-800',
+    };
+@endphp
+
+<span {{ $attributes->merge(['class' => "px-2 py-1 text-xs font-medium rounded-lg inline-block $classes"]) }}>
     {{ $slot }}
 </span>

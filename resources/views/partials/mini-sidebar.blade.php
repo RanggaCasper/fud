@@ -33,6 +33,10 @@
                     active="{{ request()->routeIs('admin.owner.index') }}">
                     Manage Ownership
                 </x-nav-item>
+                <x-nav-item href="{{ route('admin.ad.type.index') }}" icon="ti ti-headset"
+                    active="{{ request()->routeIs('admin.ad.type.index') }}">
+                    Manage Ads Types
+                </x-nav-item>
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert"
                     active="{{ request()->routeIs('admin.reported-reviews.index') }}">
                     Reported Reviews
@@ -87,6 +91,10 @@
                     <x-nav-item href="{{ route('owner.seo.index') }}" icon="ti ti-settings-search"
                         active="{{ request()->routeIs('owner.seo.index') }}">
                         Manage SEO
+                    </x-nav-item>
+                    <x-nav-item href="{{ route('owner.ads.index') }}" icon="ti ti-headset"
+                        active="{{ request()->routeIs('owner.ads.index') }}">
+                        Promote Restaurant
                     </x-nav-item>
                     <x-nav-item href="{{ route('owner.operatingHours.index') }}" icon="ti ti-clock-24"
                         active="{{ request()->routeIs('owner.operatingHours.index') }}">

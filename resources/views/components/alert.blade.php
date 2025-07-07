@@ -8,6 +8,6 @@
 <div class="flex items-center p-4 mb-3 text-sm {{ $alertClasses }} border rounded-lg" role="alert">
     <i class="ti ti-info-circle text-lg me-1"></i>
     <div>
-        {{ $message }}
+        {{ $slot }}
     </div>
 </div>

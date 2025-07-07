@@ -57,14 +57,11 @@
                 </div>
 
                 <div>
-                    <h2 class="mb-6 text-sm font-semibold uppercase">Legal</h2>
+                    <h2 class="mb-6 text-sm font-semibold uppercase">Company</h2>
                     <ul class="text-muted text-sm space-y-2">
-                        <li>
-                            <a href="{{ route('page.index', ['slug' => 'privacy-policy']) }}" class="hover:underline">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('page.index', ['slug' => 'terms-and-conditions']) }}" class="hover:underline">Terms & Conditions</a>
-                        </li>
+                        {!! App\Models\Page::get()->map(function ($page) {
+                            return '<li><a href="' . route('page.index', ['slug' => $page->slug]) . '" class="hover:underline">' . $page->title . '</a></li>';
+                        })->implode('') !!}
                     </ul>
                 </div>
             </div>

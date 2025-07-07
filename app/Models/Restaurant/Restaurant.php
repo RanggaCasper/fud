@@ -4,6 +4,7 @@ namespace App\Models\Restaurant;
 
 use Carbon\Carbon;
 use App\Models\MetaTag;
+use App\Models\RestaurantAd;
 use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
@@ -16,6 +17,13 @@ class Restaurant extends Model
         'latitude' => 'float',
         'longitude' => 'float',
     ];
+
+    public function ad()
+    {
+        return $this->hasOne(RestaurantAd::class)
+            ->where('is_active', true)
+            ->whereDate('end_date', '>=', now());
+    }
 
     public function photos()
     {
@@ -138,5 +146,5 @@ class Restaurant extends Model
         return cache()->remember("restaurant_{$this->id}_is_closed", now()->addMinutes(10), function () {
             return $this->isClosed();
         });
-    }   
+    }
 }

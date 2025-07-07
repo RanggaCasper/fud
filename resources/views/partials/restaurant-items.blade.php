@@ -1,7 +1,7 @@
 @forelse ($restaurants as $restaurant)
     <div class="col-span-1">
         <x-card.restaurant-card :title="$restaurant->name" :slug="$restaurant->slug" :rating="$restaurant->rating" :reviews="$restaurant->reviews"
-            :location="$restaurant->address" :distance="$restaurant->distance . 'km'" :image="$restaurant->thumbnail" :isPromotion="false" :isClosed="$restaurant->getIsClosedCached()"
+            :location="$restaurant->address" :distance="$restaurant->distance . 'km'" :image="$restaurant->thumbnail" :isPromotion="(bool) ($restaurant->ad?->is_active)" :isClosed="$restaurant->getIsClosedCached()"
             :isHalal="$restaurant->offerings->contains(function ($offering) {
                 return str_contains(strtolower($offering->name), 'halal');
             })" />

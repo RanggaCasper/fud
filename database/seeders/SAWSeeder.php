@@ -15,21 +15,28 @@ class SAWSeeder extends Seeder
         SAWCriteria::insert([
             [
                 'name' => 'rating',
-                'weight' => 0.2,
+                'weight' => 0.1,
                 'type' => 'benefit',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'reviews',
-                'weight' => 0.3,
+                'weight' => 0.1,
                 'type' => 'benefit',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'distance',
-                'weight' => 0.5,
+                'weight' => 0.4,
+                'type' => 'cost',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'promotion',
+                'weight' => 0.4,
                 'type' => 'cost',
                 'created_at' => now(),
                 'updated_at' => now(),

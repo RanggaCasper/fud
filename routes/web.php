@@ -130,21 +130,58 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
 
         Route::get('/simulate/get', \App\Http\Controllers\Admin\SimulateController::class)->name('simulate.get');
     });
+
+    Route::prefix('ads')->as('ad.')->group(function () {
+        Route::prefix('types')->as('type.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AdTypeController::class, 'index'])->name('index');
+            Route::get('/get', [\App\Http\Controllers\Admin\AdTypeController::class, 'get'])->name('get');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\AdTypeController::class, 'getById'])->name('getById');
+            Route::post('/', [\App\Http\Controllers\Admin\AdTypeController::class, 'store'])->name('store');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\AdTypeController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\AdTypeController::class, 'destroy'])->name('destroy');
+        });
+    });
 });
 
 Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function () {
     Route::get('/', [\App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('/seo', [\App\Http\Controllers\Owner\SeoController::class, 'index'])->name('seo.index');
-    Route::put('/seo', [\App\Http\Controllers\Owner\SeoController::class, 'update'])->name('seo.update');
-    Route::post('/seo/generate', [\App\Http\Controllers\Owner\SeoController::class, 'generate'])->name('seo.generate');
-    Route::get('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'index'])->name('manage.index');
-    Route::put('/manage', [\App\Http\Controllers\Owner\ManageController::class, 'update'])->name('manage.update');
-    Route::get('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'index'])->name('operatingHours.index');
-    Route::put('/operating-hours', [\App\Http\Controllers\Owner\OperatingHoursController::class, 'update'])->name('operatingHours.update');
-    Route::get('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'index'])->name('offering.index');
-    Route::put('/offering', [\App\Http\Controllers\Owner\OfferingController::class, 'update'])->name('offering.update');
-    Route::get('/features', [\App\Http\Controllers\Owner\FeatureController::class, 'index'])->name('features.index');
-    Route::put('/features/{type}', [\App\Http\Controllers\Owner\FeatureController::class, 'update'])->name('features.update');
+
+    Route::controller(\App\Http\Controllers\Owner\SeoController::class)->group(function () {
+        Route::get('/seo', 'index')->name('seo.index');
+        Route::put('/seo', 'update')->name('seo.update');
+        Route::post('/seo/generate', 'generate')->name('seo.generate');
+    });
+
+    Route::controller(\App\Http\Controllers\Owner\ManageController::class)->group(function () {
+        Route::get('/manage', 'index')->name('manage.index');
+        Route::put('/manage', 'update')->name('manage.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Owner\OperatingHoursController::class)->group(function () {
+        Route::get('/operating-hours', 'index')->name('operatingHours.index');
+        Route::put('/operating-hours', 'update')->name('operatingHours.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Owner\OfferingController::class)->group(function () {
+        Route::get('/offering', 'index')->name('offering.index');
+        Route::put('/offering', 'update')->name('offering.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Owner\FeatureController::class)->group(function () {
+        Route::get('/features', 'index')->name('features.index');
+        Route::put('/features/{type}', 'update')->name('features.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Owner\AdController::class)->group(function () {
+        Route::get('/ads', 'index')->name('ads.index');
+        Route::get('/ads/get', 'get')->name('ads.get');
+        Route::post('/ads', 'store')->name('ads.store');
+    });
+
+    Route::prefix('transaction')->as('transaction.')->group(function () {
+        Route::get('/{trx_id}', [\App\Http\Controllers\Owner\TransactionController::class, 'index'])->name('index');
+        Route::get('/get/{reference}', [\App\Http\Controllers\Owner\TransactionController::class, 'get'])->name('get');
+    });
 });
 
 Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
@@ -321,3 +358,7 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
         'commands' => $results,
     ]);
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/tripay/callback', \App\Http\Controllers\Callback\TripayCallbackController::class)
+    ->name('tripay.callback')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
