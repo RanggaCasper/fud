@@ -50,6 +50,11 @@ Route::prefix('auth')->as('auth.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Auth\RegisterController::class, 'index'])->name('index');
         Route::post('/', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('store');
     });
+
+    Route::prefix('forgot')->as('forgot.')->middleware('guest')->group(function () {
+        Route::post('/get-token', [\App\Http\Controllers\Auth\ForgotController::class, 'getToken'])->name('getToken');
+        Route::post('/reset-password', [\App\Http\Controllers\Auth\ForgotController::class, 'store'])->name('store');
+    });
 });
 
 Route::prefix('settings')->as('settings.')->group(function () {
