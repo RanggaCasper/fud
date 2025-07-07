@@ -37,6 +37,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.css" rel="stylesheet" />
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XHJG1WXBB8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', env('GOOGLE_ANALYTICS_ID'));
+    </script>
     @stack('styles')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

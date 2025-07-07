@@ -13,6 +13,14 @@
 @section('meta_og_type', 'restaurant')
 
 @push('styles')
+<script>
+    gtag('event', 'restaurant_view', {
+        restaurant_id: '{{ $restaurant->id }}',
+        name: '{{ $restaurant->name }}',
+        slug: '{{ $restaurant->slug }}',
+        category: '{{ implode(', ', $restaurant->offerings->take(8)->pluck('name')->toArray()) }}'
+    });
+</script>
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
