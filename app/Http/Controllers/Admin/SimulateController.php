@@ -34,6 +34,7 @@ class SimulateController extends Controller
                     'rating' => $item->rating,
                     'reviews' => $item->reviews,
                     'distance' => $item->distance,
+                    'promotion' => $item->promotion ? 'Yes' : 'No', 
                     'score' => $item->score,
                 ];
             });

@@ -40,6 +40,7 @@
                     <th>Rating</th>
                     <th>Reviews</th>
                     <th>Distance (km)</th>
+                    <th>Promotion</th>
                     <th>Score</th>
                 </tr>
             </thead>
@@ -99,7 +100,9 @@
             ]
         });
 
-        datatableSimulate = $('#simulateDatatables').DataTable();
+        datatableSimulate = $('#simulateDatatables').DataTable({
+            scrollX: true,
+        });
 
         $('#btnSimulate').on('click', function() {
             const lat = $('#lat').val();
@@ -142,6 +145,9 @@
                     },
                     {
                         data: 'distance'
+                    },
+                    {
+                        data: 'promotion'
                     },
                     {
                         data: 'score'
