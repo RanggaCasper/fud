@@ -4,7 +4,7 @@
     'id' => 'filepond',
     'required' => true,
     'name',
-    'maxFileSizeImage' => 2,
+    'maxFileSizeImage' => 5,
     'maxFileSizeAudio' => 20
 ])
 
