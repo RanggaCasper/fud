@@ -9,66 +9,74 @@ use Illuminate\Support\Collection;
 
 class Rank
 {
-        public static function getRankedRestaurants(?string $region = null, ?float $latitude = null, ?float $longitude = null): Collection
-        {
-            $latitude = $latitude ?? session('latitude');
-            $longitude = $longitude ?? session('longitude');
-            
-            $criteriaData = SAWCriteria::all();
+    public static function getRankedRestaurants(?string $region = null, ?float $latitude = null, ?float $longitude = null): Collection
+    {
+        $latitude = $latitude ?? session('latitude');
+        $longitude = $longitude ?? session('longitude');
 
-            $criteria = $criteriaData->pluck('name')->toArray();
-            $weights = $criteriaData->pluck('weight', 'name')->toArray();
-            $criteriaTypes = $criteriaData->pluck('type', 'name')->toArray();
+        $criteriaData = SAWCriteria::all();
 
-            foreach ($criteria as $key) {
-                if (!array_key_exists($key, $weights) || !array_key_exists($key, $criteriaTypes)) {
-                    throw new \InvalidArgumentException("Missing weight or criteria type for: {$key}");
-                }
+        $criteria = $criteriaData->pluck('name')->toArray();
+        $weights = $criteriaData->pluck('weight', 'name')->toArray();
+        $criteriaTypes = $criteriaData->pluck('type', 'name')->toArray();
+
+        foreach ($criteria as $key) {
+            if (!array_key_exists($key, $weights) || !array_key_exists($key, $criteriaTypes)) {
+                throw new \InvalidArgumentException("Missing weight or criteria type for: {$key}");
             }
-
-            $restaurants = Restaurant::with(['offerings', 'operatingHours', 'ad'])
-                ->withCount('reviews')
-                ->withAvg('reviews', 'rating')
-                ->get();
-
-            if ($region) {
-                $region = strtolower($region);
-                $restaurants = $restaurants->filter(function ($restaurant) use ($region) {
-                    return str_contains(strtolower($restaurant->address), $region);
-                });
-            }
-
-            $processed = $restaurants->map(function ($restaurant) use ($latitude, $longitude) {
-                if ($latitude && $longitude) {
-                    $restaurant->distance = self::haversineDistance(
-                        $latitude,
-                        $longitude,
-                        $restaurant->latitude,
-                        $restaurant->longitude
-                    );
-                } else {
-                    $restaurant->distance = null;
-                }
-
-                $googleRating = $restaurant->rating ?? 0;
-                $googleReviews = $restaurant->reviews ?? 0;
-                $fudzReviews = $restaurant->reviews_count;
-                $fudzRating = $restaurant->reviews_avg_rating ?? 0;
-
-                $totalReviews = $googleReviews + $fudzReviews;
-                $combinedRating = $totalReviews > 0
-                    ? round((($googleRating * $googleReviews) + ($fudzRating * $fudzReviews)) / $totalReviews, 2)
-                    : 0;
-
-                $restaurant->rating = $combinedRating;
-                $restaurant->reviews = $totalReviews;   
-                $restaurant->promotion = (bool) ($restaurant->ad && $restaurant->ad->is_active && is_null($restaurant->ad->image));
-
-                return $restaurant;
-            });
-
-            return (new SAWService())->calculate($processed, $weights, $criteriaTypes);
         }
+
+        $restaurants = Restaurant::with([
+                'offerings',
+                'operatingHours',
+                'ad' => function ($query) {
+                    $query->where('is_active', true)
+                        ->where('end_date', '>=', now())
+                        ->whereNull('image');
+                }
+            ])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->get();
+
+        if ($region) {
+            $region = strtolower($region);
+            $restaurants = $restaurants->filter(function ($restaurant) use ($region) {
+                return str_contains(strtolower($restaurant->address), $region);
+            });
+        }
+
+        $processed = $restaurants->map(function ($restaurant) use ($latitude, $longitude) {
+            if ($latitude && $longitude) {
+                $restaurant->distance = self::haversineDistance(
+                    $latitude,
+                    $longitude,
+                    $restaurant->latitude,
+                    $restaurant->longitude
+                );
+            } else {
+                $restaurant->distance = null;
+            }
+
+            $googleRating = $restaurant->rating ?? 0;
+            $googleReviews = $restaurant->reviews ?? 0;
+            $fudzReviews = $restaurant->reviews_count;
+            $fudzRating = $restaurant->reviews_avg_rating ?? 0;
+
+            $totalReviews = $googleReviews + $fudzReviews;
+            $combinedRating = $totalReviews > 0
+                ? round((($googleRating * $googleReviews) + ($fudzRating * $fudzReviews)) / $totalReviews, 2)
+                : 0;
+
+            $restaurant->rating = $combinedRating;
+            $restaurant->reviews = $totalReviews;
+            $restaurant->promotion = $restaurant->ad !== null;
+
+            return $restaurant;
+        });
+
+        return (new SAWService())->calculate($processed, $weights, $criteriaTypes);
+    }
 
     private static function haversineDistance($lat1, $lon1, $lat2, $lon2)
     {
