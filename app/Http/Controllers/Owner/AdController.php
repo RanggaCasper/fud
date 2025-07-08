@@ -12,6 +12,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Services\TokopayService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use RahulHaque\Filepond\Facades\Filepond;
@@ -28,8 +29,8 @@ class AdController extends Controller
         try {
             $data = RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
                 ->with(['adsType', 'restaurant', 'transaction'])
-                ->orderBy('created_at', 'desc')
                 ->get();
+
             return DataTables::of($data)
                 ->addColumn('no', function ($row) {
                     static $counter = 0;
@@ -68,6 +69,9 @@ class AdController extends Controller
                 ->addColumn('paid_at', function ($row) {
                     return $row->transaction->paid_at ? $row->transaction->paid_at->format('Y-m-d H:i:s') : 'N/A';
                 })
+                ->addColumn('created_at', function ($row) {
+                    return $row->transaction->created_at ? $row->transaction->created_at->format('Y-m-d H:i:s') : 'N/A';
+                })
                 ->rawColumns(['transaction_id', 'approval_status'])
                 ->make(true);
         } catch (\Exception $e) {
@@ -89,9 +93,9 @@ class AdController extends Controller
 
             $totalCost = $adsType->base_price * $runLength;
 
-            $path = null;
-            if ($request->has('image') && is_array($request->image)) {
-                $path = Filepond::field($request->image)->moveTo('images/ads/images/' . Str::uuid());
+            if ($request->has('image')) {
+                $path = Filepond::field($request->image)->moveTo('images/ads/' . Str::uuid());
+                $request->merge(['image' => $path['location']]);
             }
 
             $isCarousel = $adsType->type === 'carousel';
@@ -100,7 +104,7 @@ class AdController extends Controller
             $ad = RestaurantAd::create([
                 'ads_type_id'     => $adsType->id,
                 'restaurant_id'   => $restaurantId,
-                'image'           => $path,
+                'image'           => $request->image ?? null,
                 'total_cost'      => $totalCost,
                 'run_length'     => $runLength,
                 'approval_status' => $approvalStatus,
@@ -111,17 +115,21 @@ class AdController extends Controller
                 'transaction_id'   => 'F-' . Str::random(8),
             ]);
 
-            $tripay = new TripayService();
+            if ($approvalStatus === 'approved') {
+                $tripay = new TripayService();
 
-            $tripayResponse = $tripay->createOrder($transaction->transaction_id, $ad->adsType->name, $totalCost);
+                $tripayResponse = $tripay->createOrder($transaction->transaction_id, $adsType->name, $totalCost);
 
-            $transaction->update([
-                'reference'   => $tripayResponse['data']['reference'],
-            ]);
+                $transaction->update([
+                    'reference'   => $tripayResponse['data']['reference'],
+                ]);
 
-            return ResponseFormatter::redirected('Ad created successfully', route('owner.transaction.index', [
-                'trx_id' => $transaction->transaction_id
-            ]));
+                return ResponseFormatter::redirected('Ad created successfully', route('owner.transaction.index', [
+                    'trx_id' => $transaction->transaction_id
+                ]));
+            }
+
+            return ResponseFormatter::created('Ad created successfully, waiting for approval');
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }

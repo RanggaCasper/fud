@@ -37,6 +37,10 @@
                     active="{{ request()->routeIs('admin.ad.type.index') }}">
                     Manage Ads Types
                 </x-nav-item>
+                <x-nav-item href="{{ route('admin.ad.index') }}" icon="ti ti-headset"
+                    active="{{ request()->routeIs('admin.ad.index') }}">
+                    Manage Ads
+                </x-nav-item>
                 <x-nav-item href="{{ route('admin.reported-reviews.index') }}" icon="ti ti-file-alert"
                     active="{{ request()->routeIs('admin.reported-reviews.index') }}">
                     Reported Reviews

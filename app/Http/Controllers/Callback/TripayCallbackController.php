@@ -41,7 +41,10 @@ class TripayCallbackController extends Controller
 
             switch ($status) {
                 case 'PAID':
-                    $invoice->update(['paid_at' => now()]);
+                    $invoice->update([
+                        'status' => 'paid',
+                        'paid_at' => now()
+                    ]);
 
                     if ($invoice->restaurantAd) {
                         if (!$invoice->restaurantAd->start_date || !$invoice->restaurantAd->end_date) {
@@ -55,6 +58,16 @@ class TripayCallbackController extends Controller
                             ]);
                         }
                     }
+                    break;
+                case 'FAILED':
+                    $invoice->update([
+                        'status' => 'canceled',
+                    ]);
+                    break;
+                case 'EXPIRED':
+                    $invoice->update([
+                        'status' => 'canceled',
+                    ]);
                     break;
 
                 default:

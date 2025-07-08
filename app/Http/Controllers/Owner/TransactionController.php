@@ -17,7 +17,15 @@ class TransactionController extends Controller
             return redirect()->back();
         }
 
-        $transaction = Transaction::where('transaction_id', $trx_id)->first();
+        $transaction = Transaction::with('restaurantAd')->where('transaction_id', $trx_id)->first();
+
+        if($transaction->restaurantAd->approval_status === 'pending') {
+            flash()->warning('This transaction is still pending approval');
+            return redirect()->back();
+        } else if($transaction->restaurantAd->approval_status === 'rejected') {
+            flash()->error($transaction->restaurantAd->note);
+            return redirect()->back();
+        }
 
         return view('owner.transaction', compact('transaction'));
     }

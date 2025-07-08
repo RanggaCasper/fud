@@ -8,19 +8,62 @@
                 <x-card title="Transaction Details">
                     <div class="flex flex-col space-y-6">
                         <div>
-                            <div class="p-4 md:p-5 flex w-full rounded-xl items-center bg-warning/10">
-                                <div class="p-1 rounded-full mr-3 md:mr-4 bg-warning">
+                            @php
+                                $status = $transaction->status;
+
+                                $statusClass = match ($status) {
+                                    'pending' => 'bg-warning/10',
+                                    'paid' => 'bg-success/10',
+                                    'expired' => 'bg-danger/10',
+                                    default => 'bg-gray-100',
+                                };
+
+                                $iconBgClass = match ($status) {
+                                    'pending' => 'bg-warning',
+                                    'paid' => 'bg-success',
+                                    'expired' => 'bg-danger',
+                                    default => 'bg-gray-300',
+                                };
+
+                                $message = match ($status) {
+                                    'pending' => 'Pay your invoice!',
+                                    'paid' => 'Invoice paid successfully.',
+                                    'canceled' => 'Invoice has been canceled.',
+                                    default => 'Invoice status unknown.',
+                                };
+                            @endphp
+
+                            <div class="p-4 md:p-5 flex w-full rounded-xl items-center {{ $statusClass }}">
+                                <div class="p-1 rounded-full mr-3 md:mr-4 {{ $iconBgClass }}">
                                     <div
-                                        class="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center bg-warning">
+                                        class="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center {{ $iconBgClass }}">
                                         <i class="ti ti-coins text-white text-lg md:text-xl"></i>
                                     </div>
                                 </div>
                                 <div class="text-sm md:text-base">
-                                    <div class="font-semibold text-md">
-                                        Pay your invoice!</div>
-                                    <div class="text-sm">Expires in
-                                        <span class="text-custom-secondary font-bold" id="invoice-expiry">00:25:43</span>
-                                    </div>
+                                    <div class="font-semibold text-md">{{ $message }}</div>
+
+                                    @if ($status === 'pending')
+                                        <div class="text-sm">
+                                            Expires in
+                                            <span class="text-custom-secondary font-bold"
+                                                id="invoice-expiry">00:00:00</span>
+                                        </div>
+                                    @elseif ($status === 'paid')
+                                        <div class="text-sm">
+                                            Paid at:
+                                            <span class="text-custom-secondary font-bold">
+                                                {{ $transaction->paid_at ? $transaction->paid_at->format('d M Y H:i') : '-' }}
+                                            </span>
+                                        </div>
+                                    @elseif ($status === 'canceled' || $status === 'cancelled')
+                                        <div class="text-sm">
+                                            Canceled at:
+                                            <span class="text-custom-secondary font-bold">
+                                                {{ $transaction->updated_at->format('d M Y H:i') }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -39,8 +82,14 @@
                                     <div class="inline">
                                         <x-badge color="warning">{{ ucfirst($transaction->status) }}</x-badge>
                                     </div>
-                                @else
-                                    <p class="text-sm">{{ $transaction->status }}</p>
+                                @elseif ($transaction->status === 'paid')
+                                    <div class="inline">
+                                        <x-badge color="success">{{ ucfirst($transaction->status) }}</x-badge>
+                                    </div>
+                                @elseif ($transaction->status === 'canceled')
+                                    <div class="inline">
+                                        <x-badge color="danger">{{ ucfirst($transaction->status) }}</x-badge>
+                                    </div>
                                 @endif
                             </div>
                             <div class="flex flex-col">
@@ -74,22 +123,24 @@
                             </div>
                             <div></div>
                         </div>
-                        <div>
-                            <h5 class="text-sm font-semibold">Payment QR Code</h5>
-                            <p class="text-sm text-gray-600">
-                                Scan this QR Code to pay (Click image to zoom in)
-                            </p>
-                            <div id="qr-container" class="flex">
-                                <img alt="QR Code" id="qris-qr" class="size-48 bg-gray-100 rounded-lg cursor-pointer"
-                                    src="#">
+                        @if ($transaction->status === 'pending')
+                            <div>
+                                <h5 class="text-sm font-semibold">Payment QR Code</h5>
+                                <p class="text-sm text-gray-600">
+                                    Scan this QR Code to pay (Click image to zoom in)
+                                </p>
+                                <div id="qr-container" class="flex">
+                                    <img alt="QR Code" id="qris-qr" class="size-48 bg-gray-100 rounded-lg cursor-pointer"
+                                        src="#">
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         @php
                             $previousUrl = url()->previous();
                             $currentUrl = url()->current();
                             $backUrl = $previousUrl !== $currentUrl ? $previousUrl : route('owner.ads.index');
                         @endphp
-    
+
                         <a class="btn btn-primary btn-md w-full btn-icon" href="{{ $backUrl }}">
                             <i class="ti ti-arrow-left"></i>
                             Back to Ads

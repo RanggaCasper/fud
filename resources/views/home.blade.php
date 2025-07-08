@@ -89,7 +89,7 @@
                     <span class="text-xs">Real reviews, honest bites. See what people are loving to eat!</span>
                 </div>
             </div>
-            <div class="swiper">
+            <div class="swiper reviewSwiper">
                 <div class="swiper-wrapper py-3">
                     @foreach ($comments as $comment)
                         <div class="swiper-slide">

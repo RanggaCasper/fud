@@ -23,7 +23,7 @@
             </div>
 
             <div class="hidden mb-3">
-                <x-filepond class="filepond-image" label="Carousel Image" name="attachments" id="image"
+                <x-filepond class="filepond-image" label="Carousel Image" name="image" id="image"
                     :required="false" />
             </div>
 
@@ -49,8 +49,9 @@
                     <th>Price</th>
                     <th>Type</th>
                     <th>End Date</th>
-                    <th>Status</th>
+                    <th>Approval</th>
                     <th>Paid At</th>
+                    <th>Created At</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,6 +98,10 @@
                 {
                     data: 'paid_at',
                     name: 'paid_at',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
                 },
             ]
         });

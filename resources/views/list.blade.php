@@ -4,9 +4,7 @@
     use Illuminate\Support\Str;
 
     $rawRegion = request()->route('region');
-    $regionTitle = $rawRegion
-        ? Str::of($rawRegion)->replace('-', ' ')->title()
-        : null;
+    $regionTitle = $rawRegion ? Str::of($rawRegion)->replace('-', ' ')->title() : null;
 
     $pageTitle = $regionTitle
         ? Str::limit("6 Best Restaurants in $regionTitle", 40, '')
@@ -38,13 +36,51 @@
 
 @section('content')
     <div class="mt-[72px]">
-        @php
-            $carouselItems = [
-                ['src' => 'https://b.zmtcdn.com/data/o2_assets/85e14f93411a6b584888b6f3de3daf081716296829.png'],
-            ];
-        @endphp
+        <section class="p-4 md:px-2 bg-white bg-opacity-90" id="banner">
+            <div class="max-w-screen-xl mx-auto">
+                @php
+                    $carouselItems = App\Models\RestaurantAd::whereNotNull('image')
+                        ->whereNotNull('end_date')
+                        ->where('end_date', '>=', now())
+                        ->where('is_active', true)
+                        ->where('approval_status', 'approved')
+                        ->with('restaurant')
+                        ->latest()
+                        ->get()
+                        ->shuffle()
+                        ->map(function ($ad) {
+                            return [
+                                'src' => Storage::url($ad->image),
+                                'href' => route('restaurant.index', $ad->restaurant->slug),
+                            ];
+                        });
+                @endphp
+                <div class="swiper bannerSwiper">
+                    <div class="swiper-wrapper">
+                        @php
+                            $totalItems = $carouselItems->count();
+                            $placeholdersNeeded = max(0, 3 - $totalItems);
+                        @endphp
 
-        <x-section.carousel-section sectionId="home" :items="$carouselItems" />
+                        @foreach ($carouselItems as $item)
+                            <div class="swiper-slide aspect-[37/10] w-full overflow-hidden rounded-xl">
+                                <a href="{{ $item['href'] }}">
+                                    <img src="{{ $item['src'] }}" alt="Banner" class="w-full h-full object-cover" />
+                                </a>
+                            </div>
+                        @endforeach
+
+                        @for ($i = 1; $i <= $placeholdersNeeded; $i++)
+                            <div class="swiper-slide aspect-[37/10] w-full overflow-hidden rounded-xl">
+                                <img src="https://placehold.co/370x100?text=Space Available"
+                                    alt="Placeholder {{ $i }}" class="w-full h-full object-cover" />
+                            </div>
+                        @endfor
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
 
         <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-6" id="restaurant">
             <div id="restaurant-header" class="sticky top-[70px] z-10 bg-transparent">

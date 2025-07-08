@@ -140,6 +140,13 @@ Route::prefix('admin')->as('admin.')->middleware('checkRole:admin')->group(funct
             Route::put('/{id}', [\App\Http\Controllers\Admin\AdTypeController::class, 'update'])->name('update');
             Route::delete('/{id}', [\App\Http\Controllers\Admin\AdTypeController::class, 'destroy'])->name('destroy');
         });
+
+        Route::get('/', [\App\Http\Controllers\Admin\AdController::class, 'index'])->name('index');
+        Route::get('/get', [\App\Http\Controllers\Admin\AdController::class, 'get'])->name('get');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\AdController::class, 'getById'])->name('getById');
+        Route::post('/', [\App\Http\Controllers\Admin\AdController::class, 'store'])->name('store');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\AdController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\AdController::class, 'destroy'])->name('destroy');
     });
 });
 
