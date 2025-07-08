@@ -20,6 +20,7 @@
             <div class="mb-3">
                 <x-input label="Reservation Link" id="reservation_link" name="reservation_link"
                     value="{{ Auth::user()->owned->restaurant->reservation_link }}" type="url" :required="false" />
+                <span class="text-xs text-gray-500">Reservation link is only available for restaurants listed on <a href="https://www.chope.co" target="_blank" class="underline text-blue-600">chope.co</a>.</span>
             </div>
             <div class="mb-3">
                 <x-input label="Address" id="address" name="address"

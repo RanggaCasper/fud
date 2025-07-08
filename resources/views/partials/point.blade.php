@@ -3,11 +3,11 @@
         @if (Auth::user()->avatar)
             <img class="size-24 rounded-full object-cover" src="{{ Auth::user()->avatar }}" alt="user photo">
         @else
-            <span
-                class="size-24 flex items-center justify-center bg-primary text-white text-xl font-medium rounded-full">
+            <div class="size-24 rounded-full flex items-center justify-center bg-primary text-white text-4xl font-medium aspect-square">
                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </span>
+            </div>
         @endif
+
         <div class="flex flex-col w-full">
             <h5 class="text-lg font-semibold">{{ Auth::user()->name }}</h5>
             @php

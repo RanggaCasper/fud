@@ -5,42 +5,7 @@
     <div class="mt-[72px]">
         <section class="p-4 md:px-2 bg-white bg-opacity-90" id="banner">
             <div class="max-w-screen-xl mx-auto">
-                @php
-                    $carouselItems = App\Models\RestaurantAd::whereNotNull('image')
-                        ->whereNotNull('end_date')
-                        ->where('end_date', '>=', now())
-                        ->with('restaurant')
-                        ->latest()
-                        ->get()
-                        ->shuffle()
-                        ->map(function ($ad) {
-                            return [
-                                'src' => Storage::url($ad->image),
-                            ];
-                        });
-                @endphp
-                <div class="swiper bannerSwiper">
-                    <div class="swiper-wrapper">
-                        @php
-                            $totalItems = $carouselItems->count();
-                            $placeholdersNeeded = max(0, 3 - $totalItems);
-                        @endphp
-
-                        @foreach ($carouselItems as $item)
-                            <div class="swiper-slide aspect-[37/10] w-full overflow-hidden rounded-xl">
-                                <img src="{{ $item['src'] }}" alt="Banner" class="w-full h-full object-cover" />
-                            </div>
-                        @endforeach
-
-                        @for ($i = 1; $i <= $placeholdersNeeded; $i++)
-                            <div class="swiper-slide aspect-[37/10] w-full overflow-hidden rounded-xl">
-                                <img src="https://placehold.co/370x100?text=Space Available"
-                                    alt="Placeholder {{ $i }}" class="w-full h-full object-cover" />
-                            </div>
-                        @endfor
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
+                @include('partials.banner')
             </div>
         </section>
     </div>

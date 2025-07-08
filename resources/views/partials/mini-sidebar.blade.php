@@ -84,10 +84,6 @@
                         <span>Owner Menu</span>
                         <div class="flex-grow border-b border-muted"></div>
                     </li>
-                    <x-nav-item href="{{ route('owner.dashboard.index') }}" icon="ti ti-layout-dashboard"
-                        active="{{ request()->routeIs('owner.dashboard.index') }}">
-                        Dashboard
-                    </x-nav-item>
                     <x-nav-item href="{{ route('owner.manage.index') }}" icon="ti ti-chef-hat"
                         active="{{ request()->routeIs('owner.manage.index') }}">
                         Manage Restaurant

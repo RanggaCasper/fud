@@ -83,14 +83,6 @@
                             <span>Reviews</span>
                         </a>
                     </li>
-
-                    <li class="flex">
-                        <a href="{{ route('page.index', ['slug' => 'about-us']) }}"
-                            class="flex text-nowrap items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-primary hover:bg-primary/10 dark:hover:text-primary focus:ring-primary dark:hover:bg-primary/10 dark:focus:ring-primary transition duration-200 ease-in-out p-2 rounded-lg border-b-2 border-transparent hover:border-primary active:border-primary">
-                            <i class="ti ti-message text-xl"></i>
-                            <span>About Us</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 

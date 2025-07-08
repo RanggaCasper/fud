@@ -15,11 +15,17 @@
         @csrf
         @method('PUT')
         @if (!Auth::user()->email && !Auth::user()->phone)
-            <x-alert type="warning" message="Your email and phone number have not been set yet. Please set both." />
+            <x-alert type="warning">
+                Your email and phone number have not been set yet. Please set both.
+            </x-alert>
         @elseif (!Auth::user()->email)
-            <x-alert type="warning" message="Your email has not been set yet. Please set your email." />
+            <x-alert type="warning">
+                Your email has not been set yet. Please set your email.
+            </x-alert>
         @elseif (!Auth::user()->phone)
-            <x-alert type="warning" message="Your phone number has not been set yet. Please set your phone number." />
+            <x-alert type="warning">
+                Your phone number has not been set yet. Please set your phone number.
+            </x-alert>
         @endif
         <div class="grid md:grid-cols-2 gap-3 mb-3">
             <x-input 
@@ -96,7 +102,9 @@
                 />
             </div>
         @else
-            <x-alert type="warning" message="Your password has not been set yet. Please set a new password." />
+            <x-alert type="warning">
+                Your password has not been set yet. Please set a new password.
+            </x-alert>
         @endif
         <div class="grid md:grid-cols-2 gap-3 mb-3">
             <x-input 
@@ -131,7 +139,9 @@
         @csrf
         @method('DELETE')
         <div class="mb-3">
-            <x-alert type="warning" message="Are you sure you want to delete your account? This action cannot be undone." />
+            <x-alert type="warning">
+                Are you sure you want to delete your account? This action cannot be undone.
+            </x-alert>
         </div>
         <div class="grid md:grid-cols-2 gap-3 mb-3">
             <x-input 

@@ -62,7 +62,7 @@ class Rank
 
                 $restaurant->rating = $combinedRating;
                 $restaurant->reviews = $totalReviews;   
-                $restaurant->promotion = $restaurant->ad?->is_active ?? false;
+                $restaurant->promotion = (bool) ($restaurant->ad && $restaurant->ad->is_active && is_null($restaurant->ad->image));
 
                 return $restaurant;
             });

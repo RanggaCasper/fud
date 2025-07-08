@@ -1,52 +1,52 @@
 @extends('layouts.app')
 
-@section('title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
+@section('title', optional($restaurant->metaTag)->meta_title ?? $restaurant->name . ' - ' . config('app.name'))
 
-@section('meta_title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
+@section('meta_title', optional($restaurant->metaTag)->meta_title ?? $restaurant->name . ' - ' . config('app.name'))
 @section('meta_description', optional($restaurant->metaTag)->meta_description ?? 'Discover delicious food near you.')
 @section('meta_keywords', implode(',', optional($restaurant->metaTag)->meta_keywords ?? [$restaurant->name]))
 
-@section('meta_og_title', optional($restaurant->metaTag)->meta_title ?? ($restaurant->name . ' - ' . config('app.name')))
+@section('meta_og_title', optional($restaurant->metaTag)->meta_title ?? $restaurant->name . ' - ' . config('app.name'))
 @section('meta_og_description', optional($restaurant->metaTag)->meta_description ?? 'Discover delicious food near you.')
 @section('meta_og_image', $restaurant->thumbnail)
 @section('meta_og_url', route('restaurant.index', ['slug' => $restaurant->slug]))
 @section('meta_og_type', 'restaurant')
 
 @push('styles')
-<script>
-    gtag('event', 'restaurant_view', {
-        restaurant_id: '{{ $restaurant->id }}',
-        name: '{{ $restaurant->name }}',
-        slug: '{{ $restaurant->slug }}',
-        category: '{{ implode(', ', $restaurant->offerings->take(8)->pluck('name')->toArray()) }}'
-    });
-</script>
+    <script>
+        gtag('event', 'restaurant_view', {
+            restaurant_id: '{{ $restaurant->id }}',
+            name: @json($restaurant->name),
+            slug: @json($restaurant->slug),
+            category: @json($restaurant->offerings->take(8)->pluck('name')->implode(', '))
+        });
+    </script>
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Restaurant",
-  "name": "{{ $restaurant->name }}",
-  "image": "{{ $restaurant->thumbnail }}",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "{{ $restaurant->address }}",
-    "addressCountry": "ID"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": {{ $restaurant->latitude }},
-    "longitude": {{ $restaurant->longitude }}
-  },
-  "telephone": "{{ $restaurant->phone }}",
-  "url": "{{ route('restaurant.index', ['slug' => $restaurant->slug]) }}",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": {{ $restaurant->rating }},
-    "reviewCount": {{ $restaurant->reviews }}
-  },
-  "priceRange": "{{ $restaurant->price_range }}"
-}
-</script>
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "{{ $restaurant->name }}",
+        "image": "{{ $restaurant->thumbnail }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ $restaurant->address }}",
+            "addressCountry": "ID"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": {{ $restaurant->latitude }},
+            "longitude": {{ $restaurant->longitude }}
+        },
+        "telephone": "{{ $restaurant->phone }}",
+        "url": "{{ route('restaurant.index', ['slug' => $restaurant->slug]) }}",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": {{ $restaurant->rating }},
+            "reviewCount": {{ $restaurant->reviews }}
+        },
+        "priceRange": "{{ $restaurant->price_range }}"
+    }
+    </script>
 @endpush
 
 @section('header')

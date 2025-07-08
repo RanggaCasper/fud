@@ -3,16 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Rank;
-use Illuminate\Support\Str;
-use App\Services\SAWService;
 use Illuminate\Http\Request;
 use App\Models\Restaurant\Review;
-use App\Helpers\ResponseFormatter;
-use App\Services\PlaceDataService;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use App\Models\Restaurant\Restaurant;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class HomeController extends Controller
@@ -21,7 +14,8 @@ class HomeController extends Controller
     {
         return view('home', [
             'restaurants' => Rank::getRankedRestaurants()->take(6),
-            'comments' => Review::with('restaurant')
+            'comments' => Review::with(['restaurant', 'attachments'])
+                ->whereHas('attachments')
                 ->latest('id')
                 ->take(6)
                 ->get(),

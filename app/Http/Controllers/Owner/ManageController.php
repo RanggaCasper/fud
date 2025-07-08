@@ -22,7 +22,12 @@ class ManageController extends Controller
             'website' => 'nullable|url|max:255',
             'description' => 'nullable|string|max:1000',
             'address' => 'nullable|string|max:255',
-            'reservation_link' => 'nullable|url|max:255',
+            'reservation_link' => [
+                'nullable',
+                'url',
+                'max:255',
+                'regex:/^https?:\/\/(www\.)?chope\.co/'
+            ],
         ]);
 
         try {

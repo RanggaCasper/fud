@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
+use App\Models\RestaurantAd;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Restaurant\Claim;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ResponseFormatter;
+use App\Models\AdClick;
 use App\Models\Restaurant\Restaurant;
 use RahulHaque\Filepond\Facades\Filepond;
-use Illuminate\Database\Eloquent\Casts\Json;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestaurantController extends Controller
@@ -26,6 +27,37 @@ class RestaurantController extends Controller
             'reviews'
         ])->where('slug', $slug)->firstOrFail();
 
+        $source = $request->query('source');
+
+        if (in_array($source, ['ads-restaurant', 'ads-carousel'])) {
+            $type = $source === 'ads-carousel' ? 'carousel' : 'restaurant';
+
+            $ad = RestaurantAd::with('adsType')->where('restaurant_id', $restaurant->id)
+                ->where('is_active', true)
+                ->where('end_date', '>=', now())
+                ->whereHas('adsType', function ($query) use ($type) {
+                    $query->where('type', $type);
+                })
+                ->first();
+
+            if ($ad) {
+                $ip = $request->ip();
+                $threshold = now()->subSeconds(10);
+
+                $recentClick = AdClick::where('restaurant_ad_id', $ad->id)
+                    ->where('ip_address', $ip)
+                    ->where('created_at', '>=', $threshold)
+                    ->exists();
+
+                if (!$recentClick) {
+                    AdClick::create([
+                        'restaurant_ad_id' => $ad->id,
+                        'ip_address' => $ip,
+                    ]);
+                }
+            }
+        }
+
         $viewed = (array) session()->get('recently_viewed', []);
         $viewed = array_filter($viewed, fn($id) => $id != $restaurant->id);
         array_unshift($viewed, $restaurant->id);
@@ -38,7 +70,7 @@ class RestaurantController extends Controller
     public function claim(Request $request, $slug)
     {
         $restaurant = Restaurant::with('offerings', 'payments', 'diningOptions', 'accessibilities', 'operatingHours', 'reviews')->where('slug', $slug)->firstOrFail();
-        
+
         if ($restaurant->claim) {
             flash()->error('This restaurant has already been claimed and approved.');
             return redirect()->back();

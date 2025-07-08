@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Models\Role;
 use App\Models\User;
 use App\Helpers\Point;
-use Illuminate\Support\Str;
 use App\Models\SocialAccount;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +22,7 @@ class SocialLoginController extends Controller
         $socialUser = Socialite::driver($provider)->user();
 
         if (Auth::check()) {
-            $user = Auth::user();
+            $user = User::find(Auth::id());
 
             $alreadyConnected = SocialAccount::where('user_id', $user->id)
                 ->where('social_provider', $provider)
@@ -43,12 +42,30 @@ class SocialLoginController extends Controller
                 return redirect()->route('settings.index');
             }
 
-            SocialAccount::create([
-                'user_id' => $user->id,
-                'social_provider' => $provider,
-                'social_id' => $socialUser->getId(),
-                'avatar' => $socialUser->getAvatar(),
-            ]);
+            SocialAccount::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'social_provider' => $provider,
+                ],
+                [
+                    'email' => $socialUser->getEmail(),
+                    'social_id' => $socialUser->getId(),
+                    'avatar' => $socialUser->getAvatar(),
+                ]
+            );
+
+            $email = $socialUser->getEmail();
+
+            if (empty($user->email) && $email) {
+                $emailExists = User::where('email', $email)
+                    ->where('id', '!=', $user->id)
+                    ->exists();
+
+                if (!$emailExists) {
+                    $user->email = $email;
+                    $user->save();
+                }
+            }
 
             flash()->success(ucfirst($provider) . ' account connected successfully!');
             return redirect()->route('settings.index');
@@ -61,6 +78,20 @@ class SocialLoginController extends Controller
                 $user = User::find($socialLogin->user_id);
 
                 Auth::login($user);
+
+                $email = $socialUser->getEmail();
+
+                if (empty($user->email) && $email) {
+                    $emailExists = User::where('email', $email)
+                        ->where('id', '!=', $user->id)
+                        ->exists();
+
+                    if (!$emailExists) {
+                        $user->email = $email;
+                        $user->save();
+                    }
+                }
+
                 flash()->success('Welcome back, <strong>' . $user->name . '</strong>! 👋');
                 return redirect()->route('home');
             } else {
@@ -71,17 +102,35 @@ class SocialLoginController extends Controller
                     'role_id' => Role::where('name', 'user')->first()->id,
                 ]);
 
-                SocialAccount::create([
-                    'user_id' => $user->id,
-                    'social_provider' => $provider,
-                    'social_id' => $socialUser->getId(),
-                    'avatar' => $socialUser->getAvatar(),
-                ]);
+                SocialAccount::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'social_provider' => $provider,
+                    ],
+                    [
+                        'email' => $socialUser->getEmail(),
+                        'social_id' => $socialUser->getId(),
+                        'avatar' => $socialUser->getAvatar(),
+                    ]
+                );
+
+                $email = $socialUser->getEmail();
+
+                if (empty($user->email) && $email) {
+                    $emailExists = User::where('email', $email)
+                        ->where('id', '!=', $user->id)
+                        ->exists();
+
+                    if (!$emailExists) {
+                        $user->email = $email;
+                        $user->save();
+                    }
+                }
 
                 Auth::login($user);
 
                 Point::give(User::find(Auth::id()), 'register');
-                
+
                 flash()->success('Account created and logged in with ' . ucfirst($provider));
                 return redirect()->route('home');
             }

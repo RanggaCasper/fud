@@ -21,7 +21,7 @@
 <div data-aos="zoom-in-up" class="rounded-lg shadow-md transition-all {{ $cardClasses }}">
     <div class="p-3 relative rounded-lg">
         <div class="mb-2 relative">
-            <a href="{{ route('restaurant.index', ['slug' => $slug]) }}" class="relative block">
+            <a href="{{ route('restaurant.index', ['slug' => $slug]) . ($isPromotion === true ? '?source=ads-restaurant' : '') }}" class="relative block">
                 <img data-src="{{ $image }}" loading="lazy"
                     class="lazyload h-56 w-full object-cover rounded-lg transition-all {{ $imageClasses }}"
                     alt="{{ $title }}">
@@ -44,7 +44,6 @@
                     </div>
                 @endif
 
-
                 @if ($isHalal)
                     <div class="absolute bottom-2 right-0">
                         <img src="https://taucocapmeong.com/assets/img/logo_halal.png" class="w-12 h-12 object-contain"
@@ -56,7 +55,7 @@
 
         <div class="flex items-start justify-between">
             <div>
-                <a href="{{ route('restaurant.index', ['slug' => $slug]) }}"
+                <a href="{{ route('restaurant.index', ['slug' => $slug]) . ($isPromotion === true ? '?source=ads-restaurant' : '') }}"
                     class="text-lg font-bold mb-2 line-clamp-1 cursor-pointer hover:text-primary {{ $textColor }}">
                     {{ $title }}
                 </a>

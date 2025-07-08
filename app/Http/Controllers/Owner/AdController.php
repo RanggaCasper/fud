@@ -8,14 +8,15 @@ use Illuminate\Support\Str;
 use App\Models\RestaurantAd;
 use Illuminate\Http\Request;
 use App\Services\TripayService;
+use App\Services\TokopayService;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Services\TokopayService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use RahulHaque\Filepond\Facades\Filepond;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdController extends Controller
 {
@@ -92,6 +93,28 @@ class AdController extends Controller
             $runLength = (int) $request->run_length;
 
             $totalCost = $adsType->base_price * $runLength;
+
+            $existingAd = RestaurantAd::where('ads_type_id', $adsType->id)
+                ->where('restaurant_id', $restaurantId)
+                ->where('is_active', true)
+                ->where('end_date', '>=', now())
+                ->first();
+
+            if ($existingAd) {
+                return ResponseFormatter::error('You already have an active ad of this type', code: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $pendingTransaction = Transaction::whereHas('restaurantAd', function ($q) use ($adsType, $restaurantId) {
+                    $q->where('ads_type_id', $adsType->id)
+                    ->where('restaurant_id', $restaurantId);
+                })
+                ->whereNull('paid_at')
+                ->where('updated_at', '>=', now()->subHour())
+                ->first();
+
+            if ($pendingTransaction) {
+                return ResponseFormatter::error('You have a pending unpaid ad of this type. Please complete the payment first.', code: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             if ($request->has('image')) {
                 $path = Filepond::field($request->image)->moveTo('images/ads/' . Str::uuid());

@@ -50,7 +50,9 @@
                         </div>
                     </div>
                     <div id="recently-restaurant-list" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-                        @include('partials.restaurant-recently-viewed', ['restaurants' => $recentlyViewedRestaurants])
+                        @include('partials.restaurant-recently-viewed', [
+                            'restaurants' => $recentlyViewedRestaurants,
+                        ])
                     </div>
                 @endif
 
@@ -89,15 +91,29 @@
                     <span class="text-xs">Real reviews, honest bites. See what people are loving to eat!</span>
                 </div>
             </div>
-            <div class="swiper reviewSwiper">
-                <div class="swiper-wrapper py-3">
+
+            <div class="sm:hidden">
+                <div class="swiper reviewSwiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($comments as $comment)
+                            <div class="swiper-slide">
+                                <x-card.review-card :comment="$comment" />
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden sm:block">
+                <div class="columns-1 sm:columns-2 lg:columns-3 gap-6">
                     @foreach ($comments as $comment)
-                        <div class="swiper-slide">
+                        <div class="break-inside-avoid mb-6">
                             <x-card.review-card :comment="$comment" />
                         </div>
                     @endforeach
                 </div>
             </div>
+
             <div class="flex justify-center mt-4">
                 <a href="{{ route('reviews') }}" class="btn btn-md btn-warning btn-icon">
                     Explore
