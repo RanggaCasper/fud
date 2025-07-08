@@ -9,11 +9,12 @@
 ])
 
 @php
+    $bgColor = $isClosed ? 'bg-gray-100' : 'bg-white';
     $textColor = $isClosed ? 'text-gray-400' : 'text-gray-800';
 @endphp
 
 <a href="{{ route('restaurant.index', ['slug' => $slug]) }}"
-    class="flex bg-white gap-3 items-center hover:bg-gray-100 py-3 ps-3 shadow-md rounded-lg transition-all group">
+    class="flex {{ $bgColor }} gap-3 items-center hover:bg-gray-100 py-3 ps-3 shadow-md rounded-lg transition-all group">
     <div class="relative shrink-0">
         <img src="{{ $image }}" class="w-20 h-20 object-cover rounded-lg" alt="{{ $title }}">
         @if ($isClosed)

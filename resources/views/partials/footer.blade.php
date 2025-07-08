@@ -12,22 +12,19 @@
 
             <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                 <div>
-                    <h2 class="mb-6 text-sm font-semibold uppercase">Do Business With Us</h2>
+                    <h2 class="mb-6 text-sm font-semibold uppercase">Information</h2>
                     <ul class="text-muted text-sm space-y-2">
                         <li>
                             <a href="{{ route('home') }}" class="hover:underline">{{ config('app.name') }}</a>
-                        </li>
-                        <li>
-                            <a href="#" class="hover:underline">Owners</a>
-                        </li>
-                        <li>
-                            <a href="#" class="hover:underline">Access our Content API</a>
                         </li>
                         <li>
                             <a href="https://casperproject.my.id" class="hover:underline">Casper Project</a>
                         </li>
                         <li>
                             <a href="https://stats.uptimerobot.com/lsccdRbvah" target="_blank" class="hover:underline">Status</a>
+                        </li>
+                        <li>
+                            <a href="https://forms.gle/cB7RpSGDX4vCcaNX8" target="_blank" class="hover:underline">Feedback</a>
                         </li>
                     </ul>
                 </div>
