@@ -369,3 +369,7 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
 Route::post('/tripay/callback', \App\Http\Controllers\Callback\TripayCallbackController::class)
     ->name('tripay.callback')
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('/tokopay/callback', \App\Http\Controllers\Callback\TokopayCallbackController::class)
+    ->name('tokopay.callback')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
