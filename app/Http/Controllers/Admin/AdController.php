@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Services\TokopayService;
 use Illuminate\Support\Facades\Blade;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -89,7 +90,7 @@ class AdController extends Controller
         ]);
 
         try {
-            $ad = RestaurantAd::findOrFail($id);
+            $ad = RestaurantAd::with('transaction')->findOrFail($id);
             $ad->approval_status = $request->status;
 
             if ($request->status === 'rejected') {
@@ -97,19 +98,21 @@ class AdController extends Controller
             } elseif ($request->status === 'approved') {
                 $ad->note = null;
 
-                $tripay = new TripayService();
+                $tokopay = new TokopayService();
 
-                if (!$ad->transaction->reference) {
-                    $tripayResponse = $tripay->createOrder(
-                        $ad->transaction->transaction_id,
-                        $ad->adsType->name,
-                        $ad->total_cost
-                    );
+                $tokopayResponse = $tokopay->createOrder(
+                    $ad->transaction->price,
+                    $ad->transaction->transaction_id,
+                );
 
-                    $ad->transaction->update([
-                        'reference' => $tripayResponse['data']['reference'],
-                    ]);
-                }
+                $ad->transaction->update([
+                    'price'      => $ad->transaction->price,
+                    'fee'        => $tokopayResponse['data']['total_bayar'] - $tokopayResponse['data']['total_diterima'],
+                    'total'      => $tokopayResponse['data']['total_bayar'],
+                    'qr_link'    => $tokopayResponse['data']['qr_link'] ?? null,
+                    'reference'  => $tokopayResponse['data']['trx_id'],
+                    'expired_at' => now()->addDays(1),
+                ]);
             } else {
                 $ad->note = null;
             }

@@ -8,7 +8,7 @@
     <x-section.hero-section :videoSource="asset('assets/video/IMG_44891.mp4')" title="Are you Hungry?"
         description="Discover your next favorite meal, whether you're craving a quick snack or a full-course feast."
         scrollToId="#restaurant">
-        {{-- <div class="flex space-x-2">
+        <div class="flex space-x-2">
             <a href="#">
                 <img src="https://lh3.googleusercontent.com/zWYJUppfU-TunHSxKMA6i1LRpv2POWaGCOOcvwR2h1E_R8LZ3RCiMUgbyxJDGFQqePR3G5BA3MdpUw4_BtQ_mefV36WH3tnBrV3ZkuSj=e365-pa-nu-s0"
                     class="w-50" alt="">
@@ -17,7 +17,7 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png"
                     class="w-50" alt="">
             </a>
-        </div> --}}
+        </div>
     </x-section.hero-section>
 @endsection
 
@@ -180,7 +180,7 @@
                             {{ config('app.name') }} is your ultimate restaurant recommendation system, available on
                             multiple platforms to help you find the best places to eat, wherever you are.
                         </p>
-                        {{-- <div class="flex justify-center lg:justify-start space-x-3">
+                        <div class="flex justify-center lg:justify-start space-x-3">
                             <a href="#">
                                 <img src="https://lh3.googleusercontent.com/zWYJUppfU-TunHSxKMA6i1LRpv2POWaGCOOcvwR2h1E_R8LZ3RCiMUgbyxJDGFQqePR3G5BA3MdpUw4_BtQ_mefV36WH3tnBrV3ZkuSj=e365-pa-nu-s0"
                                     class="h-12 md:h-14" alt="Google Play">
@@ -189,7 +189,7 @@
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png"
                                     class="h-12 md:h-14" alt="App Store">
                             </a>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>

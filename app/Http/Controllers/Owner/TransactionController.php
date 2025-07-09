@@ -32,8 +32,11 @@ class TransactionController extends Controller
 
     public function get($reference)
     {
-        $tripayService = new TripayService();
-        $response = $tripayService->getTransaction($reference);
-        return ResponseFormatter::success('Transaction details retrieved successfully', $response);
+        try {
+            $transaction = Transaction::where('reference', $reference)->firstOrFail();
+            return ResponseFormatter::success('Data retrieved successfully', $transaction);
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
     }
 }

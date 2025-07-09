@@ -12,6 +12,7 @@ class Transaction extends Model
     
     protected $casts = [
         'paid_at' => 'datetime',
+        'expired_at' => 'datetime',
     ];
 
     public function restaurantAd()

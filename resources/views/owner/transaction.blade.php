@@ -5,96 +5,39 @@
         <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-3"
             id="restaurant-detail">
             <div class="max-w-screen-sm mx-auto px-4 md:px-0 py-6">
-                <x-card title="Transaction Details">
+                <x-card>
                     <div class="flex flex-col space-y-6">
-                        <div>
-                            @php
-                                $status = $transaction->status;
-
-                                $statusClass = match ($status) {
-                                    'pending' => 'bg-warning/10',
-                                    'paid' => 'bg-success/10',
-                                    'expired' => 'bg-danger/10',
-                                    default => 'bg-gray-100',
-                                };
-
-                                $iconBgClass = match ($status) {
-                                    'pending' => 'bg-warning',
-                                    'paid' => 'bg-success',
-                                    'expired' => 'bg-danger',
-                                    default => 'bg-gray-300',
-                                };
-
-                                $message = match ($status) {
-                                    'pending' => 'Pay your invoice!',
-                                    'paid' => 'Invoice paid successfully.',
-                                    'canceled' => 'Invoice has been canceled.',
-                                    default => 'Invoice status unknown.',
-                                };
-                            @endphp
-
-                            <div class="p-4 md:p-5 flex w-full rounded-xl items-center {{ $statusClass }}">
-                                <div class="p-1 rounded-full mr-3 md:mr-4 {{ $iconBgClass }}">
-                                    <div
-                                        class="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center {{ $iconBgClass }}">
-                                        <i class="ti ti-coins text-white text-lg md:text-xl"></i>
-                                    </div>
+                        <div class="status-box p-4 flex items-center rounded-xl bg-gray-100">
+                            <div class="status-icon-bg p-1 rounded-full mr-3 bg-gray-300">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center status-icon bg-gray-300">
+                                    <i class="ti ti-coins text-white text-lg"></i>
                                 </div>
-                                <div class="text-sm md:text-base">
-                                    <div class="font-semibold text-md">{{ $message }}</div>
-
-                                    @if ($status === 'pending')
-                                        <div class="text-sm">
-                                            Expires in
-                                            <span class="text-custom-secondary font-bold"
-                                                id="invoice-expiry">00:00:00</span>
-                                        </div>
-                                    @elseif ($status === 'paid')
-                                        <div class="text-sm">
-                                            Paid at:
-                                            <span class="text-custom-secondary font-bold">
-                                                {{ $transaction->paid_at ? $transaction->paid_at->format('d M Y H:i') : '-' }}
-                                            </span>
-                                        </div>
-                                    @elseif ($status === 'canceled' || $status === 'cancelled')
-                                        <div class="text-sm">
-                                            Canceled at:
-                                            <span class="text-custom-secondary font-bold">
-                                                {{ $transaction->updated_at->format('d M Y H:i') }}
-                                            </span>
-                                        </div>
-                                    @endif
+                            </div>
+                            <div>
+                                <div class="status-message font-semibold text-md">Invoice status unknown.</div>
+                                <div class="status-detail text-sm mt-1">
+                                    Updated at: <span class="text-custom-secondary font-bold">-</span>
                                 </div>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="flex flex-col">
-                                <h5 class="text-sm font-semibold">TRX ID</h5>
-                                <p class="text-sm">{{ $transaction->transaction_id }}</p>
+                                <h5 class="text-sm font-semibold">Trx Id</h5>
+                                <p class="text-sm" id="trx-id">N/A</p>
                             </div>
                             <div class="flex flex-col">
                                 <h5 class="text-sm font-semibold">Created At</h5>
-                                <p class="text-sm">{{ $transaction->created_at }}</p>
+                                <p class="text-sm" id="created-at">N/A</p>
                             </div>
                             <div class="flex flex-col">
                                 <h5 class="text-sm font-semibold">Status</h5>
-                                @if ($transaction->status === 'pending')
-                                    <div class="inline">
-                                        <x-badge color="warning">{{ ucfirst($transaction->status) }}</x-badge>
-                                    </div>
-                                @elseif ($transaction->status === 'paid')
-                                    <div class="inline">
-                                        <x-badge color="success">{{ ucfirst($transaction->status) }}</x-badge>
-                                    </div>
-                                @elseif ($transaction->status === 'canceled')
-                                    <div class="inline">
-                                        <x-badge color="danger">{{ ucfirst($transaction->status) }}</x-badge>
-                                    </div>
-                                @endif
+                                <div class="inline">
+                                    <x-badge><span class="text-xs" id="status">N/A</span></x-badge>
+                                </div>
                             </div>
                             <div class="flex flex-col">
-                                <h5 class="text-sm font-semibold">PAID AT</h5>
-                                <span class="text-sm">{{ $transaction->paid_at ?? 'Not Paid' }}</span>
+                                <h5 class="text-sm font-semibold">Paid At</h5>
+                                <span class="text-sm" id="paid-at">N/A</span>
                             </div>
                         </div>
                         <div>
@@ -117,34 +60,71 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody id="order-items-body" class="divide-y divide-gray-200 bg-white"></tbody>
+                                        @php
+                                            $detail = json_decode($transaction->order_details, true);
+                                        @endphp
+                                        <tbody class="divide-y divide-gray-200 bg-white">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $detail['item'] ?? '-' }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $detail['amount'] ?? 0 }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    Rp {{ number_format($detail['price'] ?? 0, 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-end text-gray-700 font-medium">
+                                                    Fee
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    Rp {{ number_format($transaction->fee, 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="2"
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-end font-semibold text-gray-900">
+                                                    Total
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                                    Rp {{ number_format($transaction->total, 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div></div>
                         </div>
-                        @if ($transaction->status === 'pending')
-                            <div>
-                                <h5 class="text-sm font-semibold">Payment QR Code</h5>
-                                <p class="text-sm text-gray-600">
-                                    Scan this QR Code to pay (Click image to zoom in)
-                                </p>
-                                <div id="qr-container" class="flex">
-                                    <img alt="QR Code" id="qris-qr" class="size-48 bg-gray-100 rounded-lg cursor-pointer"
-                                        src="#">
-                                </div>
+                        <div class="hidden" id="payment-details">
+                            <h5 class="text-sm font-semibold">Payment QR Code</h5>
+                            <p class="text-sm text-gray-600">
+                                Scan this QR Code to pay (Click image to zoom in)
+                            </p>
+                            <div id="qr-container" class="flex">
+                                <img alt="QR Code" id="qris-qr" class="size-48 bg-gray-100 rounded-lg cursor-pointer"
+                                    src="{{ $transaction->qr_link }}">
                             </div>
-                        @endif
+                        </div>
                         @php
                             $previousUrl = url()->previous();
                             $currentUrl = url()->current();
                             $backUrl = $previousUrl !== $currentUrl ? $previousUrl : route('owner.ads.index');
                         @endphp
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+                            <x-button id="check-status" color="success" class="w-full">
+                                Check Status
+                            </x-button>
 
-                        <a class="btn btn-primary btn-md w-full btn-icon" href="{{ $backUrl }}">
-                            <i class="ti ti-arrow-left"></i>
-                            Back to Ads
-                        </a>
+                            <a href="{{ $backUrl }}"
+                                class="btn btn-primary btn-md w-full flex items-center justify-center">
+                                <i class="ti ti-arrow-left mr-2"></i>
+                                Back to Ads
+                            </a>
+                        </div>
                     </div>
                 </x-card>
             </div>
@@ -156,76 +136,163 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
     <script>
-        $.ajax({
-            url: "{{ route('owner.transaction.get', ['reference' => $transaction->reference]) }}",
-            method: "GET",
-            success: function(response) {
-                let orderHtml = '';
-                response.data.order_items.forEach(item => {
-                    orderHtml += `
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${item.quantity}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Rp ${formatRupiah(item.price)}</td>
-                    </tr>
-                `;
-                });
+        function fetchData() {
+            $.ajax({
+                url: "{{ route('owner.transaction.get', ['reference' => $transaction->reference]) }}",
+                method: "GET",
+                success: function(response) {
+                    $('#trx-id').text(response.data.transaction_id);
+                    $('#qris-qr').attr('src', response.data.qr_link);
 
-                orderHtml += `
-                    <tr class="bg-gray-50 font-semibold">
-                        <td colspan="2" class="px-6 py-4 text-sm text-gray-700 text-right">Payment Fee</td>
-                        <td class="px-6 py-4 text-sm text-gray-800">Rp ${formatRupiah(response.data.fee_customer)}</td>
-                    </tr>
-                `;
+                    function formatDate(dateStr) {
+                        if (!dateStr) return 'Not Paid';
 
-                orderHtml += `
-                    <tr class="bg-gray-50 font-semibold">
-                        <td colspan="2" class="px-6 py-4 text-sm text-gray-700 text-right">Total</td>
-                        <td class="px-6 py-4 text-sm text-gray-800">Rp ${formatRupiah(response.data.amount)}</td>
-                    </tr>
-                `;
+                        const date = new Date(dateStr);
+                        const day = String(date.getDate()).padStart(2, '0');
 
-                $('#order-items-body').html(orderHtml);
+                        const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep",
+                            "Okt",
+                            "Nov", "Des"
+                        ];
+                        const month = monthNames[date.getMonth()];
 
-                $('#qris-qr').attr('src', response.data.qr_url);
+                        const year = date.getFullYear();
+                        const hours = String(date.getHours()).padStart(2, '0');
+                        const minutes = String(date.getMinutes()).padStart(2, '0');
 
-                const expiredTime = response.data.expired_time;
-                const $expiryElement = $('#invoice-expiry');
-
-                const timer = setInterval(function() {
-                    const now = Math.floor(Date.now() / 1000);
-                    const remaining = expiredTime - now;
-
-                    if (remaining <= 0) {
-                        clearInterval(timer);
-                        $expiryElement.text('Expired').addClass('text-red-600');
-                        return;
+                        return `${day} ${month} ${year} ${hours}:${minutes}`;
                     }
 
-                    const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
-                    const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
-                    const s = String(remaining % 60).padStart(2, '0');
+                    $('#paid-at').text(formatDate(response.data.paid_at));
+                    $('#created-at').text(formatDate(response.data.created_at));
 
-                    $expiryElement.text(`${h}:${m}:${s}`);
-                }, 1000);
+                    // Badge Status Kecil
+                    const rawStatus = response.data.status || 'N/A';
 
-                if (window.qrViewer) {
-                    window.qrViewer.update();
-                } else {
-                    window.qrViewer = new Viewer(document.getElementById('qr-container'), {
-                        toolbar: false,
-                        navbar: false,
-                        title: false
-                    });
+                    if (rawStatus === 'pending') {
+                        $('#payment-details').removeClass('hidden');
+                    } else {
+                        $('#payment-details').addClass('hidden');
+                    }
+
+                    const status = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1).toLowerCase();
+                    const $wrapper = $('#status').text(status).parent();
+
+                    const badgeClasses = {
+                        paid: ['bg-success', 'text-white'],
+                        pending: ['bg-warning', 'text-white'],
+                        canceled: ['bg-danger', 'text-white'],
+                    };
+
+                    const preserved = $wrapper
+                        .attr('class')
+                        .split(/\s+/)
+                        .filter(cls => !cls.startsWith('bg-') && (!cls.startsWith('text-') || cls ===
+                            'text-xs'));
+
+                    $wrapper.attr('class', [...preserved, ...(badgeClasses[status.toLowerCase()] || [
+                        'bg-gray-100',
+                        'text-gray-800'
+                    ])].join(' '));
+
+                    // Status Box Besar
+                    const statusBoxInfo = {
+                        pending: {
+                            bg: 'bg-yellow-100',
+                            iconBg: 'bg-yellow-500',
+                            message: 'Pay your invoice!',
+                            label: 'Expires in',
+                            value: '',
+                        },
+                        paid: {
+                            bg: 'bg-green-100',
+                            iconBg: 'bg-green-500',
+                            message: 'Invoice paid successfully.',
+                            label: 'Paid at:',
+                            value: formatDate(response.data.paid_at),
+                        },
+                        canceled: {
+                            bg: 'bg-red-100',
+                            iconBg: 'bg-red-500',
+                            message: 'Invoice has been canceled.',
+                            label: 'Updated at:',
+                            value: formatDate(response.data.updated_at),
+                        },
+                    };
+
+                    const boxData = statusBoxInfo[rawStatus.toLowerCase()] || {
+                        bg: 'bg-gray-100',
+                        iconBg: 'bg-gray-300',
+                        message: 'Invoice status unknown.',
+                        label: '',
+                        value: '',
+                    };
+
+                    const $box = $('.status-box');
+                    $box.removeClass((_, cls) => cls.match(/bg-\S+/g)?.join(' ') || '').addClass(boxData.bg);
+                    $box.find('.status-icon-bg').removeClass((_, cls) => cls.match(/bg-\S+/g)?.join(' ') || '')
+                        .addClass(boxData.iconBg);
+                    $box.find('.status-icon').removeClass((_, cls) => cls.match(/bg-\S+/g)?.join(' ') || '')
+                        .addClass(boxData.iconBg);
+                    $box.find('.status-message').text(boxData.message);
+
+                    if (boxData.label) {
+                        $box.find('.status-detail').html(
+                            `${boxData.label} <span class="text-custom-secondary font-bold">${boxData.value}</span>`
+                        );
+                    } else {
+                        $box.find('.status-detail').remove();
+                    }
+
+                    // Timer expired (jika pending)
+                    if (rawStatus.toLowerCase() === 'pending') {
+                        const expiredTime = Math.floor(new Date(response.data.expired_at).getTime() / 1000);
+                        const $expiryElement = $('#invoice-expiry');
+                        const $statusBoxTime = $('.status-box .status-detail span');
+
+                        if (window.invoiceTimer) clearInterval(window.invoiceTimer);
+
+                        window.invoiceTimer = setInterval(function() {
+                            const now = Math.floor(Date.now() / 1000);
+                            const remaining = expiredTime - now;
+
+                            if (remaining <= 0) {
+                                clearInterval(window.invoiceTimer);
+                                $expiryElement.text('Expired').addClass('text-red-600');
+                                $statusBoxTime.text('Expired').addClass('text-red-600');
+                                return;
+                            }
+
+                            const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
+                            const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+                            const s = String(remaining % 60).padStart(2, '0');
+
+                            const formatted = `${h}:${m}:${s}`;
+                            $expiryElement.text(formatted);
+                            $statusBoxTime.text(formatted);
+                        }, 1000);
+                    }
+
+                    // Viewer QR
+                    if (window.qrViewer) {
+                        window.qrViewer.update();
+                    } else {
+                        window.qrViewer = new Viewer(document.getElementById('qr-container'), {
+                            toolbar: false,
+                            navbar: false,
+                            title: false
+                        });
+                    }
                 }
-            },
-            error: function(error) {
-                console.error("Error fetching transaction details:", error);
-            }
-        });
-
-        function formatRupiah(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            });
         }
+
+        $(document).ready(function() {
+            fetchData();
+
+            $('#check-status').on('click', function() {
+                fetchData();
+            });
+        });
     </script>
 @endpush

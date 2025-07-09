@@ -105,9 +105,9 @@ class AdController extends Controller
             }
 
             $pendingTransaction = Transaction::whereHas('restaurantAd', function ($q) use ($adsType, $restaurantId) {
-                    $q->where('ads_type_id', $adsType->id)
+                $q->where('ads_type_id', $adsType->id)
                     ->where('restaurant_id', $restaurantId);
-                })
+            })
                 ->whereNull('paid_at')
                 ->where('updated_at', '>=', now()->subHour())
                 ->first();
@@ -129,22 +129,40 @@ class AdController extends Controller
                 'restaurant_id'   => $restaurantId,
                 'image'           => $request->image ?? null,
                 'total_cost'      => $totalCost,
-                'run_length'     => $runLength,
+                'run_length'      => $runLength,
                 'approval_status' => $approvalStatus,
             ]);
 
             $transaction = Transaction::create([
                 'restaurant_ad_id' => $ad->id,
                 'transaction_id'   => 'F-' . Str::random(8),
+                'price'            => $totalCost,
+                'order_details'    => json_encode([
+                    'item'   => $ad->adsType->name,
+                    'amount' => $runLength,
+                    'price'  => $totalCost,
+                ]),
             ]);
 
             if ($approvalStatus === 'approved') {
-                $tripay = new TripayService();
+                $tokopay = new TokopayService();
 
-                $tripayResponse = $tripay->createOrder($transaction->transaction_id, $adsType->name, $totalCost);
+                $tokopayResponse = $tokopay->createOrder($totalCost, $transaction->transaction_id);
+
+                $tokopayData = $tokopayResponse['data'] ?? [];       
 
                 $transaction->update([
-                    'reference'   => $tripayResponse['data']['reference'],
+                    'price'      => $totalCost,
+                    'fee'        => $tokopayResponse['data']['total_bayar'] - $tokopayResponse['data']['total_diterima'],
+                    'total'      => $tokopayResponse['data']['total_bayar'],
+                    'order_details' => json_encode([
+                        'item'   => $ad->adsType->name,
+                        'amount' => $runLength,
+                        'price'  => $totalCost,
+                    ]),
+                    'qr_link'    => $tokopayData['qr_link'] ?? null,
+                    'reference'  => $tokopayData['trx_id'] ?? null,
+                    'expired_at' => now()->addDays(1),
                 ]);
 
                 return ResponseFormatter::redirected('Ad created successfully', route('owner.transaction.index', [
