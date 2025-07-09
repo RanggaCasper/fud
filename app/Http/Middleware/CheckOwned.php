@@ -18,8 +18,13 @@ class CheckOwned
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (!Auth::check()) {
+            return redirect()->route('auth.login.index');
+        }
+
         if (!Auth::user()->owned) {
-            return abort(401);
+            flash('error', 'You do not own any restaurant. Please claim a restaurant first.');
+            return redirect()->route('home');
         }
 
         return $next($request);
