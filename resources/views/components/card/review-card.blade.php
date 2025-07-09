@@ -2,6 +2,7 @@
 
 @php
     $commentId = $comment->id;
+    $dropdownId = $comment->id . '-' . uniqid();
     $user = $comment->user;
     $userName = $user->name ?? 'User';
     $userImage = $user->avatar ?? null;
@@ -77,7 +78,7 @@
             <span class="like-count" data-like-id="{{ $commentId }}">{{ $comment->likes->count() }}</span>
         </div>
         <div>
-            <button data-dropdown-toggle="dropdownReview{{ $commentId }}" data-dropdown-placement="bottom-end"
+            <button data-dropdown-toggle="dropdownReview{{ $dropdownId }}" data-dropdown-placement="bottom-end"
                 class="hover:rounded-full hover:bg-gray-200 hover:text-primary py-0.5 px-1.5">
                 <i class="ti ti-dots-vertical hover:text-primary text-2xl"></i>
             </button>
@@ -85,7 +86,7 @@
     </div>
 </div>
 
-<div id="dropdownReview{{ $commentId }}"
+<div id="dropdownReview{{ $dropdownId }}"
     class="z-10 hidden bg-secondary-background divide-y divide-gray-100 rounded-lg shadow-sm w-36">
     <ul class="py-2 text-sm text-black" aria-labelledby="dropdownReviewButton">
         @if ($comment->user_id === Auth::id())
@@ -190,7 +191,6 @@
         </form>
     </x-modal>
     @push('scripts')
-
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
         <script>
