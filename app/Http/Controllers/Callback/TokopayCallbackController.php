@@ -68,6 +68,13 @@ class TokopayCallbackController extends Controller
                         'paid_at' => null,
                     ]);
 
+                    if ($transaction->restaurantAd) {
+                        $transaction->restaurantAd->update([
+                            'approval_status' => 'rejected',
+                            'note' => 'Transaction canceled by System',
+                        ]);
+                    }
+
                     return Response::json(['status' => true]);
                 } else {
                     return Response::json(['error' => "Invalid Signature"]);
