@@ -53,7 +53,7 @@ class AdController extends Controller
                         // Update ad
                         $ad->update([
                             'approval_status' => 'rejected',
-                            'note' => 'Transaction canceled by system',
+                            'note' => 'Transaction expired',
                         ]);
                     } catch (\Throwable $e) {
                     }
@@ -112,13 +112,16 @@ class AdController extends Controller
         $request->validate([
             'ad_type'    => 'required|exists:ads_types,id',
             'run_length' => 'required|integer|min:1',
-            'image' => Rule::filepond([
+            'image' => [
                 Rule::requiredIf(function () use ($request) {
                     $adType = \App\Models\AdsType::find($request->ad_type);
-                    return $adType && str_contains(strtolower($adType->type), 'carousel');
+                    return $adType && $adType->type === 'carousel';
                 }),
-                'image',
-            ]),
+                Rule::filepond([
+                    'image',
+                    'max:5000', // 5 MB
+                ]),
+            ],
         ]);
 
         try {

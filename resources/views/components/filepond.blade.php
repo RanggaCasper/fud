@@ -8,7 +8,7 @@
     'maxFileSizeAudio' => 20
 ])
 
-<div>
+<div class="relative">
     <label class="block mb-1 text-sm font-semibold text-muted" @if($id) for="{{ $id }}" @endif>
         {{ $label }}
         @if ($required) <span class="!text-danger">*</span> @endif
