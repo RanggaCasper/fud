@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', config('app.name') . ' - ' . $transaction->transaction_id)
+
 @section('content')
     <div class="mt-[72px] print:mt-0">
         <section
