@@ -42,61 +42,59 @@
                         </div>
                         <div>
                             <div class="overflow-x-auto mt-4 rounded-lg shadow">
-                                <div class="overflow-x-auto mt-4 rounded-lg shadow">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-100">
-                                            <tr>
-                                                <th
-                                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                    Item
-                                                </th>
-                                                <th
-                                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                    Amount
-                                                </th>
-                                                <th
-                                                    class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                                    Price
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        @php
-                                            $detail = json_decode($transaction->order_details, true);
-                                        @endphp
-                                        <tbody class="divide-y divide-gray-200 bg-white">
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {{ $detail['item'] ?? '-' }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {{ $detail['amount'] ?? 0 }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    Rp {{ number_format($detail['price'] ?? 0, 0, ',', '.') }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2"
-                                                    class="px-6 py-4 whitespace-nowrap text-sm text-end text-gray-700 font-medium">
-                                                    Fee
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    Rp {{ number_format($transaction->fee, 0, ',', '.') }}
-                                                </td>
-                                            </tr>
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                Item
+                                            </th>
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                Amount
+                                            </th>
+                                            <th
+                                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                Price
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    @php
+                                        $detail = json_decode($transaction->order_details, true);
+                                    @endphp
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $detail['item'] ?? '-' }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {{ $detail['amount'] ?? 0 }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                Rp {{ number_format($detail['price'] ?? 0, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"
+                                                class="px-6 py-4 whitespace-nowrap text-sm text-end text-gray-700 font-medium">
+                                                Fee
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                Rp {{ number_format($transaction->fee, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
 
-                                            <tr>
-                                                <td colspan="2"
-                                                    class="px-6 py-4 whitespace-nowrap text-sm text-end font-semibold text-gray-900">
-                                                    Total
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                                                    Rp {{ number_format($transaction->total, 0, ',', '.') }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        <tr>
+                                            <td colspan="2"
+                                                class="px-6 py-4 whitespace-nowrap text-sm text-end font-semibold text-gray-900">
+                                                Total
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                                Rp {{ number_format($transaction->total, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="hidden" id="payment-details">
