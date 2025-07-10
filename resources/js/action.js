@@ -43,6 +43,8 @@ $(document).on("submit", "form", function (e) {
                 });
             }
 
+            $('.filepond--action-revert-item-processing')?.click();
+
             if ($(e.target).data("reset") !== false) {
                 $(e.target).trigger("reset");
             }
