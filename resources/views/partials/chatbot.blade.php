@@ -1,4 +1,4 @@
-<div id="chatbot-container" class="fixed bottom-4 right-4 z-40 flex flex-col items-end space-y-3">
+<div id="chatbot-container" class="fixed bottom-4 right-4 z-40 flex flex-col items-end space-y-3 print:hidden">
     <div id="chatbot-box"
         class="hidden flex flex-col bg-white border border-gray-300 rounded-xl shadow-2xl w-80 h-[550px] overflow-hidden transition-all duration-300">
 

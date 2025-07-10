@@ -1,4 +1,4 @@
-<nav class="bg-white px-4 md:px-2 border-b border-gray-200 fixed top-0 left-0 right-0 z-30">
+<nav class="bg-white px-4 md:px-2 border-b border-gray-200 fixed top-0 left-0 right-0 z-30 print:hidden">
     <div class="py-4 max-w-screen-xl mx-auto flex items-center justify-between space-x-4">
 
         <!-- Logo + Search -->

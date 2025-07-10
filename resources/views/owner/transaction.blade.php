@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mt-[72px]">
-        <section class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] py-3"
+    <div class="mt-[72px] print:mt-0">
+        <section
+            class="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] print:min-h-screen py-3"
             id="restaurant-detail">
             <div class="max-w-screen-sm mx-auto px-4 md:px-0 py-6">
                 <x-card>
+                    <div id="print-watermark"
+                        class="hidden print:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[45deg] text-9xl font-bold text-gray-300 opacity-30 pointer-events-none z-50 select-none">
+                        {{ config('app.name') }}
+                    </div>
+
                     <div class="flex flex-col space-y-6">
                         <div class="status-box p-4 flex items-center rounded-xl bg-gray-100">
                             <div class="status-icon-bg p-1 rounded-full mr-3 bg-gray-300">
@@ -112,9 +118,10 @@
                             $currentUrl = url()->current();
                             $backUrl = $previousUrl !== $currentUrl ? $previousUrl : route('owner.ads.index');
                         @endphp
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
-                            <x-button id="check-status" color="success" class="w-full">
-                                Check Status
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 print:hidden">
+                            <x-button onclick="window.print()" color="success" class="w-full btn-icon">
+                                <i class="ti ti-printer text-lg"></i>
+                                Print
                             </x-button>
 
                             <a href="{{ $backUrl }}"
@@ -143,7 +150,7 @@
                     $('#qris-qr').attr('src', response.data.qr_link);
 
                     function formatDate(dateStr) {
-                        if (!dateStr) return 'Not Paid';
+                        if (!dateStr) return 'Unpaid';
 
                         const date = new Date(dateStr);
                         const day = String(date.getDate()).padStart(2, '0');
@@ -287,10 +294,7 @@
 
         $(document).ready(function() {
             fetchData();
-
-            $('#check-status').on('click', function() {
-                fetchData();
-            });
+            setInterval(fetchData, 15000);
         });
     </script>
 @endpush
