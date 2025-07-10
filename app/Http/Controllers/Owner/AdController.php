@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\RestaurantAd;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Services\TripayService;
 use App\Services\TokopayService;
 use Yajra\DataTables\DataTables;
@@ -31,6 +32,32 @@ class AdController extends Controller
             $data = RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
                 ->with(['adsType', 'restaurant', 'transaction'])
                 ->get();
+
+            // Update expired ads
+            RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
+                ->whereHas('transaction', function ($query) {
+                    $query->whereNotNull('expired_at')
+                        ->where('expired_at', '<', Carbon::now());
+                })
+                ->with('transaction')
+                ->get()
+                ->each(function ($ad) {
+                    try {
+                        // Update transaction
+                        if ($ad->transaction) {
+                            $ad->transaction->update([
+                                'status' => 'canceled',
+                            ]);
+                        }
+
+                        // Update ad
+                        $ad->update([
+                            'approval_status' => 'rejected',
+                            'note' => 'Transaction canceled by system',
+                        ]);
+                    } catch (\Throwable $e) {
+                    }
+                });
 
             return DataTables::of($data)
                 ->addColumn('no', function ($row) {
@@ -149,7 +176,7 @@ class AdController extends Controller
 
                 $tokopayResponse = $tokopay->createOrder($totalCost, $transaction->transaction_id);
 
-                $tokopayData = $tokopayResponse['data'] ?? [];       
+                $tokopayData = $tokopayResponse['data'] ?? [];
 
                 $transaction->update([
                     'price'      => $totalCost,

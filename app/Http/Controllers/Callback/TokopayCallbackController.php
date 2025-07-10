@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Callback;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 
@@ -13,6 +15,8 @@ class TokopayCallbackController extends Controller
     {
         $json = $request->getContent();
         $data = json_decode($json, true); // <- fix: jadikan hasilnya array
+        
+        Log::info('Tokopay Callback Data: ' . $json);
 
         if (isset($data['status'], $data['reff_id'], $data['signature'])) {
             $status = $data['status'];
