@@ -35,8 +35,9 @@ class AdController extends Controller
 
             // Update expired ads
             RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
+                ->where('approval_status', 'pending')
                 ->whereHas('transaction', function ($query) {
-                    $query->whereNotNull('expired_at')
+                    $query->where('status', 'pending')
                         ->where('expired_at', '<', Carbon::now());
                 })
                 ->with('transaction')
