@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\RestaurantAd;
 use Illuminate\Http\Request;
-use App\Services\TripayService;
-use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -82,11 +80,6 @@ class AdController extends Controller
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
             'note' => 'required_if:status,rejected',
-            'logo_url' => Rule::filepond([
-                'nullable',
-                'image',
-                'max:2000'
-            ]),
         ]);
 
         try {

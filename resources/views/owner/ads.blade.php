@@ -23,8 +23,8 @@
             </div>
 
             <div class="hidden mb-3">
-                <x-filepond class="filepond-image" label="Carousel Image" name="image" id="image"
-                    :required="false" />
+                <x-filepond class="filepond-image" label="Carousel Image" name="image" id="image" />
+                <span class="text-xs text-gray-500 italic">* Recommended image ratio: 37:10 for optimal display</span>
             </div>
 
             <div class="mb-3">

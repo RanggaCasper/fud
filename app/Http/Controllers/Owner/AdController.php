@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\RestaurantAd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Services\TripayService;
+use Illuminate\Validation\Rule;
 use App\Services\TokopayService;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\JsonResponse;
@@ -112,6 +112,13 @@ class AdController extends Controller
         $request->validate([
             'ad_type'    => 'required|exists:ads_types,id',
             'run_length' => 'required|integer|min:1',
+            'image' => Rule::filepond([
+                Rule::requiredIf(function () use ($request) {
+                    $adType = \App\Models\AdsType::find($request->ad_type);
+                    return $adType && str_contains(strtolower($adType->type), 'carousel');
+                }),
+                'image',
+            ]),
         ]);
 
         try {
@@ -124,7 +131,7 @@ class AdController extends Controller
             $existingAd = RestaurantAd::where('ads_type_id', $adsType->id)
                 ->where('restaurant_id', $restaurantId)
                 ->where('is_active', true)
-                ->where('end_date', '>=', now())
+                ->where('end_date', '>=', Carbon::now())
                 ->first();
 
             if ($existingAd) {
@@ -136,7 +143,7 @@ class AdController extends Controller
                     ->where('restaurant_id', $restaurantId);
             })
                 ->whereNull('paid_at')
-                ->where('updated_at', '>=', now()->subHour())
+                ->where('created_at', '>=', Carbon::now()->subHour())
                 ->first();
 
             if ($pendingTransaction) {
