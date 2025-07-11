@@ -101,7 +101,8 @@ class AdController extends Controller
 
             $pendingTransaction = Transaction::whereHas('restaurantAd', function ($q) use ($adsType, $restaurantId) {
                 $q->where('ads_type_id', $adsType->id)
-                    ->where('restaurant_id', $restaurantId);
+                ->where('restaurant_id', $restaurantId)
+                ->where('approval_status', 'pending');
             })
                 ->whereNull('paid_at')
                 ->where('created_at', '>=', Carbon::now()->subHour())
