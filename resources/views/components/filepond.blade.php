@@ -4,6 +4,7 @@
     'id' => 'filepond',
     'required' => true,
     'name',
+    'maxFiles' => 3,
     'maxFileSizeImage' => 5,
     'maxFileSizeAudio' => 20
 ])
@@ -70,7 +71,7 @@
                     allowFileSizeValidation: true,
                     maxFileSize: {{ 1000000 * $maxFileSizeImage }},
                     labelMaxFileSizeExceed: 'Maximum file size is {filesize}',
-                    maxFiles: 3,
+                    maxFiles: {{ $maxFiles }},
                     onaddfilestart: () => {
                         $('button[type="submit"]').prop('disabled', true);
                     },
