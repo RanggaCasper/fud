@@ -183,6 +183,7 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
         Route::get('/ads', 'index')->name('ads.index');
         Route::get('/ads/get', 'get')->name('ads.get');
         Route::post('/ads', 'store')->name('ads.store');
+        Route::post('/cancel/{reference}', 'cancel')->name('ads.cancel');
     });
 
     Route::prefix('transaction')->as('transaction.')->group(function () {

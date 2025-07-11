@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\TripayService;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\RestaurantAd;
 
 class TransactionController extends Controller
 {
@@ -19,11 +20,14 @@ class TransactionController extends Controller
 
         $transaction = Transaction::with('restaurantAd')->where('transaction_id', $trx_id)->first();
 
-        if($transaction->restaurantAd->approval_status === 'pending') {
+        if ($transaction->restaurantAd->approval_status === 'pending') {
             flash()->warning('This transaction is still pending approval');
             return redirect()->back();
-        } else if($transaction->restaurantAd->approval_status === 'rejected') {
+        } else if ($transaction->restaurantAd->approval_status === 'rejected') {
             flash()->error($transaction->restaurantAd->note);
+            return redirect()->back();
+        } else if (is_null($transaction->reference)) {
+            flash()->error('This transaction is not yet processed');
             return redirect()->back();
         }
 

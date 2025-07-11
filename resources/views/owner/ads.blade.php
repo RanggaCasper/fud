@@ -41,72 +41,30 @@
     </x-card>
 
     <x-card title="Ads List">
-        <table id="datatables" class="display">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Trx ID</th>
-                    <th>Price</th>
-                    <th>Type</th>
-                    <th>End Date</th>
-                    <th>Approval</th>
-                    <th>Paid At</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div id="ads-list">
 
-            </tbody>
-        </table>
+        </div>
     </x-card>
 @endsection
 
 @push('scripts')
     <script>
-        $('#datatables').DataTable({
-            processing: true,
-            serverSide: false,
-            scrollX: true,
-            ajax: "{{ route('owner.ads.get') }}",
-            columns: [{
-                    data: 'no',
-                    name: 'no'
+        function fetchData() {
+            $.ajax({
+                url: "{{ route('owner.ads.get') }}",
+                method: "GET",
+                success: function(response) {
+                    $('#ads-list').html(response.data.html);
                 },
-                {
-                    data: 'transaction_id',
-                    name: 'transaction_id',
-                },
-                {
-                    data: 'total_cost',
-                    name: 'total_cost',
-                    render: function(data, type, row) {
-                        return 'Rp. ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                    }
-                },
-                {
-                    data: 'ads_type.name',
-                    name: 'ads_type.name',
-                },
-                {
-                    data: 'end_date',
-                    name: 'end_date',
-                },
-                {
-                    data: 'approval_status',
-                    name: 'approval_status',
-                },
-                {
-                    data: 'paid_at',
-                    name: 'paid_at',
-                },
-                {
-                    data: 'created_at',
-                    name: 'created_at',
-                },
-            ]
-        });
+                error: function(xhr) {
+                    console.error('Error fetching ads:', xhr);
+                }
+            });
+        }
 
         $(document).ready(function() {
+            fetchData();
+
             const $adTypeSelect = $('#ad_type');
             const $runLengthInput = $('#run_length');
             const $priceInput = $('#price');

@@ -29,12 +29,10 @@ class AdController extends Controller
     public function get(): JsonResponse
     {
         try {
-            $data = RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
-                ->with(['adsType', 'restaurant', 'transaction'])
-                ->get();
+            $restaurantId = Auth::user()->owned->restaurant->id;
 
-            // Update expired ads
-            RestaurantAd::where('restaurant_id', Auth::user()->owned->restaurant->id)
+            // Update expired ads (sama seperti sebelumnya)
+            RestaurantAd::where('restaurant_id', $restaurantId)
                 ->where('approval_status', 'pending')
                 ->whereHas('transaction', function ($query) {
                     $query->where('status', 'pending')
@@ -43,66 +41,25 @@ class AdController extends Controller
                 ->with('transaction')
                 ->get()
                 ->each(function ($ad) {
-                    try {
-                        // Update transaction
-                        if ($ad->transaction) {
-                            $ad->transaction->update([
-                                'status' => 'canceled',
-                            ]);
-                        }
-
-                        // Update ad
-                        $ad->update([
-                            'approval_status' => 'rejected',
-                            'note' => 'Transaction expired',
-                        ]);
-                    } catch (\Throwable $e) {
+                    if ($ad->transaction) {
+                        $ad->transaction->update(['status' => 'canceled']);
                     }
+                    $ad->update([
+                        'approval_status' => 'rejected',
+                        'note' => 'Transaction expired',
+                    ]);
                 });
 
-            return DataTables::of($data)
-                ->addColumn('no', function ($row) {
-                    static $counter = 0;
-                    return ++$counter;
-                })
-                ->addColumn('transaction_id', function ($row) {
-                    return Blade::render(<<<'BLADE'
-                            <a href="{{ route('owner.transaction.index', ['trx_id' => $row->transaction->transaction_id]) }}" class="text-primary font-semibold hover:underline">
-                                {{ $row->transaction->transaction_id }}
-                            </a>
-                        BLADE, [
-                        'row' => $row,
-                    ]);
-                })
-                ->addColumn('approval_status', function ($row) {
-                    $status = $row->approval_status;
+            $ads = RestaurantAd::where('restaurant_id', $restaurantId)
+                ->with(['adsType', 'restaurant', 'transaction'])
+                ->latest()
+                ->get();
 
-                    $color = match ($status) {
-                        'pending' => 'warning',
-                        'approved' => 'success',
-                        default => 'danger',
-                    };
+            $html = view('partials.ads-list', compact('ads'))->render();
 
-                    return Blade::render(<<<'BLADE'
-                            <x-badge :color="$color" class="capitalize">
-                                {{ ucfirst($status) }}
-                            </x-badge>
-                        BLADE, [
-                        'status' => $status,
-                        'color' => $color,
-                    ]);
-                })
-                ->addColumn('end_date', function ($row) {
-                    return $row->end_date ? $row->end_date->format('Y-m-d H:i:s') : 'N/A';
-                })
-                ->addColumn('paid_at', function ($row) {
-                    return $row->transaction->paid_at ? $row->transaction->paid_at->format('Y-m-d H:i:s') : 'N/A';
-                })
-                ->addColumn('created_at', function ($row) {
-                    return $row->transaction->created_at ? $row->transaction->created_at->format('Y-m-d H:i:s') : 'N/A';
-                })
-                ->rawColumns(['transaction_id', 'approval_status'])
-                ->make(true);
+            return ResponseFormatter::success('Data retrieved successfully', [
+                'html' => $html,
+            ]);
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }
@@ -209,6 +166,30 @@ class AdController extends Controller
             }
 
             return ResponseFormatter::created('Ad created successfully, waiting for approval');
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
+    }
+
+    public function cancel($reference)
+    {
+        try {
+            $data = RestaurantAd::with('transaction')->find($reference);
+
+            if (!$data) {
+                return ResponseFormatter::error('Data not found.', 404);
+            }
+
+            if (!$data->transaction || $data->transaction->status !== 'pending') {
+                return ResponseFormatter::error('Only pending transactions can be canceled.', 422);
+            }
+
+            $data->update([
+                'approval_status' => 'rejected',
+                'note' => 'Transaction canceled by owner',
+            ]);
+
+            return ResponseFormatter::success('', 'Transaction canceled successfully.');
         } catch (\Exception $e) {
             return ResponseFormatter::handleError($e);
         }
