@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {!! NoCaptcha::renderJs() !!}
+    {!! NoCaptcha::renderJs(['onload' => 'onRecaptchaLoadCallback']) !!}
 </head>
 <body class="flex flex-col min-h-screen bg-light lg:flex-row-reverse">
 
