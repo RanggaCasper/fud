@@ -13,8 +13,8 @@
                                 @csrf
                                 <div class="mb-3">
                                     <div class="relative">
-                                        <x-filepond class="filepond-document" label="Upload Proof of Ownership" name="ownership_proof"
-                                            id="image" />
+                                        <x-filepond class="filepond-document" label="Upload Proof of Ownership"
+                                            name="ownership_proof" id="image" />
                                     </div>
                                 </div>
 
@@ -27,7 +27,8 @@
                     </div>
                     <div class="col-span-12 md:col-span-4">
                         <x-card.card>
-                            <img src="{{ $restaurant->thumbnail }}" class="aspect-square w-full h-64 rounded-lg mb-3" alt="{{ $restaurant->name }}">
+                            <img src="{{ $restaurant->thumbnail }}" class="aspect-square w-full h-64 rounded-lg mb-3"
+                                alt="{{ $restaurant->name }}">
                             <h5 class="font-semibold text-2xl">{{ $restaurant->name }}</h5>
                             @php
                                 $googleRating = $restaurant->rating ?? 0;

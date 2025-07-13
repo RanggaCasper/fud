@@ -19,10 +19,6 @@ Route::get('page/{slug}', [\App\Http\Controllers\PageController::class, 'index']
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
-Route::get('/business', function () {
-    return view('panel.business');
-})->name('business.index');
-
 Route::get('/dashboard', function () {
     return view('user.dashboard');
 })->name('dashboard.index');
@@ -57,7 +53,7 @@ Route::prefix('auth')->as('auth.')->group(function () {
     });
 });
 
-Route::prefix('settings')->as('settings.')->group(function () {
+Route::prefix('settings')->as('settings.')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\SettingController::class, 'index'])->name('index');
     Route::put('/profile', [\App\Http\Controllers\SettingController::class, 'updateProfile'])->name('update.profile');
     Route::put('/password', [\App\Http\Controllers\SettingController::class, 'updatePassword'])->name('update.password');
@@ -212,6 +208,10 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
     Route::prefix('point')->as('point.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\PointController::class, 'index'])->name('index');
         Route::get('/get', [\App\Http\Controllers\User\PointController::class, 'get'])->name('get');
+    });
+
+    Route::prefix('claim')->as('claim.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\ClaimController::class, 'index'])->name('index');
     });
 });
 

@@ -20,6 +20,7 @@
         "yajra/laravel-datatables-oracle": "^12.2"
     },
     "require-dev": {
+        "andyabih/laravel-to-uml": "^1.0",
         "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",

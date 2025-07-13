@@ -120,76 +120,77 @@
 </div>
 
 @once
-    <x-modal title="Update Your Review" id="reviewUpdateModal">
-        <form method="POST" id="formReviewUpdate" enctype="multipart/form-data">
-            @csrf
-            @method('PATCH')
+    @push('modals')
+        <x-modal title="Update Your Review" id="reviewUpdateModal">
+            <form method="POST" id="formReviewUpdate" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
 
-            <div class="mb-3">
-                <div class="relative">
-                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="starRating_update">
-                        Update your rating <span class="!text-danger">*</span>
-                    </label>
-                    <input type="hidden" name="rating" id="ratingInput_update" value="{{ $comment->rating }}">
-                    <div id="starRating_update" class="flex space-x-1 cursor-pointer">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <i class="ti ti-star-filled text-2xl transition-transform cursor-pointer 
-                        {{ $i <= $comment->rating ? 'text-warning' : 'text-gray-300' }}"
-                                data-index="{{ $i }}"></i>
-                        @endfor
+                <div class="mb-3">
+                    <div class="relative">
+                        <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="starRating_update">
+                            Update your rating <span class="!text-danger">*</span>
+                        </label>
+                        <input type="hidden" name="rating" id="ratingInput_update" value="{{ $comment->rating }}">
+                        <div id="starRating_update" class="flex space-x-1 cursor-pointer">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="ti ti-star-filled text-2xl transition-transform cursor-pointer 
+                    {{ $i <= $comment->rating ? 'text-warning' : 'text-gray-300' }}"
+                                    data-index="{{ $i }}"></i>
+                            @endfor
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <div class="relative">
-                    <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="comment_update">
-                        Update your review <span class="text-red-500">*</span>
-                    </label>
-                    <textarea name="comment"
-                        id="comment_update"
-                        class="w-full h-32 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary px-3 py-2"
-                        placeholder="Any changes or updates?" required></textarea>
+                <div class="mb-3">
+                    <div class="relative">
+                        <label class="block w-full mb-2 text-sm font-semibold tracking-wide" for="comment_update">
+                            Update your review <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="comment" id="comment_update"
+                            class="w-full h-32 border-2 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary px-3 py-2"
+                            placeholder="Any changes or updates?" required></textarea>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="imageReview_update"
-                    multiple :required="false" />
-                <span class="text-xs text-secondary">This will replace your attachments</span>
-            </div>
+                <div class="mb-3">
+                    <x-filepond class="filepond-image" label="Add some photos" name="attachments[]" id="imageReview_update"
+                        multiple :required="false" />
+                    <span class="text-xs text-secondary">This will replace your attachments</span>
+                </div>
 
-            <x-button type="submit" class="w-full">
-                Update Review
-            </x-button>
-        </form>
-    </x-modal>
+                <x-button type="submit" class="w-full">
+                    Update Review
+                </x-button>
+            </form>
+        </x-modal>
 
-    <x-modal title="Report a Problem" id="reportModal" size="md">
-        <form action="{{ route('user.review.report') }}" method="POST">
-            @csrf
-            <input type="hidden" name="comment_id">
+        <x-modal title="Report a Problem" id="reportModal" size="md">
+            <form action="{{ route('user.review.report') }}" method="POST">
+                @csrf
+                <input type="hidden" name="comment_id">
 
-            <ul class="space-y-1 text-sm text-gray-700">
-                <x-reason-radio id="reason-1" value="spam" label="Spam"
-                    helperText="The content is misleading or unwanted." />
-                <x-reason-radio id="reason-2" value="abuse" label="Abuse"
-                    helperText="The content contains abusive language or behavior." />
-                <x-reason-radio id="reason-3" value="hate-speech" label="Hate Speech"
-                    helperText="The content promotes violence or hatred against individuals or groups." />
-                <x-reason-radio id="reason-4" value="harassment" label="Harassment"
-                    helperText="The content is targeting someone in a threatening or bullying manner." />
-                <x-reason-radio id="reason-5" value="false-information" label="False Information"
-                    helperText="The content contains inaccurate or misleading claims." />
-                <x-reason-radio id="reason-6" value="off-topic" label="Off-topic"
-                    helperText="The content is irrelevant or not related to the discussion." />
-            </ul>
+                <ul class="space-y-1 text-sm text-gray-700">
+                    <x-reason-radio id="reason-1" value="spam" label="Spam"
+                        helperText="The content is misleading or unwanted." />
+                    <x-reason-radio id="reason-2" value="abuse" label="Abuse"
+                        helperText="The content contains abusive language or behavior." />
+                    <x-reason-radio id="reason-3" value="hate-speech" label="Hate Speech"
+                        helperText="The content promotes violence or hatred against individuals or groups." />
+                    <x-reason-radio id="reason-4" value="harassment" label="Harassment"
+                        helperText="The content is targeting someone in a threatening or bullying manner." />
+                    <x-reason-radio id="reason-5" value="false-information" label="False Information"
+                        helperText="The content contains inaccurate or misleading claims." />
+                    <x-reason-radio id="reason-6" value="off-topic" label="Off-topic"
+                        helperText="The content is irrelevant or not related to the discussion." />
+                </ul>
 
-            <div class="flex justify-end mt-4">
-                <x-button type="submit">Submit Report</x-button>
-            </div>
-        </form>
-    </x-modal>
+                <div class="flex justify-end mt-4">
+                    <x-button type="submit">Submit Report</x-button>
+                </div>
+            </form>
+        </x-modal>
+    @endpush
     @push('scripts')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>

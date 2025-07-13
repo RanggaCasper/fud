@@ -20,7 +20,7 @@
     </x-card>
 
     <x-modal id="updateModal" title="Update Status">
-        <form method="POST" id="form_update">
+        <form method="POST" id="form_update" data-reset="false">
             @csrf
             @method('PUT')
             <div class="mb-3">
@@ -30,6 +30,10 @@
                     ['value' => 'rejected', 'label' => 'Rejected'],
                 ]" placeholder="Select Status" />
             </div>
+            <div class="mb-3 hidden" id="note_container">
+                <x-input label="Note" id="note_update" name="note" type="text"
+                    placeholder="Enter Note" />
+            </div>
             <x-button label="Submit" type="submit" />
             <x-button label="Reset" type="reset" />
         </form>
@@ -38,6 +42,14 @@
 
 @push('scripts')
     <script>
+        $('#status_update').on('change', function() {
+            if ($(this).val() === 'rejected') {
+                $('#note_container').removeClass('hidden');
+            } else {
+                $('#note_container').addClass('hidden');
+            }
+        });
+
         $('#datatables').DataTable({
             processing: true,
             serverSide: false,
@@ -78,7 +90,9 @@
                 success: function(response) {
                     $('#form_update').attr('action', '{{ route('admin.owner.update', ['id' => ':id']) }}'
                         .replace(':id', id));
+                        
                     $('#status_update').val(response.data.status).trigger('change');
+                    $('#note_update').val(response.data.note); 
                 },
                 error: function(error) {
                     console.error(error);

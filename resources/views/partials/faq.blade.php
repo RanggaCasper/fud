@@ -1,26 +1,3 @@
-@php
-    $appName = config('app.name');
-
-    $faqs = [
-        [
-            'question' => "What is $appName?",
-            'answer' => "$appName is a smart food discovery platform that helps users find the best places to eat based on their preferences, location, budget, and more.",
-        ],
-        [
-            'question' => "How does $appName recommend restaurants?",
-            'answer' => "$appName uses intelligent recommendation technology that analyzes your taste preferences, location, cuisine choices, dining history, and budget to provide personalized restaurant suggestions.",
-        ],
-        [
-            'question' => 'Can I leave reviews or ratings?',
-            'answer' => "Absolutely! $appName allows users to leave reviews, rate restaurants, and upload photos to help others discover great places to eat.",
-        ],
-        [
-            'question' => "Does $appName work in all cities?",
-            'answer' => "$appName is currently available in selected cities and continuously expanding. We prioritize areas with rich culinary diversity to ensure a meaningful experience.",
-        ],
-    ];
-@endphp
-
 <section class="px-4 md:px-2 py-6 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')]"
     id="faq">
     <div class="max-w-screen-xl py-4 mx-auto">

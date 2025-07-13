@@ -1,7 +1,49 @@
 @extends('layouts.panel')
 
 @section('content')
-    <x-card title="Claim your restaurant">
+    @php
+        $userClaim = \App\Models\Restaurant\Claim::with('restaurant')
+            ->where('user_id', auth()->id())
+            ->first();
+    @endphp
+
+    @if ($userClaim)
+        <x-card title="Your Claim Status">
+            <img src="{{ $userClaim->restaurant->thumbnail ?? '/images/default-restaurant.jpg' }}" alt="Thumbnail"
+                class="w-24 h-24 object-cover rounded-md">
+
+
+            <div class="flex-1">
+                <a href="{{ route('restaurant.index', ['slug' => $userClaim->restaurant->slug]) }}"
+                    class="text-lg font-semibold text-primary hover:underline">
+                    {{ $userClaim->restaurant->name }}
+                </a>
+                <div class="text-sm text-gray-600">
+                    Status: <span
+                        class="font-medium {{ $userClaim->status === 'approved'
+                            ? 'text-success'
+                            : ($userClaim->status === 'pending'
+                                ? 'text-warning'
+                                : 'text-danger') }}">
+                        {{ ucfirst($userClaim->status) }}
+                    </span>
+                </div>
+
+                <div class="text-xs text-gray-500">
+                    Claimed on {{ $userClaim->created_at->format('d M Y') }}
+                </div>
+
+                @if ($userClaim->status === 'rejected' && $userClaim->note)
+                    <x-alert type="danger">
+                        <strong>Note : </strong> {{ $userClaim->note }}
+                    </x-alert>
+                @endif
+            </div>
+        </x-card>
+    @endif
+
+
+    <x-card title="Find and Claim Your Restaurant">
         <div class="mb-3">
             <form class="flex items-center mx-auto gap-2 mb-2">
                 <div class="relative w-full">
@@ -38,7 +80,8 @@
                         search: $('#claim-search').val()
                     },
                     beforeSend: function() {
-                        $('#claim-results').html('<div class="text-muted text-sm">Searching...</div>');
+                        $('#claim-results').html(
+                            '<div class="text-muted text-sm">Searching...</div>');
                     },
                     success: function(response) {
                         const $html = $('<div>').html(response);
@@ -47,7 +90,7 @@
                             const href = $(this).attr('href');
                             if (!href.endsWith('/claim')) {
                                 $(this).attr('href', href.replace(/\/$/, '') +
-                                '/claim');
+                                    '/claim');
                             }
                         });
 

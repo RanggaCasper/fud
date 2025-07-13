@@ -49,22 +49,19 @@
     <div class="hidden lg:flex lg:w-7/12 fixed top-0 left-0 h-screen">
         <div class="owl-carousel owl-theme w-full h-screen" id="owl-carousel">
             <div class="item w-full h-screen">
-                <img data-src="https://w.wallhaven.cc/full/4y/wallhaven-4yg19d.jpg  " 
+                <img src="https://w.wallhaven.cc/full/4y/wallhaven-4yg19d.jpg  " 
                     alt="Background Image" 
-                    loading="lazy"
-                    class="lazyload object-cover w-full h-screen">
+                    class="object-cover w-full h-screen">
             </div>
             <div class="item w-full h-screen">
-                <img data-src="https://w.wallhaven.cc/full/k7/wallhaven-k7rvlq.png" 
+                <img src="https://w.wallhaven.cc/full/k7/wallhaven-k7rvlq.png" 
                     alt="Background Image" 
-                    loading="lazy"
-                    class="lazyload object-cover w-full h-screen">
+                    class="object-cover w-full h-screen">
             </div>
             <div class="item w-full h-screen">
-                <img data-src="https://w.wallhaven.cc/full/vm/wallhaven-vm67rp.jpg" 
+                <img src="https://w.wallhaven.cc/full/vm/wallhaven-vm67rp.jpg" 
                     alt="Background Image" 
-                    loading="lazy"
-                    class="lazyload object-cover w-full h-screen">
+                    class="object-cover w-full h-screen">
             </div>
         </div>
     </div>

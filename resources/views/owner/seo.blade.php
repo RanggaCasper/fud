@@ -30,6 +30,28 @@
             <x-button type="reset">Reset</x-button>
         </form>
     </x-card.card>
+
+    @php
+        $faqs = [
+            [
+                'question' => 'What are meta tags on a website?',
+                'answer' =>
+                    'Meta tags are snippets of HTML code placed in the <head> section of a webpage to provide metadata such as title, description, and preview information for search engines and social media.',
+            ],
+            [
+                'question' => 'Why are meta tags important for SEO?',
+                'answer' =>
+                    'Meta tags help search engines understand the content of your page. Proper use of meta titles and descriptions can improve visibility and click-through rates in search results.',
+            ],
+            [
+                'question' => 'Can I customize meta tags for each page?',
+                'answer' =>
+                    'Yes, modern websites and frameworks allow you to set dynamic meta tags for each page to improve relevance and search engine performance.',
+            ],
+        ];
+    @endphp
+
+    @include('partials.faq', ['faqs' => $faqs])
 @endsection
 
 @push('scripts')

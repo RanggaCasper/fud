@@ -73,8 +73,8 @@
                 </x-nav-item>
 
                 @if (!Auth::user()->owned)
-                    <x-nav-item href="{{ route('business.index') }}" icon="ti ti-briefcase-2"
-                        active="{{ request()->routeIs('business.index') }}">
+                    <x-nav-item href="{{ route('user.claim.index') }}" icon="ti ti-briefcase-2"
+                        active="{{ request()->routeIs('user.claim.index') }}">
                         {{ config('app.name') }} For Business
                     </x-nav-item>
                 @endif

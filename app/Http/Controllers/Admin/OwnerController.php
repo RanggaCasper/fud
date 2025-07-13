@@ -87,12 +87,14 @@ class OwnerController extends Controller
     {
         $request->validate( [
             'status' => 'required|in:pending,approved,rejected',
+            'note' => 'required_if:status,rejected',
         ]);
 
         try {
             $data = Claim::findOrFail($id);
             $data->update([
                 'status' => $request->status,
+                'note' => $request->note ?? null,
             ]);
 
             return ResponseFormatter::success('Data updated successfully.');
