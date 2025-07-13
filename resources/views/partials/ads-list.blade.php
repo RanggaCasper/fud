@@ -91,7 +91,7 @@
                                     </button>
                                 </form>
                             @elseif ($transaction->status === 'paid')
-                                <a href="{{ route('owner.ads.chart', ['id' => $ad->id]) }}"
+                                <a href="{{ route('owner.ads.insight', ['id' => Crypt::encrypt($ad->id)]) }}"
                                     class="px-3 py-1.5 text-sm text-white border bg-primary border-gray-300 rounded-md hover:bg-primary/90">
                                     Insight
                                 </a>

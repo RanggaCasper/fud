@@ -1,9 +1,7 @@
 @extends('layouts.panel')
 
-@section('title', 'Ads Chart')
-
 @section('content')
-    <x-card title="Insights">
+    <x-card title="Insight">
         <div id="chart"></div>
     </x-card>
     <div class="mb-3">

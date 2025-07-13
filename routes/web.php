@@ -173,7 +173,7 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
 
     Route::controller(\App\Http\Controllers\Owner\AdController::class)->group(function () {
         Route::get('/ads', 'index')->name('ads.index');
-        Route::get('/ads/chart/{id}', 'chart')->name('ads.chart');
+        Route::get('/ads/insight/{id}', 'insight')->name('ads.insight');
         Route::get('/ads/get', 'get')->name('ads.get');
         Route::post('/ads', 'store')->name('ads.store');
         Route::post('/cancel/{reference}', 'cancel')->name('ads.cancel');
