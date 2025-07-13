@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Owner;
 
+use App\Models\AdClick;
 use App\Models\AdsType;
+use Carbon\CarbonPeriod;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\RestaurantAd;
@@ -65,6 +67,64 @@ class AdController extends Controller
         }
     }
 
+    public function chart($id)
+    {
+        $adClicks = AdClick::where('restaurant_ad_id', $id)->get();
+
+        if ($adClicks->isEmpty()) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+
+        $firstDate = $adClicks->min('created_at');
+        $maxCreatedAt = Carbon::parse($adClicks->max('created_at'));
+        $endDate = $maxCreatedAt->copy()->endOfHour();
+
+        $adClicks = $adClicks->filter(function ($click) use ($endDate) {
+            return Carbon::parse($click->created_at)->lte($endDate);
+        });
+
+        $diffDays = Carbon::parse($firstDate)->diffInDays($endDate);
+
+        if ($diffDays > 1) {
+            $grouped = $adClicks->groupBy(function ($click) {
+                return Carbon::parse($click->created_at)->format('Y-m-d');
+            });
+
+            $dates = CarbonPeriod::create(Carbon::parse($firstDate)->startOfDay(), $endDate->copy()->startOfDay());
+
+            $chartData = collect();
+            foreach ($dates as $date) {
+                $key = $date->format('Y-m-d');
+                $chartData[$key] = $grouped->has($key) ? $grouped[$key]->count() : 0;
+            }
+
+            $grouping = 'daily';
+        } else {
+            $grouped = $adClicks->groupBy(function ($click) {
+                return Carbon::parse($click->created_at)->format('Y-m-d H:00');
+            });
+
+            $end = $endDate;
+            $start = $end->copy()->subHours(11);
+
+            $hours = CarbonPeriod::create($start, '1 hour', $end);
+
+            $chartData = collect();
+            foreach ($hours as $hour) {
+                $key = $hour->format('Y-m-d H:00');
+                $chartData[$key] = $grouped->has($key) ? $grouped[$key]->count() : 0;
+            }
+
+            $grouping = 'hourly-12';
+        }
+
+        return view('owner.ads-chart', [
+            'ad' => $adClicks->first()->restaurantAd,
+            'chartData' => $chartData,
+            'grouping' => $grouping
+        ]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $request->validate([
@@ -101,8 +161,8 @@ class AdController extends Controller
 
             $pendingTransaction = Transaction::whereHas('restaurantAd', function ($q) use ($adsType, $restaurantId) {
                 $q->where('ads_type_id', $adsType->id)
-                ->where('restaurant_id', $restaurantId)
-                ->where('approval_status', 'pending');
+                    ->where('restaurant_id', $restaurantId)
+                    ->where('approval_status', 'pending');
             })
                 ->whereNull('paid_at')
                 ->where('created_at', '>=', Carbon::now()->subHour())

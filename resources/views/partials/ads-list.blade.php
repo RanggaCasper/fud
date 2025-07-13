@@ -1,5 +1,5 @@
 <div class="space-y-5">
-    @foreach ($ads as $ad)
+    @forelse ($ads as $ad)
         @php
             $transaction = $ad->transaction;
             $status = $ad->approval_status;
@@ -91,6 +91,10 @@
                                     </button>
                                 </form>
                             @elseif ($transaction->status === 'paid')
+                                <a href="{{ route('owner.ads.chart', ['id' => $ad->id]) }}"
+                                    class="px-3 py-1.5 text-sm text-white border bg-primary border-gray-300 rounded-md hover:bg-primary/90">
+                                    Insight
+                                </a>
                                 <a href="{{ route('owner.transaction.index', ['trx_id' => $transaction->transaction_id]) }}"
                                     class="px-3 py-1.5 text-sm text-white border bg-success border-gray-300 rounded-md hover:bg-success/90">
                                     Invoice
@@ -101,5 +105,11 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @empty
+        <div class="text-muted text-sm text-center">
+            <img src="{{ asset('assets/svg/undraw_empty_4zx0.svg') }}" alt="Empty Search"
+                class="w-32 h-32 mx-auto mb-4">
+            <p class="font-semibold">No ads available.</p>
+        </div>
+    @endforelse
 </div>

@@ -19,10 +19,6 @@ Route::get('page/{slug}', [\App\Http\Controllers\PageController::class, 'index']
 
 Route::post('/location', [\App\Http\Controllers\LocationController::class, 'store'])->name('location.store');
 
-Route::get('/dashboard', function () {
-    return view('user.dashboard');
-})->name('dashboard.index');
-
 Route::get('/restaurant/{slug}', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant.index');
 Route::get('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'claim'])->middleware('auth')->name('restaurant.claim');
 Route::post('/restaurant/{slug}/claim', [\App\Http\Controllers\RestaurantController::class, 'store'])->middleware('auth')->name('restaurant.claim.store');
@@ -177,6 +173,7 @@ Route::prefix('owner')->as('owner.')->middleware('checkOwned')->group(function (
 
     Route::controller(\App\Http\Controllers\Owner\AdController::class)->group(function () {
         Route::get('/ads', 'index')->name('ads.index');
+        Route::get('/ads/chart/{id}', 'chart')->name('ads.chart');
         Route::get('/ads/get', 'get')->name('ads.get');
         Route::post('/ads', 'store')->name('ads.store');
         Route::post('/cancel/{reference}', 'cancel')->name('ads.cancel');
@@ -218,18 +215,6 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
 
 Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'store'])->name('chatbot.store');
 Route::post('/chatbot/history', [\App\Http\Controllers\ChatbotController::class, 'history'])->name('chatbot.history');
-
-Route::get('/get/photos', function () {
-    $photos = \Illuminate\Support\Facades\DB::table('restaurant_photos')
-        ->select('restaurant_id', 'source')
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-    return \App\Helpers\ResponseFormatter::success(
-        'Photos retrieved successfully',
-        $photos
-    );
-});
 
 Route::get('/sitemap.xml', function () {
     return response(
