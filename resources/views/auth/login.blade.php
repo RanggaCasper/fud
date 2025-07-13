@@ -127,7 +127,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon refreshRecaptcha">
+                                <x-button class="btn-icon refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -222,7 +222,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon refreshRecaptcha">
+                                <x-button class="btn-icon refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -294,7 +294,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon refreshRecaptcha">
+                                <x-button class="btn-icon refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
