@@ -200,6 +200,12 @@
                             <x-input label="Password" id="loginPassword" name="password"
                                 placeholder="Enter your Password" type="password" />
                         </div>
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            {!! NoCaptcha::display() !!}
+                            <div>
+                                <x-button id="refreshCaptcha"><i class="ti ti-refresh"></i></x-button>
+                            </div>
+                        </div>
                         <!-- Modal footer -->
                         <button type="submit"
                             class="text-white shadow-sm bg-primary hover:bg-primary/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-2 w-full">
@@ -368,6 +374,10 @@
                 complete: function() {
                 }
             });
+        });
+
+        $('#refreshCaptcha').on('click', function() {
+            grecaptcha.reset();
         });
     </script>
 @endpush

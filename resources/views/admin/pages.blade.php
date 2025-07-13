@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 
 @section('content')
-    <x-card title="Manage Users">
+    <x-card title="Manage Pages">
         <x-button label="Create" data-modal-target="createModal" data-modal-toggle="createModal" />
         <table id="datatables" class="display">
             <thead>
