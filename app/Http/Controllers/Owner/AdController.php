@@ -72,7 +72,14 @@ class AdController extends Controller
         $adClicks = AdClick::where('restaurant_ad_id', $id)->get();
 
         if ($adClicks->isEmpty()) {
-            abort(Response::HTTP_NOT_FOUND);
+            $chartData = collect();
+            $grouping = 'hourly-12';
+
+            return view('owner.ads-chart', [
+                'ad' => RestaurantAd::findOrFail($id),
+                'chartData' => $chartData,
+                'grouping' => $grouping
+            ]);
         }
 
         $firstDate = $adClicks->min('created_at');
