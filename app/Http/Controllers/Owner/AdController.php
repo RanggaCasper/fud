@@ -34,7 +34,6 @@ class AdController extends Controller
         try {
             $restaurantId = Auth::user()->owned->restaurant->id;
 
-            // Update expired ads (sama seperti sebelumnya)
             RestaurantAd::where('restaurant_id', $restaurantId)
                 ->where('approval_status', 'pending')
                 ->whereHas('transaction', function ($query) {

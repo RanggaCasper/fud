@@ -66,7 +66,7 @@ class SearchController extends Controller
                 $words = explode(' ', $part);
                 if (count($words) > 2) return false;
                 foreach ($words as $word) {
-                    if (strlen($word) < 4) return false;
+                    if (strlen($word) < 3) return false;
                 }
                 return true;
             })
