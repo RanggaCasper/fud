@@ -121,10 +121,8 @@
 
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
-                            <div class="w-full">
-                                <div>
-                                    {!! NoCaptcha::display() !!}
-                                </div>
+                            <div class="w-full relative">
+                                {!! NoCaptcha::display() !!}
                             </div>
                         </div>
 
@@ -211,10 +209,8 @@
                         </div>
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
-                            <div class="w-full">
-                                <div>
-                                    {!! NoCaptcha::display() !!}
-                                </div>
+                            <div class="w-full relative">
+                                {!! NoCaptcha::display() !!}
                             </div>
                         </div>
 
@@ -278,10 +274,8 @@
 
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
-                            <div class="w-full">
-                                <div>
-                                    {!! NoCaptcha::display() !!}
-                                </div>
+                            <div class="w-full relative">
+                                {!! NoCaptcha::display() !!}
                             </div>
                         </div>
 
