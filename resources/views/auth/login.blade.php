@@ -127,7 +127,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon" id="refreshCaptcha">
+                                <x-button class="btn-icon refreshRecaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -222,7 +222,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon" id="refreshCaptcha">
+                                <x-button class="btn-icon refreshRecaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -294,7 +294,7 @@
 
                             {{-- Tombol Refresh --}}
                             <div>
-                                <x-button class="btn-icon" id="refreshCaptcha">
+                                <x-button class="btn-icon refreshRecaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -412,7 +412,7 @@
             });
         });
 
-        $('#refreshCaptcha').on('click', function() {
+        $('.refreshCaptcha').on('click', function() {
             grecaptcha.reset();
         });
     </script>
