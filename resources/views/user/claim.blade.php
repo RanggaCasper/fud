@@ -29,16 +29,36 @@
                     </span>
                 </div>
 
+                <div class="text-sm text-gray-600">
+                    Document: <a href="{{ Storage::url($userClaim->ownership_proof) }}"
+                        class="text-primary hover:underline" target="_blank">View Proof</a> 
+                </div>
+
                 <div class="text-xs text-gray-500">
-                    Claimed on {{ $userClaim->created_at->format('d M Y') }}
+                    Updated on {{ $userClaim->updated_at->format('d M Y') }}
                 </div>
 
                 @if ($userClaim->status === 'rejected' && $userClaim->note)
-                    <x-alert type="danger">
-                        <strong>Note : </strong> {{ $userClaim->note }}
-                    </x-alert>
+                    <div class="mt-3">
+                        <x-alert type="danger">
+                            <strong>Note : </strong> {{ $userClaim->note }}
+                        </x-alert>
+                    </div>
+
+                    <form method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="relative">
+                                <x-filepond class="filepond-document" label="Update Proof of Ownership"
+                                    name="ownership_proof" id="image" />
+                            </div>
+                        </div>
+
+                        <x-button type="submit">Submit</x-button>
+                    </form>
                 @endif
             </div>
+            <span class="text-xs text-gray-500">* If you want to claim another restaurant, please contact support.</span>
         </x-card>
     @endif
 

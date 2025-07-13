@@ -212,6 +212,7 @@ Route::prefix('user')->as('user.')->middleware('auth')->group(function () {
 
     Route::prefix('claim')->as('claim.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ClaimController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\User\ClaimController::class, 'store'])->name('store');
     });
 });
 

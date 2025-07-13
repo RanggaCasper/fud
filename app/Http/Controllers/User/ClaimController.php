@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\Restaurant\Claim;
+use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use RahulHaque\Filepond\Facades\Filepond;
 
 class ClaimController extends Controller
 {
@@ -15,14 +21,25 @@ class ClaimController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'restaurant_name' => 'required|string|max:255',
-            'restaurant_address' => 'required|string|max:255',
-            'restaurant_phone' => 'nullable|string|max:15',
+            'ownership_proof' => [
+                'required',
+                Rule::filepond(['max:2000']),
+            ],
         ]);
 
-        // Logic to handle the claim submission
-        // This could involve saving the claim to the database, notifying admins, etc.
+        try {
+            $data = Claim::where('user_id', Auth::id());
 
-        return redirect()->back()->with('success', 'Claim submitted successfully!');
+            $path = Filepond::field($request->ownership_proof)->moveTo('images/ownership/' . Str::uuid());
+
+            $data->update([
+                'status' => 'pending',
+                'ownership_proof' => $path['location'],
+            ]);
+
+            return ResponseFormatter::redirected('Restaurant claim updated successfully.', url()->previous());
+        } catch (\Exception $e) {
+            return ResponseFormatter::handleError($e);
+        }
     }
 }
