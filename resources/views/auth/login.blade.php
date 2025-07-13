@@ -119,6 +119,20 @@
                                     class="text-primary hover:underline">terms and conditions</a>.</label>
                         </div>
 
+                        <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                            {{-- reCAPTCHA --}}
+                            <div class="w-full md:w-auto">
+                                {!! NoCaptcha::display() !!}
+                            </div>
+
+                            {{-- Tombol Refresh --}}
+                            <div class="w-full md:w-auto flex justify-end md:justify-start">
+                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                                    <i class="ti ti-refresh text-lg"></i>
+                                </x-button>
+                            </div>
+                        </div>
+
                         <!-- Modal footer -->
                         <button type="submit"
                             class="text-white shadow-sm bg-primary hover:bg-primary/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-6 w-full">
@@ -200,12 +214,20 @@
                             <x-input label="Password" id="loginPassword" name="password"
                                 placeholder="Enter your Password" type="password" />
                         </div>
-                        <div class="mb-3 flex justify-between items-center">
-                            {!! NoCaptcha::display() !!}
-                            <div>
-                                <x-button class="btn-icon" id="refreshCaptcha"><i class="ti ti-refresh text-lg"></i></x-button>
+                        <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                            {{-- reCAPTCHA --}}
+                            <div class="w-full md:w-auto">
+                                {!! NoCaptcha::display() !!}
+                            </div>
+
+                            {{-- Tombol Refresh --}}
+                            <div class="w-full md:w-auto flex justify-end md:justify-start">
+                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                                    <i class="ti ti-refresh text-lg"></i>
+                                </x-button>
                             </div>
                         </div>
+
                         <!-- Modal footer -->
                         <button type="submit"
                             class="text-white shadow-sm bg-primary hover:bg-primary/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mb-2 w-full">
@@ -262,6 +284,20 @@
                         <div class="mb-3">
                             <x-input label="Confirm Password" id="forgotPasswordConfirmation"
                                 name="password_confirmation" placeholder="Password" type="password" />
+                        </div>
+
+                        <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                            {{-- reCAPTCHA --}}
+                            <div class="w-full md:w-auto">
+                                {!! NoCaptcha::display() !!}
+                            </div>
+
+                            {{-- Tombol Refresh --}}
+                            <div class="w-full md:w-auto flex justify-end md:justify-start">
+                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                                    <i class="ti ti-refresh text-lg"></i>
+                                </x-button>
+                            </div>
                         </div>
 
                         <!-- Modal footer -->
@@ -356,7 +392,8 @@
                             let d = input.closest(".relative");
                             input.addClass("border-danger");
                             d.after(
-                                `<div class="error-message text-xs text-danger mt-1">${message[0]}</div>`);
+                                `<div class="error-message text-xs text-danger mt-1">${message[0]}</div>`
+                            );
                         });
                     } else {
                         const msg = response.errors || response.message;
@@ -371,8 +408,7 @@
                     button.prop('disabled', false);
                     button.html(originalText);
                 },
-                complete: function() {
-                }
+                complete: function() {}
             });
         });
 
