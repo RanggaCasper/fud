@@ -72,63 +72,65 @@ class AdController extends Controller
     {
         try {
             $id = Crypt::decrypt($id);
+            $ad = RestaurantAd::findOrFail($id);
             $adClicks = AdClick::where('restaurant_ad_id', $id)->get();
+
             if ($adClicks->isEmpty()) {
+                $start = Carbon::parse($ad->created_at)->copy()->startOfHour();
+                $end = $start->copy()->addHours(11);
+                $hours = CarbonPeriod::create($start, '1 hour', $end);
                 $chartData = collect();
-                $grouping = 'hourly-12';
-    
+
+                foreach ($hours as $hour) {
+                    $key = $hour->format('Y-m-d H:00');
+                    $chartData[$key] = 0;
+                }
+
                 return view('owner.ads-chart', [
-                    'ad' => RestaurantAd::findOrFail($id),
+                    'ad' => $ad,
                     'chartData' => $chartData,
-                    'grouping' => $grouping
+                    'grouping' => 'hourly'
                 ]);
             }
-    
-            $firstDate = $adClicks->min('created_at');
-            $maxCreatedAt = Carbon::parse($adClicks->max('created_at'));
-            $endDate = $maxCreatedAt->copy()->endOfHour();
-    
+
+            $firstDate = Carbon::parse($adClicks->min('created_at'))->startOfHour();
+            $endDate = Carbon::parse($adClicks->max('created_at'))->endOfHour();
+
             $adClicks = $adClicks->filter(function ($click) use ($endDate) {
                 return Carbon::parse($click->created_at)->lte($endDate);
             });
-    
-            $diffDays = Carbon::parse($firstDate)->diffInDays($endDate);
-    
+
+            $diffDays = $firstDate->diffInDays($endDate);
+            $chartData = collect();
+
             if ($diffDays > 1) {
+                $grouping = 'daily';
                 $grouped = $adClicks->groupBy(function ($click) {
                     return Carbon::parse($click->created_at)->format('Y-m-d');
                 });
-    
-                $dates = CarbonPeriod::create(Carbon::parse($firstDate)->startOfDay(), $endDate->copy()->startOfDay());
-    
-                $chartData = collect();
+
+                $dates = CarbonPeriod::create($firstDate->copy()->startOfDay(), $endDate->copy()->startOfDay());
+
                 foreach ($dates as $date) {
                     $key = $date->format('Y-m-d');
                     $chartData[$key] = $grouped->has($key) ? $grouped[$key]->count() : 0;
                 }
-    
-                $grouping = 'daily';
             } else {
+                $grouping = 'hourly';
                 $grouped = $adClicks->groupBy(function ($click) {
                     return Carbon::parse($click->created_at)->format('Y-m-d H:00');
                 });
-    
-                $end = $endDate;
-                $start = $end->copy()->subHours(11);
-    
-                $hours = CarbonPeriod::create($start, '1 hour', $end);
-    
-                $chartData = collect();
+
+                $hours = CarbonPeriod::create($firstDate, '1 hour', $endDate);
+
                 foreach ($hours as $hour) {
                     $key = $hour->format('Y-m-d H:00');
                     $chartData[$key] = $grouped->has($key) ? $grouped[$key]->count() : 0;
                 }
-    
-                $grouping = 'hourly-12';
             }
-    
+
             return view('owner.ads-chart', [
-                'ad' => $adClicks->first()->restaurantAd,
+                'ad' => $ad,
                 'chartData' => $chartData,
                 'grouping' => $grouping
             ]);
