@@ -2,7 +2,7 @@
 
 @section('content')
     <x-card title="Create Ads" class="max-w-2xl mx-auto">
-        <form action="{{ route('owner.ads.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('owner.ads.store') }}" method="POST" data-fetch="fetchData" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 @php
