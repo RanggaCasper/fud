@@ -23,7 +23,7 @@ class CheckOwned
         }
 
         if (!Auth::user()->owned) {
-            flash('error', 'You do not own any restaurant. Please claim a restaurant first.');
+            flash('You do not own any restaurant. Please claim a restaurant first.', 'error');
             return redirect()->route('home');
         }
 
