@@ -58,7 +58,7 @@
                     </form>
                 @endif
             </div>
-            <span class="text-xs text-gray-500">* If you want to claim another restaurant, please contact support.</span>
+            <span class="text-xs text-gray-500">* If you want to claim another restaurant, please contact <a href="mailto:support@fudz.my.id">support@fudz.my.id</a>.</span>
         </x-card>
     @endif
 
