@@ -412,8 +412,12 @@
             });
         });
 
-        $('.refreshCaptcha').on('click', function() {
-            grecaptcha.reset();
+        $(document).on('click', '.refreshCaptcha', function() {
+            if (typeof grecaptcha !== 'undefined') {
+                grecaptcha.reset();
+            } else {
+                console.warn('reCAPTCHA is not loaded yet.');
+            }
         });
     </script>
 @endpush
