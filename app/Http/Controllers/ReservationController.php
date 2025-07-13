@@ -25,7 +25,7 @@ class ReservationController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'date' => ['required', 'date', 'after_or_equal:tomorrow'],
+            'date' => ['required', 'date'],
             'time' => ['required'],
             'adults' => ['required', 'integer', 'min:1'],
             'children' => ['required', 'integer', 'min:0'],
