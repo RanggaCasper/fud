@@ -122,7 +122,9 @@
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
                             <div class="w-full md:w-auto relative">
-                                {!! NoCaptcha::display() !!}
+                                <div>
+                                    {!! NoCaptcha::display() !!}
+                                </div>
                             </div>
                         </div>
 
@@ -210,7 +212,9 @@
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
                             <div class="w-full md:w-auto relative">
-                                {!! NoCaptcha::display() !!}
+                                <div>
+                                    {!! NoCaptcha::display() !!}
+                                </div>
                             </div>
                         </div>
 
@@ -275,14 +279,9 @@
                         <div class="mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                             {{-- reCAPTCHA --}}
                             <div class="w-full md:w-auto relative">
-                            {!! NoCaptcha::display() !!}
-                            </div>
-
-                            {{-- Tombol Refresh --}}
-                            <div>
-                                <x-button class="btn-icon refreshCaptcha" id="refreshCaptchaForgot">
-                                    <i class="ti ti-refresh text-lg"></i>
-                                </x-button>
+                                <div>
+                                    {!! NoCaptcha::display() !!}
+                                </div>
                             </div>
                         </div>
 
