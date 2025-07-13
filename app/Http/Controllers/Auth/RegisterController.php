@@ -14,6 +14,15 @@ class RegisterController extends Controller
 {
     public function store(Request $request)
     {
+        if (config('app.env') == 'production') {
+            $request->validate([  
+                'g-recaptcha-response' => 'required|captcha'  
+            ], [  
+                'g-recaptcha-response.required' => 'The reCAPTCHA field is required.',  
+                'g-recaptcha-response.captcha' => 'The reCAPTCHA verification failed. Please try again.'  
+            ]); 
+        }
+        
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
             'name' => 'required|string|max:255',

@@ -19,6 +19,15 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
+        if (config('app.env') == 'production') {
+            $request->validate([  
+                'g-recaptcha-response' => 'required|captcha'  
+            ], [  
+                'g-recaptcha-response.required' => 'The reCAPTCHA field is required.',  
+                'g-recaptcha-response.captcha' => 'The reCAPTCHA verification failed. Please try again.'  
+            ]); 
+        }
+
         $request->validate([
             'input' => 'required',
             'password' => 'required|min:8',

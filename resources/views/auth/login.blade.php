@@ -200,10 +200,10 @@
                             <x-input label="Password" id="loginPassword" name="password"
                                 placeholder="Enter your Password" type="password" />
                         </div>
-                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="mb-3 flex justify-between items-center">
                             {!! NoCaptcha::display() !!}
                             <div>
-                                <x-button id="refreshCaptcha"><i class="ti ti-refresh"></i></x-button>
+                                <x-button class="btn-icon" id="refreshCaptcha"><i class="ti ti-refresh text-lg"></i></x-button>
                             </div>
                         </div>
                         <!-- Modal footer -->
