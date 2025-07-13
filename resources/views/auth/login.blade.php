@@ -126,8 +126,8 @@
                             </div>
 
                             {{-- Tombol Refresh --}}
-                            <div class="w-full md:w-auto flex justify-end md:justify-start">
-                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                            <div>
+                                <x-button class="btn-icon" id="refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -221,8 +221,8 @@
                             </div>
 
                             {{-- Tombol Refresh --}}
-                            <div class="w-full md:w-auto flex justify-end md:justify-start">
-                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                            <div>
+                                <x-button class="btn-icon" id="refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
@@ -293,8 +293,8 @@
                             </div>
 
                             {{-- Tombol Refresh --}}
-                            <div class="w-full md:w-auto flex justify-end md:justify-start">
-                                <x-button class="btn-icon w-full md:w-auto" id="refreshCaptcha">
+                            <div>
+                                <x-button class="btn-icon" id="refreshCaptcha">
                                     <i class="ti ti-refresh text-lg"></i>
                                 </x-button>
                             </div>
