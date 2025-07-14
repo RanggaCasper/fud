@@ -2,6 +2,15 @@
 
 @section('content')
     <x-card title="Manage Ownership">
+        <div class="grid grid-cols-2 space-x-4">
+            <div class="mb-3">
+                <x-select label="Status" name="status" id="status-options" :options="[
+                    ['value' => 'pending', 'label' => 'Pending'],
+                    ['value' => 'approved', 'label' => 'Approved'],
+                    ['value' => 'rejected', 'label' => 'Rejected'],
+                ]" placeholder="Select Status" />
+            </div>
+        </div>
         <table id="datatables" class="display">
             <thead>
                 <tr>
@@ -31,8 +40,7 @@
                 ]" placeholder="Select Status" />
             </div>
             <div class="mb-3 hidden" id="note_container">
-                <x-input label="Note" id="note_update" name="note" type="text"
-                    placeholder="Enter Note" />
+                <x-input label="Note" id="note_update" name="note" type="text" placeholder="Enter Note" />
             </div>
             <x-button label="Submit" type="submit" />
             <x-button label="Reset" type="reset" />
@@ -50,11 +58,16 @@
             }
         });
 
-        $('#datatables').DataTable({
+        var table = $('#datatables').DataTable({
             processing: true,
             serverSide: false,
             scrollX: true,
-            ajax: "{{ route('admin.owner.get') }}",
+            ajax: {
+                url: "{{ route('admin.owner.get') }}",
+                data: function(d) {
+                    d.status = $('#status-options').val();
+                }
+            },
             columns: [{
                     data: 'no',
                     name: 'no'
@@ -82,17 +95,22 @@
             ]
         });
 
+        $('#status-options').on('change', function() {
+            table.ajax.reload();
+        });
+
         $('#datatables').on('click', '[data-update-id]', function() {
             var id = $(this).data('update-id');
             $.ajax({
                 url: '{{ route('admin.owner.getById', ['id' => ':id']) }}'.replace(':id', id),
                 type: 'GET',
                 success: function(response) {
-                    $('#form_update').attr('action', '{{ route('admin.owner.update', ['id' => ':id']) }}'
+                    $('#form_update').attr('action',
+                        '{{ route('admin.owner.update', ['id' => ':id']) }}'
                         .replace(':id', id));
-                        
+
                     $('#status_update').val(response.data.status).trigger('change');
-                    $('#note_update').val(response.data.note); 
+                    $('#note_update').val(response.data.note);
                 },
                 error: function(error) {
                     console.error(error);
@@ -105,7 +123,7 @@
             });
         });
 
-        $("#datatables").on("click", "[data-delete-id]", function () {
+        $("#datatables").on("click", "[data-delete-id]", function() {
             var id = $(this).data("delete-id");
 
             Swal.fire({
@@ -126,16 +144,17 @@
                 confirmButtonText: "Yes, Delete!",
                 buttonsStyling: false,
                 showCloseButton: true,
-            }).then(function (result) {
+            }).then(function(result) {
                 if (result.value) {
                     $.ajax({
-                        url: '{{ route("admin.owner.destroy", ["id" => ":id"]) }}'.replace(":id", id),
+                        url: '{{ route('admin.owner.destroy', ['id' => ':id']) }}'.replace(":id",
+                            id),
                         type: "POST",
                         data: {
                             _token: "{{ csrf_token() }}",
                             _method: "DELETE",
                         },
-                        success: function (data) {
+                        success: function(data) {
                             Swal.fire({
                                 html: `
                                     <div class="mt-3">
@@ -157,16 +176,16 @@
                             });
                             $("#datatables").DataTable().ajax.reload();
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             let response = xhr.responseJSON;
-                            let message; 
-                            
+                            let message;
+
                             if (response.errors) {
                                 message = response.errors;
                             } else {
                                 message = response.message;
                             }
-                            
+
                             Swal.fire({
                                 html: `
                                     <div class="mt-3">

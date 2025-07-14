@@ -2,6 +2,15 @@
 
 @section('content')
     <x-card title="Manage Ads">
+        <div class="grid grid-cols-2 space-x-4">
+            <div class="mb-3">
+                <x-select label="Status" name="status" id="status-options" :options="[
+                    ['value' => 'pending', 'label' => 'Pending'],
+                    ['value' => 'approved', 'label' => 'Approved'],
+                    ['value' => 'rejected', 'label' => 'Rejected'],
+                ]" placeholder="Select Status" />
+            </div>
+        </div>
         <table id="datatables" class="display">
             <thead>
                 <tr>
@@ -63,11 +72,16 @@
             }
         });
 
-        $('#datatables').DataTable({
+        let table = $('#datatables').DataTable({
             processing: true,
             serverSide: false,
             scrollX: true,
-            ajax: "{{ route('admin.ad.get') }}",
+            ajax: {
+                url: "{{ route('admin.ad.get') }}",
+                data: function(d) {
+                    d.status = $('#status-options').val();
+                }
+            },
             columns: [{
                     data: 'no',
                     name: 'no'
@@ -104,6 +118,10 @@
                     name: 'action',
                 },
             ]
+        });
+
+        $('#status-options').on('change', function() {
+            table.ajax.reload();
         });
 
         $('#datatables').on('click', '[data-update-id]', function() {

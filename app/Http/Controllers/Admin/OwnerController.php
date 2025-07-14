@@ -17,14 +17,20 @@ class OwnerController extends Controller
         return view('admin.owner');
     }
 
-    public function get(): JsonResponse
+    public function get(Request $request): JsonResponse
     {
         try {
+            $status = $request->input('status');
+
             $data = Claim::with(
                 'user',
                 'restaurant',
                 'reviewed',
-            )->get();
+            )->latest();
+
+            if (!empty($status) && $status != 'all') {
+                $data->where('status', $status);
+            }
 
             return DataTables::of($data)
                 ->addColumn('no', function ($row) {

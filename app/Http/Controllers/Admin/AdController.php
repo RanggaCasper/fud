@@ -18,10 +18,19 @@ class AdController extends Controller
         return view('admin.ads');
     }
 
-    public function get(): JsonResponse
+    public function get(Request $request): JsonResponse
     {
         try {
-            $data = RestaurantAd::with(['adsType', 'restaurant', 'transaction'])->orderByRaw("approval_status = 'pending' DESC")->latest()->get();
+            $status = $request->input('status');
+
+            $data = RestaurantAd::with(['adsType', 'restaurant', 'transaction'])
+                ->orderByRaw("approval_status = 'pending' DESC")
+                ->latest();
+
+            if (!empty($status) && $status != 'all') {
+                $data->where('approval_status', $status);
+            }
+
             return DataTables::of($data)
                 ->addColumn('no', function ($row) {
                     static $counter = 0;

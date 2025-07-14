@@ -53,6 +53,9 @@
                 {
                     data: 'base_price',
                     name: 'base_price',
+                    render: function(data, type, row) {
+                        return 'Rp. ' + data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    }
                 },
                 {
                     data: 'action',
