@@ -1,61 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Fudz! 🍽️
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Fudz!** adalah platform web berbasis Laravel yang dirancang untuk membantu pengguna menemukan, memesan, dan merekomendasikan tempat makan terbaik, dengan fitur login sosial, integrasi pembayaran, dan manajemen konten.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- 🔐 Autentikasi (Login/Daftar), termasuk Google & Facebook
+- 💬 Sistem komentar dan ulasan
+- 📍 Rekomendasi restoran berdasarkan lokasi & preferensi
+- 📊 Dashboard admin untuk manajemen restoran, user, dan transaksi
+- 💸 Integrasi pembayaran dengan Payment Gateway
+- 🤖 Integrasi AI (Gemini, Dify)
+- 📈 Google Analytics
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📦 Instalasi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clone Repository
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/RanggaCasper/fud.git
+cd fud
+````
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Install Dependency
 
-## Laravel Sponsors
+```bash
+composer install
+npm install && npm run dev
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Setup File `.env`
 
-### Premium Partners
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+Edit konfigurasi `.env` sesuai dengan environment kamu (lihat bagian **Konfigurasi**).
 
-## Contributing
+### 4. Jalankan Migrasi & Seeder (Opsional)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan migrate --seed
+```
 
-## Code of Conduct
+### 5. Jalankan Server Laravel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+Akses aplikasi di: [http://localhost:8000](http://localhost:8000)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## ⚙️ Konfigurasi Environment
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Pastikan variabel berikut diatur di `.env`:
+
+```dotenv
+APP_NAME="Fudz!"
+APP_URL=http://localhost
+
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth/login/google/callback
+
+FACEBOOK_CLIENT_ID=your_facebook_client_id
+FACEBOOK_CLIENT_SECRET=your_facebook_client_secret
+FACEBOOK_REDIRECT_URI=http://localhost:8000/auth/login/facebook/callback
+
+TOKOPAY_MERCHANT_ID=your_tokopay_merchant_id
+TOKOPAY_SECRET_KEY=your_tokopay_secret_key
+
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_email_app_password
+
+GOOGLE_ANALYTICS_ID=your_analytics_id
+```
+
+
+---
+
+## 🗂️ Struktur Proyek (Singkat)
+
+```
+fud/
+├── app/                # Logic utama aplikasi
+├── config/             # Konfigurasi Laravel
+├── database/           # Seeder & migration
+├── public/             # Web root
+├── resources/          # View (Blade) & asset
+├── routes/             # Routing web/api
+├── .env.example        # Template konfigurasi
+└── README.md           # Dokumentasi ini
+```
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+---
+
+
+## 🙋‍♂️ Kontak
+
+Dikembangkan oleh [@RanggaCasper](https://github.com/RanggaCasper)
+
+---
+
+Terima kasih telah menggunakan **Fudz!** 🙏
