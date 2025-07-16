@@ -65,7 +65,7 @@ class TokopayService
             'reff_id' => $send['merchantRef'],
             'amount' => intval($send['amount']),
             'customer_name' => json_encode($customer['username']),
-            'customer_email' => 'topup@casperproject.net',
+            'customer_email' => 'fudz@fudz.my.id',
             'customer_phone' => $customer['phone'],
             'redirect_url' => URL::to('/'),
             'expired_ts' => Carbon::now()->addHours(24)->timestamp,

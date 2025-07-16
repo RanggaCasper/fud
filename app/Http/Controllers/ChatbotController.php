@@ -53,7 +53,6 @@ class ChatbotController extends Controller
         );
     }
 
-
     public function history(Request $request)
     {
         $user = Auth::check() ? Auth::user()->name : 'guest-' . substr(md5(request()->ip()), 0, 8);

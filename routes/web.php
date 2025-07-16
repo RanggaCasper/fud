@@ -331,11 +331,6 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
         'git reset --hard HEAD',
         'git pull origin main',
         'git status',
-        'composer install --no-dev',
-        'php artisan migrate --force',
-        'php artisan config:cache',
-        'npm ci',
-        'npm run build',
     ];
 
     $results = [];
@@ -352,10 +347,6 @@ Route::post('/deploy', function (\Illuminate\Http\Request $request) {
         'commands' => $results,
     ]);
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-
-Route::post('/tripay/callback', \App\Http\Controllers\Callback\TripayCallbackController::class)
-    ->name('tripay.callback')
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/tokopay/callback', \App\Http\Controllers\Callback\TokopayCallbackController::class)
     ->name('tokopay.callback')

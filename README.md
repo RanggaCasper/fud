@@ -57,6 +57,20 @@ Akses aplikasi di: [http://localhost:8000](http://localhost:8000)
 
 ---
 
+## 📁 Konfigurasi Google Service Account (Opsional)
+
+Jika kamu menggunakan integrasi dengan Google Cloud :
+
+1. Buat service account di Google Cloud Console
+2. Unduh file JSON (misalnya `service-account.json`), kemudian rename menjadi account.json
+3. Simpan file tersebut ke:
+
+```bash
+storage/app/private/google/account.json
+```
+
+---
+
 ## ⚙️ Konfigurasi Environment
 
 Pastikan variabel berikut diatur di `.env`:

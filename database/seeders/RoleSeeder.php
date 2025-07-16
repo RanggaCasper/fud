@@ -25,5 +25,18 @@ class RoleSeeder extends Seeder
                 $role
             );
         }
+
+        $adminRole = \App\Models\Role::where('name', 'admin')->first();
+
+        $adminExists = \App\Models\User::where('role_id', $adminRole->id)->exists();
+
+        if (! $adminExists) {
+            \App\Models\User::create([
+                'name' => 'Administrator',
+                'email' => 'admin@example.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role_id' => $adminRole->id,
+            ]);
+        }
     }
 }

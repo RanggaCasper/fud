@@ -14,7 +14,7 @@ class TokopayCallbackController extends Controller
     public function __invoke(Request $request)
     {
         $json = $request->getContent();
-        $data = json_decode($json, true); // <- fix: jadikan hasilnya array
+        $data = json_decode($json, true);
         
         Log::info('Tokopay Callback Data: ' . $json);
 
