@@ -125,11 +125,4 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
 ---
 
-
-## 🙋‍♂️ Kontak
-
-Dikembangkan oleh [@RanggaCasper](https://github.com/RanggaCasper)
-
----
-
 Terima kasih telah menggunakan **Fudz!** 🙏
