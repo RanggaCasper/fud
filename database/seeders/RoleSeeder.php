@@ -33,6 +33,7 @@ class RoleSeeder extends Seeder
         if (! $adminExists) {
             \App\Models\User::create([
                 'name' => 'Administrator',
+                'username' => 'admin',
                 'email' => 'admin@example.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('password'),
                 'role_id' => $adminRole->id,
